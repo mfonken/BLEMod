@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project>
+
+    <gatt out="gatt_db.c" header="gatt_db.h" prefix="gattdb_">
+
+		<!-- Generic Access Service -->
+		<!-- https://developer.bluetooth.	/gatt/services/Pages/ServiceViewer.aspx?u=org.bluetooth.service.generic_access.xml -->    
+        <service uuid="1800">
+            <description>Generic Access Profile</description>
+            <!-- Device Name -->
+			<!-- https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.gap.device_name.xml -->
+            <characteristic uuid="2a00" id="device_name">
+                <properties read="true" write="true"/>
+                <value>Empty Example</value>
+            </characteristic>
+            <!-- Appearance -->
+			<!-- https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.gap.appearance.xml -->
+            <characteristic uuid="2a01">
+                <properties read="true" const="true" />
+                <value type="hex">0000</value>
+            </characteristic>
+        </service>
+		
+		<!-- Device Information Service -->
+		<!-- https://developer.bluetooth.org/gatt/services/Pages/ServiceViewer.aspx?u=org.bluetooth.service.device_information.xml -->
+		<service uuid="180A">
+			<description>Device Information Service</description>
+		
+			<!-- Manufacturer name string -->
+			<!-- https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.manufacturer_name_string.xml -->
+			<characteristic uuid="2A29">
+				<properties read="true" const="true" />
+				<value>Silicon Labs</value>
+			</characteristic>
+
+			<!-- Model number string string -->
+			<!-- https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.model_number_string.xml -->
+			<characteristic uuid="2A24">
+				<properties read="true" const="true" />
+				<value>Blue Gecko</value>
+			</characteristic>
+
+			<!-- Serial number string -->
+			<!-- https://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.system_id.xml -->
+			<characteristic uuid="2A23">
+				<properties read="true" const="true" />
+				<value type="hex">000102030405</value>
+			</characteristic>
+
+		</service>
+
+        <service uuid="1d14d6ee-fd63-4fa1-bfa4-8f47b42119f0">
+	    <description>Silicon Labs OTA</description>
+		<characteristic uuid="f7bf3564-fb6d-4e53-88a4-5e37e0326063" id="ota_control">
+		    <properties write="true" />
+			<value length="1" type="user" />
+		</characteristic>
+		<characteristic uuid="984227f3-34fc-4045-a5d0-2c581f81a153" id="ota_data">
+		    <properties write_no_response="true" />
+			<value length="20" />
+		</characteristic>
+	</service>
+    </gatt>
+
+</project>
