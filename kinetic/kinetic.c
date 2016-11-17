@@ -1,23 +1,39 @@
-/*
- * kinetic.c
- *
- *  Created on: Nov 16, 2016
+/***********************************************************************************************//**
+ * \file   kinetic.c
+ * \brief  Kinetic Motion code
+ ***************************************************************************************************
+ *  Created on: Nov 13, 2016
  *      Author: Matthew Fonken
- */
+ **************************************************************************************************/
 
+/* Own header */
 #include "kinetic.h"
 
+/* Sensors headers */
 #include "../sensors/imu.h"
+
+/* Math headers */
 #include "kalman.h"
 #include "matrix.h"
 
+/* Additional function headers */
 #include "../system/usart_sp.h"
 
+/***************************************************************************************************
+ Local Variables
+ **************************************************************************************************/
+/** Coordinates of beacons returned by vision */
+static cartesian2_t   vis[2];
 
-cartesian2_t   vis[2];
-double         delta_t;
-kinetic_t      kinetics;
+/** Local change in time */
+static double         delta_t;
 
+/** Local positional and rotational vectors */
+static kinetic_t      kinetics;
+
+/***********************************************************************************************//**
+ *  \brief  Initialize Kinetic Sensors
+ **************************************************************************************************/
 void initKinetics( void )
 {
 	if ( !IMU_Init( I2C0 ) )
@@ -26,7 +42,10 @@ void initKinetics( void )
 	}
 	Print_String("IMU Initialized.\r\n", 18);
 }
-/*! Filter Initializer */
+
+/***********************************************************************************************//**
+ *  \brief  Initialize Filters for Kinetic Data
+ **************************************************************************************************/
 void initFilters( void )
 {
     initKalman( &kinetics.rot_f[0], getRoll()  );
@@ -34,7 +53,11 @@ void initFilters( void )
     initKalman( &kinetics.rot_f[2], getYaw()   );
 }
 
-/*! Augment vision data
+/***********************************************************************************************//**
+ *  \brief  Initialize Filters for Kinetic Data
+ *  \param[in] dvec Beacon positional vector to augment
+ *  \param[in] a Tait-Bryan angles to augement by
+
  \f{eqnarray*}{
     &\mathbf{v} =
     \begin{cases}
@@ -47,15 +70,15 @@ void initFilters( void )
     &c_{augment} = \frac{D_{beacon}(1 + D_{augment})}{||\mathbf{d_{true}}||} \\
     &\mathbf{v_{return}} =c_{augment}\mathbf{v_{true}}
  \f}
- */
+**************************************************************************************************/
 vec3_t *dAugment( vec3_t *dvec,
                   ang3_t *a)
 {
-    /* Create v vector for zero state */
-    vec3_t vvec;       // Vision system vector
+    /* Create v (vision) vector for zero state */
+    vec3_t vvec;
     vvec.ihat = VISION_ZSTATE_IHAT;
     vvec.jhat = VISION_ZSTATE_JHAT;
-    vvec.khat = VISION_ZSTATE_KHAT; // Defualt is (0,0,-1) or facing down (towards center of gravity)
+    vvec.khat = VISION_ZSTATE_KHAT;
     //normalizevec3_t(vvec); // normalize if vvec inital isn't of length 1
     /* Transform and normalize v vector by given angles to get unit vector from camera */
     vec3_t *vtru = zxyTransform( &vvec, a, 0 );
@@ -74,7 +97,9 @@ vec3_t *dAugment( vec3_t *dvec,
     return vtru;
 }
 
-/*! Get absolute position
+/***********************************************************************************************//**
+ *  \brief  Calculates system's absolute position and places value in tru[]
+
  \f{eqnarray*}{
     &a_a = rot_{f_0}, a_b = rot_{f_1}, a_c = rot_{f_2} \\
 
@@ -100,9 +125,9 @@ vec3_t *dAugment( vec3_t *dvec,
         &v_y = &n_{\hat{j}}\Delta{t} \\
         &v_z = &n_{\hat{k}}\Delta{t} \\
     \end{cases} \\
-    &\text{Update all position kalman_ts with } \mathbf{p_{true}}, \mathbf{v}, \text{ and } \Delta{t}
+   &\text{Update all position kalman_ts with } \mathbf{p_{true}}, \mathbf{v}, \text{ and } \Delta{t}
  \f}
- */
+ **************************************************************************************************/
 void getAbsolutePosition( void )
 {
     /* Tait-Bryan angles of vision */
@@ -120,19 +145,22 @@ void getAbsolutePosition( void )
     /* Create r vector (camera -TO-> vision center) from augment generated true d and vision d */
     vec3_t rvec = *( dAugment( &dvec, &tba ) );
 
-    /* vector between vision center -TO-> B1 */
+    /* vector between vision center -TO-> B1 
+        (e is only on XY plane (surface of beacons) */
     vec3_t evec;
     evec.ihat = VISION_CENTER_X - vis[0].x;
     evec.jhat = VISION_CENTER_Y - vis[0].y;
-    evec.khat = 0;                             // e is only on XY plane (surface of beacons)
+    evec.khat = 0;
 
-    /* vector between vision center -TO-> B2 */
+    /* vector between vision center -TO-> B2 
+        (f is only on XY plane (surface of beacons) */
 //    vec3_t fvec;
 //    fvec.ihat = VISION_CENTER_X - vis[1].x;
 //    fvec.jhat = VISION_CENTER_Y - vis[1].y;
-//    fvec.khat = 0;                             // f is only on XY plane (surface of beacons)
+//    fvec.khat = 0;
 
-    /* Transform e vector (vision center -TO-> B1) to true e vector (transformed vision center -TO-> true B1) */
+    /* Transform e vector (vision center -TO-> B1) 
+        to true e vector (transformed vision center -TO-> true B1) */
     vec3_t etru = *( zxyTransform( &evec, &tba, 1 ) );
 
     /* Subract true e vector from augmented r vector */
@@ -157,7 +185,9 @@ void getAbsolutePosition( void )
     updateKalman( &kinetics.tru_f[2], kinetics.tru[2], z_vel, delta_time);
 }
 
-/*! IMU even handler */
+/***********************************************************************************************//**
+ *  \brief  Update IMU data and filter
+ **************************************************************************************************/
 void IMU_Update( void )
 {
 	uint16_t imu_data[12];
@@ -168,24 +198,28 @@ void IMU_Update( void )
     double psi   = getYaw();
 
     double kalman_t_temp = kinetics.rot_f[0].value;
-    if ((theta < -HALF_PI && kalman_t_temp > HALF_PI) || (theta > HALF_PI && kalman_t_temp < -HALF_PI))
+    if( ( theta < -HALF_PI && kalman_t_temp > HALF_PI ) ||
+        ( theta > HALF_PI && kalman_t_temp < -HALF_PI ) )
     {
     	kinetics.rot_f[1].value  = theta;
     	kinetics.rot[1]          = theta;
     }
     else
     {
-        updateKalman( &kinetics.rot_f[1], theta, gyro[1], delta_t ); // Calculate the true pitch using a kalman_t filter
+        /* Calculate the true pitch using a kalman_t filter */
+        updateKalman( &kinetics.rot_f[1], theta, gyro[1], delta_t );
         kinetics.rot[1] = kinetics.rot_f[1].value;
     }
 
     kalman_t_temp = absl(kinetics.rot_f[1].value);
     if (kalman_t_temp > HALF_PI)
     {
-        gyro[0] = -gyro[0]; // Invert rate, so it fits the restricted accelerometer reading
+        /* Invert rate, so it fits the restricted accelerometer reading */
+        gyro[0] = -gyro[0];
     }
-    updateKalman( &kinetics.rot_f[0], phi, gyro[0], delta_t ); // Calculate the true roll using a kalman_t filter
+    /* Calculate the true roll using a kalman_t filter */
+    updateKalman( &kinetics.rot_f[0], phi, gyro[0], delta_t );
     kinetics.rot[0] = kinetics.rot_f[0].value;
-
-    updateKalman( &kinetics.rot_f[2], psi, gyro[2], delta_t ); // Calculate the true yaw using a kalman_t filter
+    /* Calculate the true yaw using a kalman_t filter */
+    updateKalman( &kinetics.rot_f[2], psi, gyro[2], delta_t );
 }

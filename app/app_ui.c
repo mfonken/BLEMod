@@ -111,7 +111,7 @@ static char appUiHeaderString[APP_HEADER_SIZE];
 
 /** Off LED sequence and request. */
 static struct appUiLedStates appUiLedSeqOff[] = { { 0, 0 } };
-static struct appUiLedSeqReq appUiLedSeqOffReq = {appUiLedSeqOff, COUNTOF(appUiLedSeqOff)};
+static struct appUiLedSeqReq appUiLedSeqOffReq = { appUiLedSeqOff, COUNTOF( appUiLedSeqOff ) };
 
 /** Low alert LED sequence and request. */
 static struct appUiLedStates appUiLedSeqLowAlert[] = { { 1, 0 }, { 1, 0 },
@@ -129,7 +129,7 @@ static struct appUiLedSeqReq appUiLedSeqLowAlertReq =
 static struct appUiLedStates appUiLedSeqHighAlert[] = { { 1, 0 }, { 1, 0 },
                                                         { 0, 1 }, { 0, 1 } };
 static struct appUiLedSeqReq appUiLedSeqHighAlertReq =
-  {appUiLedSeqHighAlert, COUNTOF(appUiLedSeqHighAlert)};
+  { appUiLedSeqHighAlert, COUNTOF( appUiLedSeqHighAlert ) };
 
 /** Request a sequence for driving the LEDs. */
 static struct appUiLedSeqReq *appUiLedSeqReq = NULL;
@@ -138,16 +138,16 @@ static struct appUiLedSeqReq *appUiLedSeqReq = NULL;
 /***************************************************************************************************
  Static Function Declarations
  **************************************************************************************************/
-static void appUiLedTimerCback(void);
-static uint8_t appUiPushButtonsGet(uint8_t button);
-static void appUiButtonTimerCallback(void);
-static void appUiBtnSendEvent(AppUiBtnEvt_t btn);
+static void appUiLedTimerCback( void );
+static uint8_t appUiPushButtonsGet( uint8_t button );
+static void appUiButtonTimerCallback( void );
+static void appUiBtnSendEvent( AppUiBtnEvt_t btn );
 
 #ifdef FEATURE_LED_BUTTON_ON_SAME_PIN
-static void appUiButtonInit(void);
-static void appUiLedsInit(void);
-static void BSP_LedSet(uint8_t AppUiLedId);
-static void BSP_LedClear(uint8_t AppUiLedId);
+static void appUiButtonInit( void );
+static void appUiLedsInit( void );
+static void BSP_LedSet( uint8_t AppUiLedId );
+static void BSP_LedClear( uint8_t AppUiLedId );
 #endif /* BRD4300A */
 
 /***************************************************************************************************

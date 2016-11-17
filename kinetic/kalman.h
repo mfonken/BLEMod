@@ -1,98 +1,77 @@
-/*! \file kalman.h
-    \brief Quick Kalman Filter
- */
+/***********************************************************************************************//**
+ * \file   kalman.h
+ * \brief  Quick Kalman Filter Header
+ ***************************************************************************************************
+ *      Author: Matthew Fonken
+ *      Sources:
+ **************************************************************************************************/
 
 #ifndef kalman_h
 #define kalman_h
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Standard headers */
 #include <stdio.h>
 #include <stdint.h>
+    
+/* em library */
 #include "em_rtcc.h"
 
+/* Included types header */
 #include "kinetic_types.h"
 
-#define VALUE_UNCERTAINTY   0.001 /**< Uncertainty of value */
-#define BIAS_UNCERTAINTY    0.003 /**< Uncertainty of bias */
-#define SENSOR_UNCERTAINTY  0.03  /**< Uncertainty of sensor */
+/***********************************************************************************************//**
+ * @addtogroup Application
+ * @{
+ **************************************************************************************************/
 
-/*! Kalman Initalizer with initial value */
-void initKalman( kalman_t *k,
-                 double    v )
-{
-    k->K[0]        = 0;
-    k->K[1]        = 0;
-    k->P_k[0][0]   = 0;
-    k->P_k[0][1]   = 0;
-    k->P_k[1][0]   = 0;
-    k->P_k[1][1]   = 0;
-    k->rate        = 0;
-    k->bias        = 0;
-    k->value       = v;
-}
+/***********************************************************************************************//**
+ * @addtogroup kinetic
+ * @{
+ **************************************************************************************************/
 
-/*! Kalman performer with new value, new rate, and time difference \r\n
- \f{eqnarray*}{
-    \mathbf{Predict\space:} \\
-    &rate_k &=& rate_{new} - bias_k \\
-    &value_k &=& value_k + {rate_K}\Delta{t} \\
-    &P_{k_{diag}} &=& P_{11_k}\Delta{t} \\
-    &P_{00_k} &=& P_{00_k} + \Delta{t}(P_{11_k}\Delta{t} - P_{01_k} - P_{10_k} + value_u) \\
-    &P_{01_k} &=& P_{01_k} - P_{k_{diag}} \\
-    &P_{10_k} &=& P_{10_k} - P_{k_{diag}} \\
-    &P_{11_k} &=& P_{11_k} + bias_u\Delta{t} \\
- \\
-    \mathbf{Update\space:} \\
-    &S &=& P_{00_k} + sensor_u \\
-    &K_{0_k} &=& P_{00_k} / S \\
-    &K_{1_k} &=& P_{10_k} / S \\
-    &\Delta{value} &=& value_{new} - value_k \\
-    &value_k &=& value_k + K_{0_k}\Delta{value} \\
-    &bias_k &=& bias_k + K_{1_k}\Delta{value} \\
-    &P_{00_k} &=& P_{00_k} - K_{0_k}P_{00_k} \\
-    &P_{01_k} &=& P_{01_k} - K_{0_k}P_{01_k} \\
-    &P_{10_k} &=& P_{10_k} - K_{1_k}P_{00_k} \\
-    &P_{11_k} &=& P_{11_k} - K_{1_k}P_{01_k} \\
- \f}
- */
-void updateKalman( kalman_t *k,
-                   double    value_new,
-                   double    rate_new,
-                   double    delta_time )
-{
-    /* =-----= PREDICT =-----= */
-    /* Predict values */
-    k->rate       = rate_new - k->bias;
-    k->value     += delta_time * k->rate;
+
+/***************************************************************************************************
+Public Definitions
+***************************************************************************************************/
+
+/** Uncertainty of value */
+#define VALUE_UNCERTAINTY   0.001
     
-    /* Predict error covariance */
-    double P_k_diag = delta_time * k->P_k[1][1];
-    k->P_k[0][0] +=   delta_time *
-                    ( delta_time *
-                      k->P_k[1][1] -
-                      k->P_k[0][1] -
-                      k->P_k[1][0] +
-                      VALUE_UNCERTAINTY );
-    k->P_k[0][1] -= P_k_diag;
-    k->P_k[1][0] -= P_k_diag;
-    k->P_k[1][1] += BIAS_UNCERTAINTY * delta_time;
+/** Uncertainty of bias */
+#define BIAS_UNCERTAINTY    0.003
     
-    /* =-----= UPDATE =-----= */
-    /* Update values */
-    double S      = k->P_k[0][0] + SENSOR_UNCERTAINTY;
-    k->K[0]       = k->P_k[0][0] / S;
-    k->K[1]       = k->P_k[1][0] / S;
-    double delta_value = value_new - k->value;
-    k->value     += k->K[0] * delta_value;
-    k->bias      += k->K[1] * delta_value;
+/** Uncertainty of sensor */
+#define SENSOR_UNCERTAINTY  0.03
+
+/***************************************************************************************************
+ Static Function Declarations
+ **************************************************************************************************/
+ 
+/***********************************************************************************************//**
+*  \brief Initalize Kalman Filter
+*  \param[in] k Pointer to kalman filter type
+*  \param[in] v Initial value
+**************************************************************************************************/
+static void initKalman( kalman_t *k,
+                        double    v )
     
-    /* Update error covariance */
-    k->P_k[0][0] -= k->K[0] * k->P_k[0][0];
-    k->P_k[0][1] -= k->K[0] * k->P_k[0][1];
-    k->P_k[1][0] -= k->K[1] * k->P_k[0][0];
-    k->P_k[1][1] -= k->K[1] * k->P_k[0][1];
-    
-    uint32_t time = RTCC->TIME;
-    k->timestamp = (double)time;
-};
+/***********************************************************************************************//**
+ *  \brief Update Kalman Filter
+ *  \param[in] k Pointer to kalman filter type
+ *  \param[in] value_new    New value
+ *  \param[in] rate_new     New rate
+ *  \param[in] delta_time   Time difference
+ **************************************************************************************************/
+static void updateKalman( kalman_t *k,
+                          double    value_new,
+                          double    rate_new,
+                          double    delta_time )
+
+/** @} (end addtogroup kinetic) */
+/** @} (end addtogroup Application) */
 
 #endif /* kalman_h */

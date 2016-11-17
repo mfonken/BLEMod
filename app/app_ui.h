@@ -74,7 +74,7 @@ typedef enum
 ***************************************************************************************************/
 
 /** Button press callback. */
-typedef void (*appUiBtnCback_t)(AppUiBtnEvt_t btn);
+typedef void ( *appUiBtnCback_t )( AppUiBtnEvt_t btn );
 
 /***************************************************************************************************
   Public Variables
@@ -88,39 +88,39 @@ typedef void (*appUiBtnCback_t)(AppUiBtnEvt_t btn);
  *  \brief  Register a callback function to receive button presses.
  *  \param[in]  cback  Application button callback function.
  **************************************************************************************************/
-void appUiBtnRegister(appUiBtnCback_t cback);
+void appUiBtnRegister( appUiBtnCback_t cback );
 
 /***********************************************************************************************//**
  *  \brief  Switch off LEDs.
  **************************************************************************************************/
-void appUiLedOff(void);
+void appUiLedOff( void );
 
 /***********************************************************************************************//**
  *  \brief  Switch on LEDs with low blinking frequency.
  **************************************************************************************************/
-void appUiLedLowAlert(void);
+void appUiLedLowAlert( void );
 
 /***********************************************************************************************//**
  *  \brief  Switch on LEDs with high blinking frequency.
  **************************************************************************************************/
-void appUiLedHighAlert(void);
+void appUiLedHighAlert( void );
 
 /***********************************************************************************************//**
  *  \brief  Initialize buttons, graphics on the LCD and start repeating timer.
  *  \param[in]  devId  device ID
  **************************************************************************************************/
-void appUiInit(uint16 devId);
+void appUiInit( uint16 devId );
 
 /***********************************************************************************************//**
  *  \brief  Periodic call for User Interface specific functions.
  **************************************************************************************************/
-void appUiTick(void);
+void appUiTick( void );
 
 /***********************************************************************************************//**
  *  \brief  Write string to graphical display.
  *  \param[in]  string  String to be displayed.
  **************************************************************************************************/
-void appUiWriteString(char *string);
+void appUiWriteString( char *string );
 
 
 /** @} (end addtogroup app_ui) */

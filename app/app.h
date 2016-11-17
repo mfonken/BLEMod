@@ -43,13 +43,13 @@ extern "C" {
 /***********************************************************************************************//**
  *  \brief  Initialise application, set device name.
  **************************************************************************************************/
-void appInit (void);
+void appInit( void );
 
 /***********************************************************************************************//**
  *  \brief  Handle application events.
  *  \param[in]  evt  incoming event ID
  **************************************************************************************************/
-void appHandleEvents(struct gecko_cmd_packet *evt);
+void appHandleEvents( struct gecko_cmd_packet *evt );
 
 
 /** @} (end addtogroup app) */

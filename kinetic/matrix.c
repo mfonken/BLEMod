@@ -1,12 +1,37 @@
-/*
- * matrix.c
- *
- *  Created on: Nov 16, 2016
+/***********************************************************************************************//**
+ * \file   matrix.c
+ * \brief  Matrix Math
+ ***************************************************************************************************
  *      Author: Matthew Fonken
- */
+ **************************************************************************************************/
+
+/* Own header */
 #include "matrix.h"
 
-/*! Tait-Bryan ZXY Transformation Function\r\n
+/***********************************************************************************************//**
+ * @addtogroup Application
+ * @{
+ **************************************************************************************************/
+
+/***********************************************************************************************//**
+ * @addtogroup kinetic
+ * @{
+ **************************************************************************************************/
+
+/***************************************************************************************************
+ Static Function Definitions
+ **************************************************************************************************/
+
+/***********************************************************************************************//**
+ *  \brief  Tait-Bryan Z > X' > Y" matrix transformation
+ *  \param[out] Transformed matrix
+ *  \param[in] x Matrix to transform
+ *  \param[in] rot Tait-Bryan angles
+ *  \param[in] reverse invert angles
+ ***************************************************************************************************
+ * NOTE: Reversing angles does not invert transformation matrix!
+ ***************************************************************************************************
+ * FORMULA:
  \f{eqnarray*}{
      &\mathbf{A} = \left[
          \begin{matrix}
@@ -17,7 +42,7 @@
          \right] \\
      &\mathbf{y} = \mathbf{A}\mathbf{x}
  \f}
- */
+ **************************************************************************************************/
 vec3_t * zxyTransform(  vec3_t *x,
                         ang3_t *rot,
                         bool reverse)
@@ -59,7 +84,16 @@ vec3_t * zxyTransform(  vec3_t *x,
 }
 
 
-/*! Tait-Bryan YXZ Transformation Function\r\n
+/***********************************************************************************************//**
+ *  \brief  Tait-Bryan Z > X' > Y" matrix transformation
+ *  \param[out] Transformed matrix
+ *  \param[in] x Matrix to transform
+ *  \param[in] rot Tait-Bryan angles
+ *  \param[in] reverse invert angles
+ ***************************************************************************************************
+ * NOTE: Reversing angles does not invert transformation matrix!
+ ***************************************************************************************************
+ * FORMULA:
  \f{eqnarray*}{
     &\mathbf{A} = \left[
      \begin{matrix}
@@ -70,7 +104,7 @@ vec3_t * zxyTransform(  vec3_t *x,
     \right] \\
     &\mathbf{y} = \mathbf{A}\mathbf{x}
  \f}
- */
+ ***************************************************************************************************/
 vec3_t * yxzTransform( vec3_t * x,
                        ang3_t * rot,
                        bool reverse)
@@ -111,13 +145,19 @@ vec3_t * yxzTransform( vec3_t * x,
     return yvec;
 }
 
-/*! Difference of 3D Vectors\r\n
+/***********************************************************************************************//**
+ *  \brief  Subract two 3D vectors
+ *  \param[in] x Subracted from and returned
+ *  \param[in] y Values to subract
+ ***************************************************************************************************
+ * FORMULA:
+
  \f{eqnarray*}{
     &x_\hat{i} = x_\hat{i} - y_\hat{i} \\
     &x_\hat{j} = x_\hat{j} - y_\hat{j} \\
     &x_\hat{k} = x_\hat{k} - y_\hat{k}
  \f}
- */
+ **************************************************************************************************/
 void subtractvec3_ts( vec3_t * x,
                     vec3_t * y )
 {
@@ -125,12 +165,16 @@ void subtractvec3_ts( vec3_t * x,
     x->jhat = x->jhat - y->jhat;
     x->khat = x->khat - y->khat;
 }
-
-/*! Length of a 3D Vector\r\n
+/***********************************************************************************************//**
+ *  \brief  Return length of 3D vector
+ *  \param[out] Length of vector
+ *  \param[in] x Vector measured
+ ***************************************************************************************************
+ * FORMULA:
  \f{eqnarray*}{
     ||\mathbf{v}|| = \sqrt{v_\hat{i}^2 + v_\hat{j}^2 + v_\hat{k}^2}\\
  \f}
- */
+ **************************************************************************************************/
 double lengthOfvec3_t( vec3_t * vec )
 {
     double i_2 = vec->ihat * vec->ihat;
@@ -139,11 +183,15 @@ double lengthOfvec3_t( vec3_t * vec )
     return sqrt( i_2 + j_2 + k_2 );
 }
 
-/*! Normal of a 3D Vector\r\n
+/***********************************************************************************************//**
+ *  \brief  Normalize a 3D Vector
+ *  \param[in] vec Vector to normalize, returned as self
+ ***************************************************************************************************
+ * FORMULA:
  \f{eqnarray*}{
     \mathbf{v_{norm}} = \frac{\mathbf{v}}{||\mathbf{v}||}
  \f}
- */
+ **************************************************************************************************/
 void normalizevec3_t( vec3_t * vec )
 {
     double length = lengthOfvec3_t( vec );
@@ -151,12 +199,17 @@ void normalizevec3_t( vec3_t * vec )
     vec->jhat /= length;
     vec->khat /= length;
 }
-
-/*! Distance between to Cartesian coordinates
+/***********************************************************************************************//**
+ *  \brief  Distance between two 2D coordinates
+ *  \param[out] Distance between
+ *  \param[in] a First coordinate
+ *  \param[in] b Second coordinate
+ ***************************************************************************************************
+ * FORMULA:
  \f{eqnarray*}{
  d = \sqrt{(x_b^2 - x_a^2) + (y_b^2 - y_a^2)}
  \f}
- */
+ **************************************************************************************************/
 double get2dDistance( cartesian2_t *a, cartesian2_t *b )
 {
     double a_x = a->x;
@@ -167,3 +220,5 @@ double get2dDistance( cartesian2_t *a, cartesian2_t *b )
     return sqrt( ( ( b_x * b_x ) - ( a_x * a_x ) ) + ( ( b_y * b_y ) - ( a_y * a_y ) ) );
 }
 
+/** @} (end addtogroup kinetic) */
+/** @} (end addtogroup Application) */

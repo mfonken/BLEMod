@@ -65,7 +65,7 @@
 /***********************************************************************************************//**
  * \brief Function that initializes the device name, LEDs, buttons and services.
  **************************************************************************************************/
-void appInit(void)
+void appInit( void )
 {
   /* Unique device ID */
   uint16_t devId;
@@ -77,15 +77,15 @@ void appInit(void)
 
   /* Create the device name based on the 16-bit device ID */
   btAddr = gecko_cmd_system_get_bt_address();
-  devId = *((uint16*)(btAddr->address.addr));
-  snprintf(devName, APP_DEVNAME_LEN + 1, APP_DEVNAME, devId);
-  gecko_cmd_gatt_server_write_attribute_value(gattdb_device_name,
-                                              0,
-                                              strlen(devName),
-                                              (uint8_t *)devName);
+  devId = *( ( uint16* )( btAddr->address.addr ) );
+  snprintf( devName, APP_DEVNAME_LEN + 1, APP_DEVNAME, devId );
+  gecko_cmd_gatt_server_write_attribute_value( gattdb_device_name,
+                                               0,
+                                               strlen( devName ),
+                                               ( uint8_t * )devName );
 
   /* Initialize LEDs, buttons, graphics. */
-  appUiInit(devId);
+  appUiInit( devId );
 
   /* Hardware initialization. Initializes temperature sensor. */
   appHwInit();
@@ -98,9 +98,10 @@ void appInit(void)
  * \brief Event handler function
  * @param[in] evt Event pointer
  **************************************************************************************************/
-void appHandleEvents(struct gecko_cmd_packet *evt)
+void appHandleEvents( struct gecko_cmd_packet* evt )
 {
-  switch (BGLIB_MSG_ID(evt->header)) {
+    switch ( BGLIB_MSG_ID( evt->header ) )
+    {
 
 	/* Boot event and connection closed event */
     case gecko_evt_system_boot_id:
@@ -116,7 +117,7 @@ void appHandleEvents(struct gecko_cmd_packet *evt)
     case gecko_evt_le_connection_opened_id:
 	  /* Call advertisement.c connection started callback */
       advConnectionStarted();
-      Print_String("Connection Started.\r\n", 21);
+      Print_String( "Connection Started.\r\n", 21 );
       break;
 
     /* Value of attribute changed from the local database by remote GATT client */
@@ -148,7 +149,8 @@ void appHandleEvents(struct gecko_cmd_packet *evt)
     /* Software Timer event */
     case gecko_evt_hardware_soft_timer_id:
 	  /* Check which software timer handle is in question */
-      switch (evt->data.evt_hardware_soft_timer.handle) {
+      switch ( evt->data.evt_hardware_soft_timer.handle )
+      {
         case UI_TIMER: /* App UI Timer (LEDs, Buttons) */
           appUiTick();
           break;
@@ -168,8 +170,10 @@ void appHandleEvents(struct gecko_cmd_packet *evt)
 //      {
 //        gecko_cmd_system_reset(1);
 //      }
+      uint8array request = evt->data.evt_gatt_server_user_write_request.value;
       Print_String( "\r\nIncoming Data: ", 17 );
-      Print_String( evt->data.evt_gatt_server_user_write_request.value.data, evt->data.evt_gatt_server_user_write_request.value.len );
+
+      Print_String( request.data, request.len );
       break;
 
     default:
@@ -189,9 +193,9 @@ void appHandleEvents(struct gecko_cmd_packet *evt)
  * @return  0 for successful or
  *         -1 if the requested frequency does not match the RTC frequency.
  *****************************************************************************/
-int rtcIntCallbackRegister(void (*pFunction)(void*),
-                           void* argument,
-                           unsigned int frequency)
+int rtcIntCallbackRegister( void ( *pFunction )( void* ),
+                            void* argument,
+                            unsigned int frequency )
 {
   return 0;
 }
