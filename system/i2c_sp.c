@@ -1,9 +1,9 @@
-/*
- * i2c_sp.c
- *
- *  Created on: Nov 17, 2016
+/***********************************************************************************************//**
+ * \file   i2c_sp.c
+ * \brief  I2C Special Functions
+ ***************************************************************************************************
  *      Author: Matthew Fonken
- */
+ **************************************************************************************************/
 
 /* Standard headers */
 #include <stdbool.h>
@@ -14,6 +14,24 @@
 /* Own header */
 #include "i2c_sp.h"
 
+/***********************************************************************************************//**
+ * @addtogroup Application
+ * @{
+ **************************************************************************************************/
+
+/***********************************************************************************************//**
+ * @addtogroup sp
+ * @{
+ **************************************************************************************************/
+
+/***********************************************************************************************//**
+ *  \brief  Read I2C
+ *  \param[out] Return read success
+ *  \param[in] addr Address of slave
+ *  \param[in] reg Register to access
+ *  \param[in] i2c_read_data Array to store read data in
+ *  \param[in] i2c_read_data_length Number of bytes to read
+ **************************************************************************************************/
 bool I2C_Read( uint8_t addr, uint8_t reg, uint8_t *i2c_read_data, uint8_t i2c_read_data_length)
 {
 	I2C_TransferSeq_TypeDef    seq;
@@ -36,6 +54,13 @@ bool I2C_Read( uint8_t addr, uint8_t reg, uint8_t *i2c_read_data, uint8_t i2c_re
 	return ret;
 }
 
+/***********************************************************************************************//**
+ *  \brief  Write I2C
+ *  \param[out] Return read success
+ *  \param[in] addr Address of slave
+ *  \param[in] i2c_write_data Array to write
+ *  \param[in] i2c_read_data_length Number of bytes to write
+ **************************************************************************************************/
 bool I2C_Write( uint8_t addr, uint8_t *i2c_write_data, uint8_t i2c_write_data_length)
 {
 	I2C_TransferSeq_TypeDef    seq;
@@ -55,4 +80,7 @@ bool I2C_Write( uint8_t addr, uint8_t *i2c_write_data, uint8_t i2c_write_data_le
 	}
 	return ret;
 }
+
+/** @} (end addtogroup sp) */
+/** @} (end addtogroup Application) */
 

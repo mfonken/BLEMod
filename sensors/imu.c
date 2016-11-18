@@ -1,19 +1,25 @@
 /***********************************************************************************************//**
  * \file   imu.c
- * \brief  IMU Functions
+ * \brief  IMU Control
+ ***************************************************************************************************
+ *      Author: Matthew Fonken
  **************************************************************************************************/
 
+/* Standard headers */
 #include <stddef.h>
 #include <math.h>
 
+/* em headers */
 #include "em_i2c.h"
 
+/* Additional function headers */
 #include "i2c_sp.h"
 
+/* Own header */
 #include "imu.h"
-#include "matrix.h"
 
-#define sign(x) x > 0 ? 1:-1
+/* Math headers */
+#include "matrix.h"
 
 /***********************************************************************************************//**
  * @addtogroup Application
@@ -26,23 +32,24 @@
  **************************************************************************************************/
 
 /***************************************************************************************************
+ Macros
+ **************************************************************************************************/
+#define sign(x) x > 0 ? 1:-1
+
+/***************************************************************************************************
  Local Variables
  **************************************************************************************************/
-
 IMU_Settings settings;
 
 /***************************************************************************************************
  Local Functions
  **************************************************************************************************/
-
-/***************************************************************************************************
- Register Access
- **************************************************************************************************/
 /**************************************************************************//**
-
+ * \brief IMU_GetRegister
+ * \param[out] Return value from register
+ * \param[in] reg Register to access
  *****************************************************************************/
-/** IMU_ReadRegister */
-uint8_t IMU_GetRegister( uint8_t reg )
+uint8_t IMU_GetRegister( regAddr reg )
 {
 	uint8_t i2c_read_data[1];
 	I2C_Read( IMU_ADDR, reg, i2c_read_data, 1 );
@@ -50,20 +57,27 @@ uint8_t IMU_GetRegister( uint8_t reg )
 }
 
 /**************************************************************************//**
-
+ * \brief IMU_SetRegister
+ * \param[in] reg Register to access
+ * \param[in] val Value to set
  *****************************************************************************/
-/** IMU_SetRegister */
-bool IMU_SetRegister( uint8_t reg, uint8_t val )
+void IMU_SetRegister( regAddr reg, uint8_t val )
 {
 	uint8_t i2c_write_data[2];
 	i2c_write_data[0] = reg;
 	i2c_write_data[0] = val;
-	return I2C_Write( IMU_ADDR, i2c_write_data, 2 );
+	I2C_Write( IMU_ADDR, i2c_write_data, 2 );
 }
 
 /***************************************************************************************************
  Initialization
  **************************************************************************************************/
+
+/**************************************************************************//**
+ * \brief Reset Local Settings to Default
+ ******************************************************************************
+ * NOTE: This does not physically set on the IMU, just the local variable
+ *****************************************************************************/
 bool IMU_Default( void )
 {
 	settings.general.temperatureEnabled = TEMP_ENABLED;
@@ -83,19 +97,25 @@ bool IMU_Default( void )
 	settings.accel.fifoEnabled			= ACCEL_FIFO_EN;
 	settings.accel.fifoDecimation		= ACCEL_FIFO_DEC;
 }
-/** IMU_Init */
+
+/**************************************************************************//**
+ * \brief Initialize IMU with local settings
+ * \param[out] Initialization success
+ *****************************************************************************/
 bool IMU_Init( void )
 {
+    /* Ensure IMU is connected and correct */
 	uint8_t i2c_read_data[1];
-
 	I2C_Read( IMU_ADDR, WHO_AM_I, i2c_read_data, 1 );
 	if( i2c_read_data[0] != IMU_ID )
 	{
 		return false;
 	}
 
+    /* Get default settings */
 	IMU_Default();
 
+    /* Set accel settings */
 	uint8_t options = 0;
 	if( settings.accel.enabled )
 	{
@@ -175,6 +195,7 @@ bool IMU_Init( void )
 	}
 	IMU_SetRegister( CTRL1_XL, options);
 
+    /* Set gyro settings */
 	options = 0;
 	if( settings.gyro.enabled )
 	{
@@ -217,13 +238,13 @@ bool IMU_Init( void )
 
 
 /******************************************************************************
- * Motion
+ * Motion Data Access
  *****************************************************************************/
 
 /**************************************************************************//**
-
+ * \brief Read IMU accel and gyro data
+ * \param[in] read_data Array to store read data
  *****************************************************************************/
-/** IMU_Read */
 bool IMU_Read( uint16_t *read_data )
 {
 	I2C_TransferSeq_TypeDef    seq;
@@ -256,42 +277,70 @@ bool IMU_Read( uint16_t *read_data )
 	return true;
 }
 
+/**************************************************************************//**
+ * \brief Convert accelerometer data to readable double value
+ * \param[out] Return converted value
+ * \param[in] data Raw value from register
+ *****************************************************************************/
 double convertAccel( uint16_t data )
 {
-	return ( double )data * 0.061;
+	return ( double )( data * 0.061 * (settings.accel.range >> 1) / 1000 );
 }
 
+/**************************************************************************//**
+ * \brief Convert gyroscope data to readable double value
+ * \param[out] Return converted value
+ * \param[in] data Raw value from register
+ *****************************************************************************/
 double convertGyro( uint16_t data )
 {
-	return ( double )data * 4.375;
+    uint8_t rangeDivisor = settings.gyroRange / 125;
+    if ( settings.gyroRange == 245 ) {
+        rangeDivisor = 2;
+    }
+	return ( double )data * 4.375 * ( rangeDivisor ) / 1000;
 }
 
+/******************************************************************************
+ * Rotation Calculation
+ *****************************************************************************/
 /* See - http://www.nxp.com/files/sensors/doc/app_note/AN3461.pdf */
 
-/*! Get roll from IMU data */
+/**************************************************************************//**
+ * \brief Get roll angle from accelerometer data
+ * \param[out] Return value
+ *****************************************************************************/
 double getRoll( void )
 {
 	double y = sign( acc[2] ) * sqrt( ( acc[2] * acc[2] ) + ( MU * ( acc[0] * acc[0] ) ) );
     return atan2( acc[1], y ); // Eqn. 38
 }
 
-/*! Get pitch from IMU data */
+/**************************************************************************//**
+ * \brief Get pitch angle from accelerometer data
+ * \param[out] Return value
+ *****************************************************************************/
 double getPitch( void )
 {
     return atan( -acc[0] / sqrt( ( acc[1] * acc[1] ) + ( acc[2] * acc[2] ) ) ); // Eqn. 37
 }
 
-/*! Get yaw from IMU data */
+/**************************************************************************//**
+ * \brief Get yaw angle from accelerometer data
+ * \param[out] Return value
+ *****************************************************************************/
 double getYaw( void )
 {
     return atan( -acc[2] / sqrt( ( acc[0] * acc[0] ) + ( acc[1] * acc[1] ) ) ); // Eqn. 37
 }
 
-/*! Find acceleration apart from gravity */
+/**************************************************************************//**
+ * \brief Get no gravitation acceleration from accelerometer data
+ * \param[out] Return 3D vector of acceleration
+ * \param[in] tba Tait-Bryan angles to transform by
+ *****************************************************************************/
 vec3_t * getNonGravAcceleration( ang3_t * tba )
 {
-    /* Tait-Bryan angles of vision */
-
     /* Create a vector of accelerometer values */
     vec3_t avec;
     avec.ihat = acc[0];
@@ -310,9 +359,9 @@ vec3_t * getNonGravAcceleration( ang3_t * tba )
  *****************************************************************************/
 
 /**************************************************************************//**
-
+ * \brief Read temperature from register
+ * \param[out] Return raw temperature data
  *****************************************************************************/
-/** IMU_ReadTemp */
 uint16_t IMU_ReadTemp( void )
 {
 	uint16_t tempurature;
@@ -321,8 +370,23 @@ uint16_t IMU_ReadTemp( void )
 	return tempurature;
 }
 
+/**************************************************************************//**
+ * \brief Read temperature in Fahrenheit
+ * \param[out] Return corrected temperature data as readable double
+ *****************************************************************************/
 double getTempF( void )
 {
-	double temp = ( ( double )IMU_ReadTemp() / 16 ) + 25;
-	return temp;
+	return ( double )( ( IMU_ReadTemp() / 16 ) + 25 );;
 }
+
+/**************************************************************************//**
+ * \brief Read temperature in Celsius
+ * \param[out] Return corrected temperature data as readable double
+ *****************************************************************************/
+double getTempC( void )
+{
+    return ( double )( ( getTempF() * ( 5 / 9 ) ) - 32 );;
+}
+
+/** @} (end addtogroup imu) */
+/** @} (end addtogroup Application) */
