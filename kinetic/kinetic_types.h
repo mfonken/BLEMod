@@ -26,18 +26,6 @@ extern "C" {
  Public Types
  ***************************************************************************************************/
 
-/** Kinetic Type */
-typedef struct _kinetic_t
-{
-    double     pos[3];          /**< Raw position */
-    double     rot[3];          /**< Raw rotation */
-    double     tru[3];          /**< Raw true loction */
-    
-    kalman_t   pos_f[3];        /**< Filtered position */
-    kalman_t   rot_f[3];        /**< Filtered rotation */
-    kalman_t   tru_f[3];        /**< Filtered true location */
-} kinetic_t;
-    
 /** Kalman structure */
 typedef struct _kalman_t
 {
@@ -49,7 +37,17 @@ typedef struct _kalman_t
     double  timestamp;          /**< Timestamp */
 } kalman_t;
 
-
+/** Kinetic Type */
+typedef struct _kinetic_t
+{
+    double     pos[3];          /**< Raw position */
+    double     rot[3];          /**< Raw rotation */
+    double     tru[3];          /**< Raw true loction */
+    
+    kalman_t   pos_f[3];        /**< Filtered position */
+    kalman_t   rot_f[3];        /**< Filtered rotation */
+    kalman_t   tru_f[3];        /**< Filtered true location */
+} kinetic_t;
 
 /** 2D Cartesian Cooridinate */
 typedef struct _cartesian2_t

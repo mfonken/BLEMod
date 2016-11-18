@@ -59,6 +59,7 @@ sensors/imu.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\
 sensors/imu.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include\efr32bg1b_af_ports.h
 sensors/imu.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include\efr32bg1b_af_pins.h
 sensors/imu.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\stdbool.h
+sensors/imu.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\system\i2c_sp.h
 sensors/imu.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\imu.h
 sensors/imu.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\kinetic_types.h
 sensors/imu.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\matrix.h

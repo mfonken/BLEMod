@@ -74,7 +74,7 @@ static void initKalman( kalman_t *k,
  &P_{11_k} &=& P_{11_k} - K_{1_k}P_{01_k} \\
  \f}
  **************************************************************************************************/
-static void updateKalman( kalman_t *k,
+void updateKalman( kalman_t *k,
                           double    value_new,
                           double    rate_new,
                           double    delta_time )

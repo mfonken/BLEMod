@@ -39,7 +39,7 @@
  ***************************************************************************************************
  * NOTE: Reversing angles does not invert transformation matrix!
  **************************************************************************************************/
-static vec3_t * zxyTransform(  vec3_t *x, ang3_t *rot, bool reverse);
+vec3_t * zxyTransform(  vec3_t *x, ang3_t *rot, bool reverse);
 
 /***********************************************************************************************//**
  *  \brief  Tait-Bryan Y > X' > Z" matrix transformation
@@ -50,27 +50,27 @@ static vec3_t * zxyTransform(  vec3_t *x, ang3_t *rot, bool reverse);
  ***************************************************************************************************
  * NOTE: Reversing angles does not invert transformation matrix!
  **************************************************************************************************/
-static vec3_t * yxzTransform( vec3_t * x, ang3_t * rot, bool reverse);
+vec3_t * yxzTransform( vec3_t * x, ang3_t * rot, bool reverse);
 
 /***********************************************************************************************//**
  *  \brief  Subract two 3D vectors
  *  \param[in] x Subracted from and returned
  *  \param[in] y Values to subract
  **************************************************************************************************/
-static void subtractvec3_t( vec3_t * x, vec3_t * y );
+void subtractvec3_t( vec3_t * x, vec3_t * y );
 
 /***********************************************************************************************//**
  *  \brief  Return length of 3D vector
  *  \param[out] Length of vector
  *  \param[in] x Vector measured
  **************************************************************************************************/
-static double lengthOfvec3_t( vec3_t * vec );
+double lengthOfvec3_t( vec3_t * vec );
 
 /***********************************************************************************************//**
  *  \brief  Normalize a 3D Vector
  *  \param[in] vec Vector to normalize, returned as self
  **************************************************************************************************/
-static void normalizevec3_t( vec3_t * vec );
+void normalizevec3_t( vec3_t * vec );
 
 /***********************************************************************************************//**
  *  \brief  Distance between two 2D coordinates
@@ -78,7 +78,7 @@ static void normalizevec3_t( vec3_t * vec );
  *  \param[in] a First coordinate
  *  \param[in] b Second coordinate
  **************************************************************************************************/
-static double get2dDistance( cartesian2_t *a, cartesian2_t *b );
+double get2dDistance( cartesian2_t *a, cartesian2_t *b );
 
 /** @} (end addtogroup kinetic) */
 /** @} (end addtogroup Application) */

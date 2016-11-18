@@ -36,7 +36,7 @@ static kinetic_t      kinetics;
  **************************************************************************************************/
 void initKinetics( void )
 {
-	if ( !IMU_Init( I2C0 ) )
+	if ( !IMU_Init( ) )
 	{
 		Print_String("No IMU Found.\r\n", 15); /* Display error message on screen. */
 	}
@@ -164,7 +164,7 @@ void getAbsolutePosition( void )
     vec3_t etru = *( zxyTransform( &evec, &tba, 1 ) );
 
     /* Subract true e vector from augmented r vector */
-    subtractvec3_ts(&rvec, &etru);
+    subtractvec3_t(&rvec, &etru);
 
     kinetics.tru[0] = rvec.ihat;
     kinetics.tru[1] = rvec.jhat;
@@ -191,7 +191,7 @@ void getAbsolutePosition( void )
 void IMU_Update( void )
 {
 	uint16_t imu_data[12];
-    IMU_Read(I2C0, imu_data);
+    IMU_Read( imu_data );
 
     double theta = getPitch();
     double phi   = getRoll();

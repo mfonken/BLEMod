@@ -56,8 +56,8 @@ Public Definitions
 *  \param[in] k Pointer to kalman filter type
 *  \param[in] v Initial value
 **************************************************************************************************/
-static void initKalman( kalman_t *k,
-                        double    v )
+void initKalman( kalman_t *k,
+                        double    v );
     
 /***********************************************************************************************//**
  *  \brief Update Kalman Filter
@@ -66,10 +66,10 @@ static void initKalman( kalman_t *k,
  *  \param[in] rate_new     New rate
  *  \param[in] delta_time   Time difference
  **************************************************************************************************/
-static void updateKalman( kalman_t *k,
+void updateKalman( kalman_t *k,
                           double    value_new,
                           double    rate_new,
-                          double    delta_time )
+                          double    delta_time );
 
 /** @} (end addtogroup kinetic) */
 /** @} (end addtogroup Application) */

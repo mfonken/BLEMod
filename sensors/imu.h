@@ -14,7 +14,6 @@
 
 #include "kinetic_types.h"
 
-
 #define IMU_ADDR 	0xd4
 #define IMU_ID	 	0x69
 
@@ -23,12 +22,155 @@
 extern uint8_t acc[3];
 extern uint8_t gyro[3];
 
+
+
+typedef struct _IMU_General_Settings
+{
+	bool 	temperatureEnabled;
+} IMU_General_Settings;
+
+typedef struct _IMU_FIFO_Settings
+{
+	uint16_t sampleRate;
+	uint16_t threshold;
+	uint8_t  mode;
+} IMU_FIFO_Settings;
+
+typedef struct _IMU_Gyro_Settings
+{
+	bool  	 enabled;
+	uint16_t range;
+	uint16_t sampleRate;
+	uint16_t bandWidth;
+	bool  	 fifoEnabled;
+	bool  	 fifoDecimation;
+} IMU_Gyro_Settings;
+
+typedef struct _IMU_Accel_Settings
+{
+	bool  	 enabled;
+	bool	 dataReadyEnabled;
+	uint16_t range;
+	uint16_t sampleRate;
+	uint16_t bandWidth;
+	bool  	 fifoEnabled;
+	bool  	 fifoDecimation;
+} IMU_Accel_Settings;
+
+typedef struct _IMU_Settings
+{
+	IMU_General_Settings 	general;
+	IMU_FIFO_Settings  		fifo;
+	IMU_Gyro_Settings  		gyro;
+	IMU_Accel_Settings 		accel;
+} IMU_Settings;
+
+bool 		IMU_Default( void );
+bool 		IMU_Init( void );
+uint8_t 	IMU_ReadRegister( uint8_t reg );
+bool 		IMU_SetRegister( uint8_t reg, uint8_t val );
+bool 	 	IMU_Read( uint16_t *read_data );
+
+double 		convertAccel( uint16_t data );
+double 		convertGyro( uint16_t data );
+double 		getRoll( void );
+double 		getPitch( void );
+double 		getYaw( void );
+vec3_t * 	getNonGravAcceleration( ang3_t * tba );
+
+uint16_t 	IMU_ReadTemp( void );
+double 		getTempF( void );
+
+enum accel_bandwidths
+{
+	ACCEL_BANDWIDTH_50HZ  = 0x03,
+	ACCEL_BANDWIDTH_100HZ = 0x02,
+	ACCEL_BANDWIDTH_200HZ = 0x01,
+	ACCEL_BANDWIDTH_400HZ = 0x00,
+};
+enum accel_scales
+{
+	ACCEL_SCALE_2G  	  = 0x03,
+	ACCEL_SCALE_4G  	  = 0x08,
+	ACCEL_SCALE_8G  	  = 0x0c,
+	ACCEL_SCALE_16G  	  = 0x04,
+};
+enum accel_data_rate
+{
+	ACCEL_DATA_RATE_PWDN  	= 0x00,
+	ACCEL_DATA_RATE_13HZ  	= 0x10,
+	ACCEL_DATA_RATE_26HZ  	= 0x20,
+	ACCEL_DATA_RATE_52HZ  	= 0x30,
+	ACCEL_DATA_RATE_104HZ  	= 0x40,
+	ACCEL_DATA_RATE_208HZ  	= 0x50,
+	ACCEL_DATA_RATE_416HZ  	= 0x60,
+	ACCEL_DATA_RATE_833HZ  	= 0x70,
+	ACCEL_DATA_RATE_1660HZ  = 0x80,
+	ACCEL_DATA_RATE_3330HZ  = 0x90,
+	ACCEL_DATA_RATE_6660HZ  = 0xA0,
+	ACCEL_DATA_RATE_13330HZ = 0xB0,
+};
+
+enum gyro_scales_non_125
+{
+	GYRO_SCALE_125DPS	  = 0x00,
+	GYRO_SCALE_245DPS 	  = 0x03,
+	GYRO_SCALE_500DPS  	  = 0x08,
+	GYRO_SCALE_1000DPS 	  = 0x0c,
+	GYRO_SCALE_2000DPS 	  = 0x04,
+};
+enum gryo_data_rate
+{
+	GYRO_DATA_RATE_PWDN  	= 0x00,
+	GYRO_DATA_RATE_13HZ  	= 0x10,
+	GYRO_DATA_RATE_26HZ  	= 0x20,
+	GYRO_DATA_RATE_52HZ  	= 0x30,
+	GYRO_DATA_RATE_104HZ  	= 0x40,
+	GYRO_DATA_RATE_208HZ  	= 0x50,
+	GYRO_DATA_RATE_416HZ  	= 0x60,
+	GYRO_DATA_RATE_833HZ  	= 0x70,
+	GYRO_DATA_RATE_1660HZ  	= 0x80,
+};
+
 enum regDefaults
 {
 	CTRL1_XL_D 		= 0x80,
 	CTRL2_G_D 		= 0x80,
 	CTRL3_C_D 		= 0x04,
 };
+
+enum fifo_modes
+{
+	BYPASS_MODE 		= 0,
+	FIFO_ACTIVE_MODE	= 1,
+	CONTINUOUS_MODE 	= 6,
+	CONT_TO_FIFO_MODE	= 3,
+	BYPASS_TO_CONT_MODE = 4,
+};
+
+enum defaultValues
+{
+	TEMP_ENABLED		= true,
+
+	FIFO_THRESHOLD		= 3000,
+	FIFO_SAMPLE_RATE	= 10,
+	FIFO_MODE			= BYPASS_MODE,
+
+	GYRO_ENABLE 		= true,
+	GYRO_RANGE 			= 2000,
+	GYRO_SAMPLE_RATE	= 416,
+	GYRO_BANDWIDTH		= 400,
+	GYRO_FIFO_EN		= true,
+	GYRO_FIFO_DEC		= true,
+
+	ACCEL_ENABLE		= true,
+	ACCEL_RANGE			= 16,
+	ACCEL_SAMPLE_RATE	= 416,
+	ACCEL_BANDWIDTH		= 100,
+	ACCEL_FIFO_EN		= true,
+	ACCEL_FIFO_DEC		= true,
+};
+
 // register addresses
 enum regAddr
 {
@@ -101,17 +243,5 @@ enum regAddr
 	MD1_CFG           = 0x5E,
 	MD2_CFG           = 0x5F,
 };
-
-bool 		IMU_Init( I2C_TypeDef *i2c );
-uint8_t 	IMU_ReadRegister( I2C_TypeDef *i2c, uint8_t reg );
-bool 		IMU_SetRegister( I2C_TypeDef *i2c, uint8_t reg, uint8_t val );
-bool 		I2CSP_SetRegister( I2C_TypeDef *i2c, uint8_t addr, uint8_t reg, uint8_t val );
-bool 		IMU_Read( I2C_TypeDef *i2c, uint16_t *read_data );
-uint16_t 	IMU_ReadTemp( I2C_TypeDef *i2c );
-
-double 		getRoll();
-double 		getPitch();
-double 		getYaw();
-vec3_t * 	getNonGravAcceleration( ang3_t * tba );
 
 #endif /* IMU_H_ */
