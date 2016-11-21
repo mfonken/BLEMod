@@ -322,7 +322,8 @@ double getRoll( void )
  *****************************************************************************/
 double getPitch( void )
 {
-    return atan( -acc[0] / sqrt( ( acc[1] * acc[1] ) + ( acc[2] * acc[2] ) ) ); // Eqn. 37
+    double y = sqrt( ( myIMU.ay * myIMU.ay ) + ( myIMU.az * myIMU.az ) );
+    return atan2( -myIMU.ax, y ); // Eqn. 37
 }
 
 /**************************************************************************//**
@@ -331,7 +332,8 @@ double getPitch( void )
  *****************************************************************************/
 double getYaw( void )
 {
-    return atan( -acc[2] / sqrt( ( acc[0] * acc[0] ) + ( acc[1] * acc[1] ) ) ); // Eqn. 37
+    double y = sqrt( ( myIMU.ax * myIMU.ax ) + ( myIMU.ay * myIMU.ay ) );
+    return atan2( -myIMU.az, y ); // Eqn. 37
 }
 
 /**************************************************************************//**

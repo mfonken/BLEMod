@@ -31,7 +31,6 @@
 #define IMU_ADDR 	0xd4
 #define IMU_ID	 	0x69
 
-#define MU          0.1
 
 extern uint8_t acc[3];
 extern uint8_t gyro[3];
