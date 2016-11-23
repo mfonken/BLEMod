@@ -88,22 +88,28 @@ double 		convertAccel( uint16_t data );
 double 		convertGyro( uint16_t data );
 
 /**************************************************************************//**
- * \brief Get roll angle from accelerometer data
- * \param[out] Return value
+ * \brief Get roll angle (phi) from accelerometer data
+ * \param[out] Return roll
  *****************************************************************************/
 double 		getRoll( void );
 
 /**************************************************************************//**
- * \brief Get pitch angle from accelerometer data
- * \param[out] Return value
+ * \brief Get roll angle (phi) error from accelerometer data
+ * \param[out] Return roll error
+ *****************************************************************************/
+double getRollError( void )
+
+/**************************************************************************//**
+ * \brief Get pitch angle (theta) from accelerometer data
+ * \param[out] Return pitch
  *****************************************************************************/
 double 		getPitch( void );
 
 /**************************************************************************//**
- * \brief Get yaw angle from accelerometer data
- * \param[out] Return value
+ * \brief Get yaw angle (psi) from magnetometer data, pitch, and roll
+ * \param[out] Return yaw
  *****************************************************************************/
-double 		getYaw( void );
+double getYaw( void )
 
 /**************************************************************************//**
  * \brief Get no gravitation acceleration from accelerometer data

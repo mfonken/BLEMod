@@ -193,33 +193,34 @@ void IMU_Update( void )
 	uint16_t imu_data[12];
     IMU_Read( imu_data );
 
-    double theta = getPitch();
     double phi   = getRoll();
+    double theta = getPitch();
     double psi   = getYaw();
 
-    double kalman_t_temp = kinetics.rot_f[0].value;
-    if( ( theta < -HALF_PI && kalman_t_temp > HALF_PI ) ||
-        ( theta > HALF_PI && kalman_t_temp < -HALF_PI ) )
+    double v = kinetics.rot_f[0].value;
+    if( ( theta < -HALF_PI && v > HALF_PI ) ||
+        ( theta > HALF_PI  && v < -HALF_PI ) )
     {
-    	kinetics.rot_f[1].value  = theta;
-    	kinetics.rot[1]          = theta;
+
+        rot[0] = this->rot_f[0].value;
+    	kinetics.rot[1] = phi;
     }
     else
     {
-        /* Calculate the true pitch using a kalman_t filter */
-        updateKalman( &kinetics.rot_f[1], theta, gyro[1], delta_t );
+        double dt = millis() - kinetics.rot_f[0].timestamp;
+        updateKalman( &rot_f[0], phi, gyro[0], dt );
         kinetics.rot[1] = kinetics.rot_f[1].value;
     }
 
-    kalman_t_temp = absl(kinetics.rot_f[1].value);
-    if (kalman_t_temp > HALF_PI)
+    double dt = millis() - kinetics.rot_f[1].timestamp;
+    if (v > HALF_PI)
     {
         /* Invert rate, so it fits the restricted accelerometer reading */
         gyro[0] = -gyro[0];
     }
     /* Calculate the true roll using a kalman_t filter */
-    updateKalman( &kinetics.rot_f[0], phi, gyro[0], delta_t );
-    kinetics.rot[0] = kinetics.rot_f[0].value;
+    updateKalman( &kinetics.rot_f[1], phi, gyro[1], dt );
+    kinetics.rot[1] = kinetics.rot_f[1].value;
     /* Calculate the true yaw using a kalman_t filter */
-    updateKalman( &kinetics.rot_f[2], psi, gyro[2], delta_t );
+    updateKalman( &kinetics.rot_f[2], psi, gyro[2], dt );
 }

@@ -304,36 +304,60 @@ double convertGyro( uint16_t data )
 /******************************************************************************
  * Rotation Calculation
  *****************************************************************************/
-/* See - http://www.nxp.com/files/sensors/doc/app_note/AN3461.pdf */
+/* See - http://www.nxp.com/files/sensors/doc/app_note/AN3461.pdf and
+       - http://www.nxp.com/assets/documents/data/en/application-notes/AN4248.pdf
+ */
 
 /**************************************************************************//**
- * \brief Get roll angle from accelerometer data
- * \param[out] Return value
+ * \brief Get roll angle (phi) from accelerometer data
+ * \param[out] Return roll
  *****************************************************************************/
 double getRoll( void )
 {
-	double y = sign( acc[2] ) * sqrt( ( acc[2] * acc[2] ) + ( MU * ( acc[0] * acc[0] ) ) );
-    return atan2( acc[1], y ); // Eqn. 38
+    double den = sqrt( ( ( acc[1] * acc[1] ) + ( acc[2] * acc[2] ) ) );
+    return atan2( -acc[0], den );
+}
+/**************************************************************************//**
+ * \brief Get roll angle (phi) error from accelerometer data
+ * \param[out] Return roll error
+ *****************************************************************************/
+double getRollError( void )
+{
+    double sin_phi   = sin( this.roll );
+    double sin_theta = sin( this.pitch );
+    double cos_phi   = cos( this.roll );
+    double cos_theta = cos( this.pitch );
+    double cos_theta_cos_phi = cos_theta * cos_phi;
+    double mu_sin_2_theta = MU * ( sin_theta * sin_theta );
+    double factor = sqrt( ( cos_theta_cos_phi * cos_theta_cos_phi ) + mu_sin_2_theta );
+    double num = sin_phi * ( cos_theta_cos_phi - factor );
+    double den = ( cos_theta * ( sin_phi * sin_phi ) ) + ( cos_phi * factor );
+    return atan2( num, den );
 }
 
 /**************************************************************************//**
- * \brief Get pitch angle from accelerometer data
- * \param[out] Return value
+ * \brief Get pitch angle (theta) from accelerometer data
+ * \param[out] Return pitch
  *****************************************************************************/
 double getPitch( void )
 {
-    double y = sqrt( ( myIMU.ay * myIMU.ay ) + ( myIMU.az * myIMU.az ) );
-    return atan2( -myIMU.ax, y ); // Eqn. 37
+    double den = sign( acc[2] ) * sqrt( ( ( acc[2] * acc[2] ) + ( MU * ( acc[0] * acc[0] ) ) ) );
+    return atan2( acc[1], den );
 }
 
 /**************************************************************************//**
- * \brief Get yaw angle from accelerometer data
- * \param[out] Return value
+ * \brief Get yaw angle (psi) from magnetometer data, pitch, and roll
+ * \param[out] Return yaw
  *****************************************************************************/
 double getYaw( void )
 {
-    double y = sqrt( ( myIMU.ax * myIMU.ax ) + ( myIMU.ay * myIMU.ay ) );
-    return atan2( -myIMU.az, y ); // Eqn. 37
+    double sin_phi   = sin( this.roll );
+    double sin_theta = sin( this.pitch );
+    double cos_phi   = cos( this.roll );
+    double cos_theta = cos( this.pitch );
+    double num = ( mag[2] * sin_phi ) - ( mag[1] * cos_phi );
+    double den = ( mag[0] * cos_theta ) + ( mag[1] * ( sin_theta * sin_phi ) ) + ( mag[2] * ( sin_theta * cos_phi ) );
+    return atan2( num, den );
 }
 
 /**************************************************************************//**
