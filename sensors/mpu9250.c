@@ -1,5 +1,5 @@
 /***********************************************************************************************//**
- * \file   imu.c
+ * \file   mpu9250.c
  * \brief  IMU Control
  ***************************************************************************************************
  *      Author: Matthew Fonken
@@ -16,7 +16,7 @@
 #include "i2c_sp.h"
 
 /* Own header */
-#include "imu.h"
+#include "mpu9250.h"
 
 /* Math headers */
 #include "matrix.h"
