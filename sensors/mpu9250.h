@@ -16,6 +16,7 @@
 
 /* Included types header */
 #include "kinetic_types.h"
+#include "mpu9250_regs.h"
 
 /***********************************************************************************************//**
  * @addtogroup Application
@@ -27,14 +28,12 @@
  * @{
  **************************************************************************************************/
 
-
-#define IMU_ADDR 	0xd4
-#define IMU_ID	 	0x69
-
-
-extern uint8_t acc[3];
+extern uint8_t accel[3];
+extern uint8_t accel_bias[3];
 extern uint8_t gyro[3];
-
+extern uint8_t gyro_bias[3];
+extern uint8_t mag[3];
+extern uint8_t mag_bias[3];
 
 /***************************************************************************************************
  Local Functions
@@ -71,7 +70,7 @@ bool 		IMU_Init( void );
  * \brief Read IMU accel and gyro data
  * \param[in] read_data Array to store read data
  *****************************************************************************/
-void 	 	IMU_Read( uint16_t *read_data );
+void 	 	IMU_Update( void );
 
 /**************************************************************************//**
  * \brief Convert accelerometer data to readable double value
@@ -137,67 +136,14 @@ double 		getTempF( void );
 double 		getTempC( void );
 
 /***************************************************************************************************
- Local Types
- **************************************************************************************************/
-
-/** FIFO Mode Options */
-enum fifo_modes
-{
-	BYPASS_MODE             = 0,
-	FIFO_ACTIVE_MODE        = 1,
-	CONTINUOUS_MODE         = 6,
-	CONT_TO_FIFO_MODE       = 3,
-	BYPASS_TO_CONT_MODE     = 4,
-};
-
-
-/***************************************************************************************************
  Local Structures
  **************************************************************************************************/
 
-
-
-/** IMU General Settings */
-typedef struct _IMU_General_Settings
+typedef struct
 {
-    uint8_t
-    uint8_t fsync_en;
-} IMU_General_Settings;
-
-/** IMU FIFO Settings */
-typedef struct _IMU_FIFO_Settings
-{
-    uint16_t  sampleRate;               /**< FIFO sample rate           */
-    uint16_t  threshold;                /**< FIFO collection threshold  */
-    fifo_mode mode;                     /**< FIFO mode                  */
-} IMU_FIFO_Settings;
-
-/** IMU Gyroscope Settings */
-typedef struct _IMU_Gyro_Settings
-{
-    bool  	 enabled;                   /**< Gyro enable control        */
-    uint16_t scale;                     /**< Gyro dps scale             */
-    uint16_t fchoice;                   /**< Gyro fchoice               */
-} IMU_Gyro_Settings;
-
-/** IMU Accelerometer Settings */
-typedef struct _IMU_Accel_Settings
-{
-    bool  	 enabled;                   /**< Accel enable control       */
-    uint8_t  scale;                     /**< Accel dps range            */
-    uint8_t  fchoice;                   /**< Accel bandwidth            */
-    uint8_t  dlpfConfig;
-    //bool	 dataReadyEnabled;          /**< Accel data ready enable    */
-};
-
-/** IMU Settings */
-typedef struct _IMU_Settings
-{
-    IMU_General_Settings 	general;    /**< IMU general settings       */
-    IMU_FIFO_Settings  		fifo;       /**< IMU FIFO settings          */
-    IMU_Gyro_Settings  		gyro;       /**< IMU gyro settings          */
-    IMU_Accel_Settings 		accel;      /**< IMU accel settings         */
-} IMU_Settings;
+    imu_t               imu;
+    mpu9250_global_t    settings;
+} mpu9250_t;
 
 /** @} (end addtogroup imu) */
 /** @} (end addtogroup Application) */

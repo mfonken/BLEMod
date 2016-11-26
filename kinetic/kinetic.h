@@ -95,7 +95,7 @@ void getAbsolutePosition( void );
 /***********************************************************************************************//**
  *  \brief  Update IMU data and filter
  **************************************************************************************************/
-void IMU_Update( void );
+void Kalman_Update( void );
 
     
 /** @} (end addtogroup kinetic) */

@@ -12,7 +12,6 @@
 /***************************************************************************************************
  Local Variables
  **************************************************************************************************/
-mpu9250_global_t this;
 
 /***************************************************************************************************
  Local Functions
@@ -44,9 +43,34 @@ void mpu9250_SetRegister( regAddr reg, uint8_t val )
 }
 
 /**************************************************************************//**
+ * \brief Get register value from MPU9250 Magnometer
+ * \param[out] Return value from register
+ * \param[in] reg Register to access
+ *****************************************************************************/
+uint8_t mpu9250_GetMagRegister( regAddr reg )
+{
+    uint8_t i2c_read_data[1];
+    I2C_Read( MAG_ADDR, reg, i2c_read_data, 1 );
+    return i2c_read_data[0];
+}
+
+/**************************************************************************//**
+ * \brief Set register value on MPU9250 Magnometer
+ * \param[in] reg Register to access
+ * \param[in] val Value to set
+ *****************************************************************************/
+void mpu9250_SetMagRegister( regAddr reg, uint8_t val )
+{
+    uint8_t i2c_write_data[2];
+    i2c_write_data[0] = reg;
+    i2c_write_data[0] = val;
+    I2C_Write( MAG_ADDR, i2c_write_data, 2 );
+}
+
+/**************************************************************************//**
  * \brief Initialize MPU9250 with default values
  *****************************************************************************/
-void mpu9250_defaultInit( void )
+void mpu9250_defaultInit( mpu9250_global_t * this )
 {
     this.config.general.fifoMode   = FIFO_MODE_DEFAULT;
     this.config.general.fsyncMode  = EXT_FSYNC_MODE_DEFAULT;

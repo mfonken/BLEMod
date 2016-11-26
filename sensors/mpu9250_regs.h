@@ -9,6 +9,9 @@
 #ifndef mpu9250_regs_h
 #define mpu9250_regs_h
 
+#include <stdint.h>
+#include <stdbool.h>
+
 /***********************************************************************************************//**
  * @addtogroup Application
  * @{
@@ -18,6 +21,12 @@
  * @addtogroup imu
  * @{
  **************************************************************************************************/
+
+/***************************************************************************************************
+ Device Addresses
+ **************************************************************************************************/
+#define IMU_ADDR                0x68
+#define MAG_ADDR                0x0C
 
 /***************************************************************************************************
  Accel and Gyro Registers
@@ -127,7 +136,6 @@
 /***************************************************************************************************
  Magnometer Registers
  **************************************************************************************************/
-#define MAG_ADDRESS             0x0C
 #define MAG_WIA                 0x00
 #define MAG_INFO                0x01
 #define MAG_ST1                 0x02
@@ -148,6 +156,10 @@
 #define MAG_ASAY                0x11
 #define MAG_ASAZ                0x12
 
+#define MAG_BIAS_X               470
+#define MAG_BIAS_Y               120
+#define MAG_BIAS_Z               125
+
 //Magnetometer register masks
 #define WIA_MASK 0x48
 
@@ -156,7 +168,18 @@
  **************************************************************************************************/
 
 /* System Value */
-#define WHO_AM_I                0x71
+#define IMU_ID                  0x71
+
+/* Biases */
+#define ACCEL_BIAS_X               0
+#define ACCEL_BIAS_Y               0
+#define ACCEL_BIAS_Z               0
+#define GYRO_BIAS_X                0
+#define GYRO_BIAS_Y                0
+#define GYRO_BIAS_Z                0
+#define MAG_BIAS_X               470
+#define MAG_BIAS_Y               120
+#define MAG_BIAS_Z               125
 
 /* FIFO Modes */
 #define FIFO_MODE_NO_OVWR       1
@@ -202,7 +225,7 @@ typedef struct
     uint8_t dlpfConfig  :3;                 /**< Digital low pass filter configuration */
     uint8_t fsyncMode   :3;                 /**< FSYNC latch mode                      */
     uint8_t fifoMode    :1;                 /**< FIFO write mode configuration         */
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED    :1;
 } mpu9250_gen_config_t;
 
 /* Gyro fchoice option to enable normal fs bandwidth options */
@@ -214,16 +237,16 @@ typedef struct
 /* Gyro bandwidth options set through its DLPF */
 enum mpu9250_gyro_bandwidth
 {
-    GYRO_BANDWIDTH_8800HZ_HIGH_FS = 0xFD;   /**< 8.8kHz Bandwidth with 32kHs Fs */
-    GYRO_BANDWIDTH_3600HZ_HIGH_FS = 0xFE;   /**< 3.6kHz Bandwidth with 32kHs Fs */
-    GYRO_BANDWIDTH_3600HZ   = 0x07;         /**< 3.6kHz Bandwidth with 8kHs Fs  */
-    GYRO_BANDWIDTH_250HZ    = 0x00;         /**<  250Hz Bandwidth with 1kHs Fs  */
-    GYRO_BANDWIDTH_184HZ    = 0x01;         /**<  184Hz Bandwidth with 1kHs Fs  */
-    GYRO_BANDWIDTH_92HZ     = 0x02;         /**<   92Hz Bandwidth with 1kHs Fs  */
-    GYRO_BANDWIDTH_41HZ     = 0x03;         /**<   41Hz Bandwidth with 1kHs Fs  */
-    GYRO_BANDWIDTH_20HZ     = 0x04;         /**<   20Hz Bandwidth with 1kHs Fs  */
-    GYRO_BANDWIDTH_10HZ     = 0x05;         /**<   10Hz Bandwidth with 1kHs Fs  */
-    GYRO_BANDWIDTH_5HZ      = 0x06;         /**<    5Hz Bandwidth with 1kHs Fs  */
+    GYRO_BANDWIDTH_8800HZ_HIGH_FS   = 0xFD, /**< 8.8kHz Bandwidth with 32kHs Fs */
+    GYRO_BANDWIDTH_3600HZ_HIGH_FS   = 0xFE, /**< 3.6kHz Bandwidth with 32kHs Fs */
+    GYRO_BANDWIDTH_3600HZ           = 0x07, /**< 3.6kHz Bandwidth with 8kHs Fs  */
+    GYRO_BANDWIDTH_250HZ            = 0x00, /**<  250Hz Bandwidth with 1kHs Fs  */
+    GYRO_BANDWIDTH_184HZ            = 0x01, /**<  184Hz Bandwidth with 1kHs Fs  */
+    GYRO_BANDWIDTH_92HZ             = 0x02, /**<   92Hz Bandwidth with 1kHs Fs  */
+    GYRO_BANDWIDTH_41HZ             = 0x03, /**<   41Hz Bandwidth with 1kHs Fs  */
+    GYRO_BANDWIDTH_20HZ             = 0x04, /**<   20Hz Bandwidth with 1kHs Fs  */
+    GYRO_BANDWIDTH_10HZ             = 0x05, /**<   10Hz Bandwidth with 1kHs Fs  */
+    GYRO_BANDWIDTH_5HZ              = 0x06, /**<    5Hz Bandwidth with 1kHs Fs  */
 };
 
 /* Enables all X(0x01), Y(0x02), and Z(0x04) gyros */
@@ -233,7 +256,7 @@ enum mpu9250_gyro_bandwidth
 typedef struct
 {
     uint8_t fchoice     :2;                 /**< Fchoice config for gyro         */
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED    :1;
     uint8_t fscale      :2;                 /**< Fscale config for gyro          */
     uint8_t enable      :3;                 /**< Enable config for gyro channels */
 } mpu9250_gyro_config_t;
@@ -251,14 +274,14 @@ typedef struct
 /* Accel bandwidth options set through its DLPF */
 enum mpu9250_accel_bandwidth
 {
-    ACCEL_BANDWIDTH_113KHZ = 0xFF;          /**< 113kHz Bandwith with 4kHs Rate */
-    ACCEL_BANDWIDTH_460HZ  = 0x00;          /**<  460Hz Bandwith with 1kHs Rate */
-    ACCEL_BANDWIDTH_184HZ  = 0x01;          /**<  184Hz Bandwith with 1kHs Rate */
-    ACCEL_BANDWIDTH_92HZ   = 0x02;          /**<   92Hz Bandwith with 1kHs Rate */
-    ACCEL_BANDWIDTH_41HZ   = 0x03;          /**<   41Hz Bandwith with 1kHs Rate */
-    ACCEL_BANDWIDTH_20HZ   = 0x04;          /**<   20Hz Bandwith with 1kHs Rate */
-    ACCEL_BANDWIDTH_10HZ   = 0x05;          /**<   10Hz Bandwith with 1kHs Rate */
-    ACCEL_BANDWIDTH_5HZ    = 0x06;          /**<    5Hz Bandwith with 1kHs Rate */
+    ACCEL_BANDWIDTH_113KHZ          = 0xFF, /**< 113kHz Bandwith with 4kHs Rate */
+    ACCEL_BANDWIDTH_460HZ           = 0x00, /**<  460Hz Bandwith with 1kHs Rate */
+    ACCEL_BANDWIDTH_184HZ           = 0x01, /**<  184Hz Bandwith with 1kHs Rate */
+    ACCEL_BANDWIDTH_92HZ            = 0x02, /**<   92Hz Bandwith with 1kHs Rate */
+    ACCEL_BANDWIDTH_41HZ            = 0x03, /**<   41Hz Bandwith with 1kHs Rate */
+    ACCEL_BANDWIDTH_20HZ            = 0x04, /**<   20Hz Bandwith with 1kHs Rate */
+    ACCEL_BANDWIDTH_10HZ            = 0x05, /**<   10Hz Bandwith with 1kHs Rate */
+    ACCEL_BANDWIDTH_5HZ             = 0x06, /**<    5Hz Bandwith with 1kHs Rate */
 };
 
 /* Enables all X(0x01), Y(0x02), and Z(0x04) accelerometers */
@@ -269,7 +292,7 @@ typedef struct
 {
     uint8_t dlpfConfig  :3;                 /**< Digital low pass filter configuration */
     uint8_t fchoice     :1;                 /**< Fchoice config for accel              */
-    uint8_t _RESERVED   :7;
+    uint8_t RESERVED    :7;
     uint8_t fscale      :2;                 /**< Fscale config for accel               */
     uint8_t enable      :3;                 /**< Enable config for accel channels      */
 } mpu9250_accel_config_t;
@@ -279,18 +302,18 @@ typedef struct
 #define ACCEL_FULL_SCALE_4G     1
 #define ACCEL_FULL_SCALE_8G     2
 #define ACCEL_FULL_SCALE_16G    3
-#define ACCEL_INTEL_EN_LOC   7
-#define ACCEL_INTEL_MODE_LOC 6
+#define ACCEL_INTEL_EN_LOC      7
+#define ACCEL_INTEL_MODE_LOC    6
 
 /* Accel Motion Interrupt Config */
 #define ACCEL_INTEL_EN   DISABLE
 #define ACCEL_INTEL_MODE DISABLE
-#define ACCEL_INTEL ( ACCEL_INTEL_EN   << ACCEL_INTEL_EN_LOC   \
-                      ACCEL_INTEL_MODE << ACCEL_INTEL_MODE_LOC \
+#define ACCEL_INTEL ( ACCEL_INTEL_EN   << ACCEL_INTEL_EN_LOC   || \
+                      ACCEL_INTEL_MODE << ACCEL_INTEL_MODE_LOC )
 /* Accel Motion Register Type */
 typedef struct
 {
-    uint8_t _RESERVED   :6;
+    uint8_t RESERVED    :6;
     uint8_t intel_mode  :1;                 /**< Accel motion interrupt mode   */
     uint8_t intel_en    :1;                 /**< Accel motion interrupt enable */
 } mpu9250_accel_interrupt_t;
@@ -298,25 +321,25 @@ typedef struct
 /* Low-Power Accel Output Data Rate Options */
 enum mpu9250_accel_lp_odr
 {
-    ACCEL_LP_ODR__240HZ      =  0,          /**<  0.24Hz low-power accel output frequency */
-    ACCEL_LP_ODR__490HZ      =  1,          /**<  0.49Hz low-power accel output frequency */
-    ACCEL_LP_ODR__980HZ      =  2,          /**<  0.98Hz low-power accel output frequency */
-    ACCEL_LP_ODR_1_950HZ     =  3,          /**<  1.95Hz low-power accel output frequency */
-    ACCEL_LP_ODR_3_910HZ     =  4,          /**<  3.91Hz low-power accel output frequency */
-    ACCEL_LP_ODR_7_810HZ     =  5,          /**<  7.81Hz low-power accel output frequency */
-    ACCEL_LP_ODR_15_630HZ    =  6,          /**< 15.63Hz low-power accel output frequency */
-    ACCEL_LP_ODR_31_250HZ    =  7,          /**< 31.25Hz low-power accel output frequency */
-    ACCEL_LP_ODR_62_500HZ    =  8,          /**< 62.50Hz low-power accel output frequency */
-    ACCEL_LP_ODR_125HZ       =  9,          /**<   125Hz low-power accel output frequency */
-    ACCEL_LP_ODR_250HZ       = 10,          /**<   250Hz low-power accel output frequency */
-    ACCEL_LP_ODR_500HZ       = 11,          /**<   500Hz low-power accel output frequency */
+    ACCEL_LP_ODR__240HZ             =  0,   /**<  0.24Hz low-power accel output frequency */
+    ACCEL_LP_ODR__490HZ             =  1,   /**<  0.49Hz low-power accel output frequency */
+    ACCEL_LP_ODR__980HZ             =  2,   /**<  0.98Hz low-power accel output frequency */
+    ACCEL_LP_ODR_1_950HZ            =  3,   /**<  1.95Hz low-power accel output frequency */
+    ACCEL_LP_ODR_3_910HZ            =  4,   /**<  3.91Hz low-power accel output frequency */
+    ACCEL_LP_ODR_7_810HZ            =  5,   /**<  7.81Hz low-power accel output frequency */
+    ACCEL_LP_ODR_15_630HZ           =  6,   /**< 15.63Hz low-power accel output frequency */
+    ACCEL_LP_ODR_31_250HZ           =  7,   /**< 31.25Hz low-power accel output frequency */
+    ACCEL_LP_ODR_62_500HZ           =  8,   /**< 62.50Hz low-power accel output frequency */
+    ACCEL_LP_ODR_125HZ              =  9,   /**<   125Hz low-power accel output frequency */
+    ACCEL_LP_ODR_250HZ              = 10,   /**<   250Hz low-power accel output frequency */
+    ACCEL_LP_ODR_500HZ              = 11,   /**<   500Hz low-power accel output frequency */
 };
 
 /* Low-Power Accel Output Data Rate Register Type */
 typedef struct
 {
     uint8_t lposc_clsel :4;                 /**< Low-power oscillator clock select */
-    uint8_t _RESERVED   :4;
+    uint8_t RESERVED    :4;
 } mpu9250_accel_lp_odr_t;
 
 /***************************************************************************************************
@@ -340,7 +363,7 @@ typedef struct
 #define FIFO_ENABLE_TEMP_LOC    7
 #define FIFO_ENABLE_GYRO_X_LOC  6
 #define FIFO_ENABLE_GYRO_Y_LOC  5
-#define FIFO_ENABLE_GYRO_Z_LO   4
+#define FIFO_ENABLE_GYRO_Z_LOC  4
 #define FIFO_ENABLE_ACCEL_LOC   3
 #define FIFO_ENABLE_SLV_2_LOC   2
 #define FIFO_ENABLE_SLV_1_LOC   1
@@ -357,14 +380,14 @@ typedef struct
 #define FIFO_ENABLE_SLV_0       false
 
 /* FIFO Enable Register Define Config */
-#define FIFO_ENABLE   ( FIFO_ENABLE_TEMP   << FIFO_ENABLE_TEMP_LOC   \
-FIFO_ENABLE_GYRO_X << FIFO_ENABLE_GYRO_X_LOC \
-FIFO_ENABLE_GYRO_Y << FIFO_ENABLE_GYRO_Y_LOC \
-FIFO_ENABLE_GYRO_Z << FIFO_ENABLE_GYRO_Z_LOC \
-FIFO_ENABLE_ACCEL  << FIFO_ENABLE_ACCEL_LOC  \
-FIFO_ENABLE_SLV_2  << FIFO_ENABLE_SLV_2_LOC  \
-FIFO_ENABLE_SLV_1  << FIFO_ENABLE_SLV_2_LOC  \
-FIFO_ENABLE_SLV_0  << FIFO_ENABLE_SLV_0_LOC  )
+#define FIFO_ENABLE   ( FIFO_ENABLE_TEMP   << FIFO_ENABLE_TEMP_LOC   || \
+                        FIFO_ENABLE_GYRO_X << FIFO_ENABLE_GYRO_X_LOC || \
+                        FIFO_ENABLE_GYRO_Y << FIFO_ENABLE_GYRO_Y_LOC || \
+                        FIFO_ENABLE_GYRO_Z << FIFO_ENABLE_GYRO_Z_LOC || \
+                        FIFO_ENABLE_ACCEL  << FIFO_ENABLE_ACCEL_LOC  || \
+                        FIFO_ENABLE_SLV_2  << FIFO_ENABLE_SLV_2_LOC  || \
+                        FIFO_ENABLE_SLV_1  << FIFO_ENABLE_SLV_2_LOC  || \
+                        FIFO_ENABLE_SLV_0  << FIFO_ENABLE_SLV_0_LOC  )
 
 /***************************************************************************************************
  I2C Master Types and Definitions
@@ -373,22 +396,22 @@ FIFO_ENABLE_SLV_0  << FIFO_ENABLE_SLV_0_LOC  )
 /* I2C Master Clock Options */
 enum mpu9250_i2c_master_clk
 {
-    I2C_MCLK_348KHZ     =  0,          /**<  348kHz I2C master clock frequency */
-    I2C_MCLK_333KHZ     =  1,          /**<  333kHz I2C master clock frequency */
-    I2C_MCLK_320KHZ     =  2,          /**<  320kHz I2C master clock frequency */
-    I2C_MCLK_308KHZ     =  3,          /**<  308kHz I2C master clock frequency */
-    I2C_MCLK_296KHZ     =  4,          /**<  296kHz I2C master clock frequency */
-    I2C_MCLK_286KHZ     =  5,          /**<  286kHz I2C master clock frequency */
-    I2C_MCLK_376KHZ     =  6,          /**<  276kHz I2C master clock frequency */
-    I2C_MCLK_267KHZ     =  7,          /**<  267kHz I2C master clock frequency */
-    I2C_MCLK_258KHZ     =  8,          /**<  258kHz I2C master clock frequency */
-    I2C_MCLK_500KHZ     =  9,          /**<  500kHz I2C master clock frequency */
-    I2C_MCLK_471KHZ     = 10,          /**<  471kHz I2C master clock frequency */
-    I2C_MCLK_444KHZ     = 11,          /**<  444kHz I2C master clock frequency */
-    I2C_MCLK_421KHZ     = 12,          /**<  421kHz I2C master clock frequency */
-    I2C_MCLK_400KHZ     = 13,          /**<  400kHz I2C master clock frequency */
-    I2C_MCLK_381KHZ     = 14,          /**<  381kHz I2C master clock frequency */
-    I2C_MCLK_364KHZ     = 15,          /**<  364kHz I2C master clock frequency */
+    I2C_MCLK_348KHZ                 =  0,   /**<  348kHz I2C master clock frequency */
+    I2C_MCLK_333KHZ                 =  1,   /**<  333kHz I2C master clock frequency */
+    I2C_MCLK_320KHZ                 =  2,   /**<  320kHz I2C master clock frequency */
+    I2C_MCLK_308KHZ                 =  3,   /**<  308kHz I2C master clock frequency */
+    I2C_MCLK_296KHZ                 =  4,   /**<  296kHz I2C master clock frequency */
+    I2C_MCLK_286KHZ                 =  5,   /**<  286kHz I2C master clock frequency */
+    I2C_MCLK_376KHZ                 =  6,   /**<  276kHz I2C master clock frequency */
+    I2C_MCLK_267KHZ                 =  7,   /**<  267kHz I2C master clock frequency */
+    I2C_MCLK_258KHZ                 =  8,   /**<  258kHz I2C master clock frequency */
+    I2C_MCLK_500KHZ                 =  9,   /**<  500kHz I2C master clock frequency */
+    I2C_MCLK_471KHZ                 = 10,   /**<  471kHz I2C master clock frequency */
+    I2C_MCLK_444KHZ                 = 11,   /**<  444kHz I2C master clock frequency */
+    I2C_MCLK_421KHZ                 = 12,   /**<  421kHz I2C master clock frequency */
+    I2C_MCLK_400KHZ                 = 13,   /**<  400kHz I2C master clock frequency */
+    I2C_MCLK_381KHZ                 = 14,   /**<  381kHz I2C master clock frequency */
+    I2C_MCLK_364KHZ                 = 15,   /**<  364kHz I2C master clock frequency */
 };
 
 /* I2C Master Control Type */
@@ -408,7 +431,7 @@ typedef struct
 /* INT Pin Config Type */
 typedef struct
 {
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED    :1;
     uint8_t bypass_en   :1;             /**< Set I2C master pins to "bypass mode"   */
     uint8_t fsync_md_en :1;             /**< Enable FSYNC pin to be an interrupt    */
     uint8_t actl_fsync  :1;             /**< Acitve level of FSYNC pin as interrupt */
@@ -437,24 +460,24 @@ typedef struct
 #define INT_PIN_BYPS_EN      HIGH
 
 /* INT PIN Register Define Config */
-#define INT_PIN   ( INT_PIN_ACTL     << INT_PIN_ACTL_LOC     \
-                    INT_PIN_OPEN     << INT_PIN_OPEN_LOC     \
-                    INT_PIN_LTCH_EN  << INT_PIN_LTCH_EN_LOC  \
-                    INT_PIN_ANYRD_C  << INT_PIN_ANYRD_C_LOC  \
-                    INT_PIN_ACTL_FS  << INT_PIN_ACTL_FS_LOC  \
-                    INT_PIN_FSYNC_EN << INT_PIN_FSYNC_EN_LOC \
+#define INT_PIN   ( INT_PIN_ACTL     << INT_PIN_ACTL_LOC     || \
+                    INT_PIN_OPEN     << INT_PIN_OPEN_LOC     || \
+                    INT_PIN_LTCH_EN  << INT_PIN_LTCH_EN_LOC  || \
+                    INT_PIN_ANYRD_C  << INT_PIN_ANYRD_C_LOC  || \
+                    INT_PIN_ACTL_FS  << INT_PIN_ACTL_FS_LOC  || \
+                    INT_PIN_FSYNC_EN << INT_PIN_FSYNC_EN_LOC || \
                     INT_PIN_BYPS_EN  << INT_PIN_BYPS_EN_LOC  )
 
 /* Interrupt Enable Type */
 typedef struct
 {
     uint8_t raw_rdy_en  :1;             /**< Enable raw sensor data ready interrupt */
-    uint8_t _RESERVED   :2;
+    uint8_t RESERVED1   :2;
     uint8_t fsync_int_en :1;            /**< Enable FSYNC interrupt                 */
     uint8_t fifo_ovfw_en :1;            /**< Enable FIFO overflow interrupt         */
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED2   :1;
     uint8_t wom_en      :1;             /**< Enable wake on motion interrupt        */
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED3   :1;
 } mpu9250_int_enable_t;
 
 /* INT Enable Register Locations */
@@ -470,21 +493,21 @@ typedef struct
 #define INT_ENABLE_RAW_RDY_EN   DISABLE
 
 /* INT Enable Register Define Config */
-#define INT_ENABLE    ( INT_ENABLE_WOM_EN       << INT_ENABLE_WOM_EN_LOC       \
-                        INT_ENABLE_FIFO_OVFL_EN << INT_ENABLE_FIFO_OVFL_EN_LOC \
-                        INT_ENABLE_FSYNC_INT_EN << INT_ENABLE_FSYNC_INT_EN_LOC \
-                        INT_ENABLE_RAW_RDY_EN   << INT_ENABLE_RAW_RDY_EN_LOC   )
+#define INT_ENABLE_CONFIG ( INT_ENABLE_WOM_EN       << INT_ENABLE_WOM_EN_LOC       || \
+                            INT_ENABLE_FIFO_OVFL_EN << INT_ENABLE_FIFO_OVFL_EN_LOC || \
+                            INT_ENABLE_FSYNC_INT_EN << INT_ENABLE_FSYNC_INT_EN_LOC || \
+                            INT_ENABLE_RAW_RDY_EN   << INT_ENABLE_RAW_RDY_EN_LOC   )
 
 /* Interrupt Status Type */
 typedef struct
 {
     uint8_t raw_rdy_int :1;             /**< Raw sensor data ready interrupt */
-    uint8_t _RESERVED   :2;
+    uint8_t RESERVED1   :2;
     uint8_t fsync_int_int :1;           /**< FSYNC interrupt                 */
     uint8_t fifo_ovfw_int :1;           /**< FIFO overflow interrupt         */
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED2   :1;
     uint8_t wom_int     :1;             /**< Wake on motion interrupt        */
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED3   :1;
 } mpu9250_int_status_t;
 
 /* INT Status Register Locations */
@@ -500,10 +523,10 @@ typedef struct
 #define INT_STATUS_RAW_RDY_EN   DISABLE
 
 /* INT Status Register Define Config */
-#define INT_STATUS    ( INT_STATUS_WOM_EN       << INT_STATUS_WOM_EN_LOC       \
-                        INT_STATUS_FIFO_OVFL_EN << INT_STATUS_FIFO_OVFL_EN_LOC \
-                        INT_STATUS_FSYNC_INT_EN << INT_STATUS_FSYNC_INT_EN_LOC \
-                        INT_STATUS_RAW_RDY_EN   << INT_STATUS_RAW_RDY_EN_LOC   )
+#define INT_STATUS_CONFIG ( INT_STATUS_WOM_EN       << INT_STATUS_WOM_EN_LOC       || \
+                            INT_STATUS_FIFO_OVFL_EN << INT_STATUS_FIFO_OVFL_EN_LOC || \
+                            INT_STATUS_FSYNC_INT_EN << INT_STATUS_FSYNC_INT_EN_LOC || \
+                            INT_STATUS_RAW_RDY_EN   << INT_STATUS_RAW_RDY_EN_LOC   )
 
 /***************************************************************************************************
  User Control Types and Definitions
@@ -515,11 +538,11 @@ typedef struct
     uint8_t sig_cond_rst :1;            /**< Reset gyro, accel, and temp digital signal paths */
     uint8_t i2c_m_rst   :1;             /**< Reset I2C master module                          */
     uint8_t fifo_rst    :1;             /**< Reset FIFO module                                */
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED1   :1;
     uint8_t i2c_if_dis  :1;             /**< Reset I2C slave module and enter SPI mode only   */
     uint8_t i2c_m_en    :1;             /**< Reset I2C master I/F module                      */
     uint8_t fifo_en     :1;             /**< Enable FIFO operation                            */
-    uint8_t _RESERVED   :1;
+    uint8_t RESERVED2   :1;
 } mpu9250_usr_control_t;
 
 /* User Config Register Locations */
@@ -539,11 +562,11 @@ typedef struct
 #define USER_CONFIG_SIGCOND_RST DISABLE
 
 /* User Config Define Config */
-#define USER_CONFIG   ( USER_CONFIG_FIFO_EN     << USER_CONFIG_FIFO_EN_LOC     \
-                        USER_CONFIG_I2C_MST_EN  << USER_CONFIG_I2C_MST_EN_LOC  \
-                        USER_CONFIG_I2C_IF_DIS  << USER_CONFIG_I2C_IF_DIS_LOC  \
-                        USER_CONFIG_FIFO_RST    << USER_CONFIG_FIFO_RST_LOC    \
-                        USER_CONFIG_I2C_MST_RST << USER_CONFIG_I2C_MST_RST_LOC \
+#define USER_CONFIG   ( USER_CONFIG_FIFO_EN     << USER_CONFIG_FIFO_EN_LOC     || \
+                        USER_CONFIG_I2C_MST_EN  << USER_CONFIG_I2C_MST_EN_LOC  || \
+                        USER_CONFIG_I2C_IF_DIS  << USER_CONFIG_I2C_IF_DIS_LOC  || \
+                        USER_CONFIG_FIFO_RST    << USER_CONFIG_FIFO_RST_LOC    || \
+                        USER_CONFIG_I2C_MST_RST << USER_CONFIG_I2C_MST_RST_LOC || \
                         USER_CONFIG_SIGCOND_RST << USER_CONFIG_SIGCOND_RST_LOC )
 
 /***************************************************************************************************
@@ -559,7 +582,7 @@ typedef struct
     uint8_t dis_za      :1;             /**< Disble Z accel */
     uint8_t dis_ya      :1;             /**< Disble Y accel */
     uint8_t dis_xa      :1;             /**< Disble X accel */
-    uint8_t _RESERVED   :2;
+    uint8_t RESERVED    :2;
     uint8_t clk_sel     :3;             /**< Clock source select                                    */
     uint8_t pd_ptat     :1;             /**< Power down internal PTAT voltage generator             */
     uint8_t gyro_stdby  :1;             /**< Enable gyro and pll circuitry, but disable sense paths */
@@ -597,17 +620,17 @@ typedef struct
 #define PWR_MGMT_DISABLE_ZG DISABLE
 
 /* Power Management Register Define Config */
-#define PWR_MGMT  ( PWR_MGMT_H_RESET    << PWR_MGMT_H_RESET_LOC    \
-                    PWR_MGMT_SLEEP      << PWR_MGMT_SLEEP_LOC      \
-                    PWR_MGMT_CYCLE      << PWR_MGMT_CYCLE_LOC      \
-                    PWR_MGMT_GYRO_STBY  << PWR_MGMT_GYRO_STBY_LOC  \
-                    PWR_MGMT_PD_PTAT    << PWR_MGMT_PD_PTAT_LOC    \
-                    PWR_MGMT_CLKSEL     << PWR_MGMT_CLKSEL         \
-                    PWR_MGMT_DISABLE_XA << PWR_MGMT_DISABLE_XA_LOC \
-                    PWR_MGMT_DISABLE_YA << PWR_MGMT_DISABLE_YA_LOC \
-                    PWR_MGMT_DISABLE_ZA << PWR_MGMT_DISABLE_ZA_LOC \
-                    PWR_MGMT_DISABLE_XG << PWR_MGMT_DISABLE_XG_LOC \
-                    PWR_MGMT_DISABLE_YG << PWR_MGMT_DISABLE_YG_LOC \
+#define PWR_MGMT  ( PWR_MGMT_H_RESET    << PWR_MGMT_H_RESET_LOC    || \
+                    PWR_MGMT_SLEEP      << PWR_MGMT_SLEEP_LOC      || \
+                    PWR_MGMT_CYCLE      << PWR_MGMT_CYCLE_LOC      || \
+                    PWR_MGMT_GYRO_STBY  << PWR_MGMT_GYRO_STBY_LOC  || \
+                    PWR_MGMT_PD_PTAT    << PWR_MGMT_PD_PTAT_LOC    || \
+                    PWR_MGMT_CLKSEL     << PWR_MGMT_CLKSEL         || \
+                    PWR_MGMT_DISABLE_XA << PWR_MGMT_DISABLE_XA_LOC || \
+                    PWR_MGMT_DISABLE_YA << PWR_MGMT_DISABLE_YA_LOC || \
+                    PWR_MGMT_DISABLE_ZA << PWR_MGMT_DISABLE_ZA_LOC || \
+                    PWR_MGMT_DISABLE_XG << PWR_MGMT_DISABLE_XG_LOC || \
+                    PWR_MGMT_DISABLE_YG << PWR_MGMT_DISABLE_YG_LOC || \
                     PWR_MGMT_DISABLE_ZG << PWR_MGMT_DISABLE_ZG_LOC )
 
 /***************************************************************************************************
@@ -638,29 +661,29 @@ typedef struct
 /* Univerisal Type */
 typedef struct
 {
-    mpu9250_config_t    config;                 /**< Universal config */
-    mpu9250_control_t   control;                /**< Universal control */
+    mpu9250_config_t            config;         /**< Universal config */
+    mpu9250_control_t           control;        /**< Universal control */
 } mpu9250_global_t;
 
-enum defaultConfig()
+enum defaultConfig
 {
-    FIFO_MODE_DEFAULT           = FIFO_MODE_OVWR;               /**< FIFO mode default                 */
-    EXT_FSYNC_MODE_DEFAULT      = EXT_FSYNC_MODE_DIS;           /**< External FSYNC mode default       */
-    GYRO_BW_DEFAULT             = GYRO_BANDWIDTH_3600HZ;        /**< Gyro bandwidth default            */
-    GYRO_FS_DEFAULT             = GYRO_FULL_SCALE_250DPS;       /**< Gyro full scale default           */
-    GYRO_EN_DEFAULT             = GYRO_EN;                      /**< Gyro enable default               */
-    ACCEL_BW_DEFAULT            = ACCEL_BANDWIDTH_460HZ;        /**< Accel bandwidth default           */
-    ACCEL_FS_DEFAULT            = ACCEL_FULL_SCALE_2G;          /**< Accel full scale default          */
-    ACCEL_LP_ODR_DEFAULT        = ACCEL_LP_ODR_240HZ;           /**< Low-power accel date rate default */
-    ACCEL_EN_DEFAULT            = ACCEL_EN;                     /**< Accel enable default              */
-    ACCEL_INTEL_DEFAULT         = ACCEL_INTEL;                  /**< Accel interrupt default           */
-    FIFO_ENABLE_DEFAULT         = FIFO_ENABLE;                  /**< FIFO enable default               */
-    INT_PIN_DEFAULT             = INT_PIN;                      /**< INT pin default                   */
-    INT_ENABLE_DEFAULT          = INT_ENABLE;                   /**< Interrupt enable default          */
-    INT_STATUS_DEFAULT          = INT_STATUS;                   /**< Interrupt status default          */
-    USER_CONFIG_DEFAULT         = USER_CONFIG;                  /**< User config default               */
-    PWR_MGMT_DEFAULT            = PWR_MGMT;                     /**< Power Management default          */
-}
+    FIFO_MODE_DEFAULT           = FIFO_MODE_OVWR,           /**< FIFO mode default                */
+    EXT_FSYNC_MODE_DEFAULT      = EXT_FSYNC_MODE_DIS,       /**< External FSYNC mode default      */
+    GYRO_BW_DEFAULT             = GYRO_BANDWIDTH_3600HZ,    /**< Gyro bandwidth default           */
+    GYRO_FS_DEFAULT             = GYRO_FULL_SCALE_250DPS,   /**< Gyro full scale default          */
+    GYRO_EN_DEFAULT             = GYRO_EN,                  /**< Gyro enable default              */
+    ACCEL_BW_DEFAULT            = ACCEL_BANDWIDTH_460HZ,    /**< Accel bandwidth default          */
+    ACCEL_FS_DEFAULT            = ACCEL_FULL_SCALE_2G,      /**< Accel full scale default         */
+    ACCEL_LP_ODR_DEFAULT        = ACCEL_LP_ODR_250HZ,       /**< Low-power accel date rate default*/
+    ACCEL_EN_DEFAULT            = ACCEL_EN,                 /**< Accel enable default             */
+    ACCEL_INTEL_DEFAULT         = ACCEL_INTEL,              /**< Accel interrupt default          */
+    FIFO_ENABLE_DEFAULT         = FIFO_ENABLE,              /**< FIFO enable default              */
+    INT_PIN_DEFAULT             = INT_PIN,                  /**< INT pin default                  */
+    INT_ENABLE_DEFAULT          = INT_ENABLE,               /**< Interrupt enable default         */
+    INT_STATUS_DEFAULT          = INT_STATUS,               /**< Interrupt status default         */
+    USER_CONFIG_DEFAULT         = USER_CONFIG,              /**< User config default              */
+    PWR_MGMT_DEFAULT            = PWR_MGMT,                 /**< Power Management default         */
+};
 
 /***************************************************************************************************
  Local Functions
@@ -671,19 +694,33 @@ enum defaultConfig()
  * \param[in] reg Register to access
  * \param[in] val Value to set
  *****************************************************************************/
-void mpu9250_SetRegister( regAddr reg, uint8_t val );
+void mpu9250_SetRegister( uint8_t reg, uint8_t val );
 
 /**************************************************************************//**
  * \brief Get register value from MPU9250
  * \param[out] Return value from register
  * \param[in] reg Register to access
  *****************************************************************************/
-uint8_t mpu9250_GetRegister( regAddr reg )
+uint8_t mpu9250_GetRegister( uint8_t reg );
+
+/**************************************************************************//**
+ * \brief Set register value on MPU9250 Magnometer
+ * \param[in] reg Register to access
+ * \param[in] val Value to set
+ *****************************************************************************/
+void mpu9250_SetMagRegister( uint8_t reg, uint8_t val );
+
+/**************************************************************************//**
+ * \brief Get register value from MPU9250 Magnometer
+ * \param[out] Return value from register
+ * \param[in] reg Register to access
+ *****************************************************************************/
+uint8_t mpu9250_GetMagRegister( uint8_t reg );
 
 /**************************************************************************//**
  * \brief Initialize MPU9250 with default values
  *****************************************************************************/
-void mpu9250_defaultInit( void );
+void mpu9250_defaultInit( mpu9250_global_t * );
 
 /**************************************************************************//**
  * \brief Update MPU9250 registers with current global configuration
