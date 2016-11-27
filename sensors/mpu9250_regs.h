@@ -5,7 +5,6 @@
  *      Author: Matthew Fonken
  **************************************************************************************************/
 
-
 #ifndef mpu9250_regs_h
 #define mpu9250_regs_h
 
@@ -290,11 +289,11 @@ enum mpu9250_accel_bandwidth
 /* Accel Config Type */
 typedef struct
 {
-    uint8_t dlpfConfig  :3;                 /**< Digital low pass filter configuration */
-    uint8_t fchoice     :1;                 /**< Fchoice config for accel              */
-    uint8_t RESERVED    :7;
-    uint8_t fscale      :2;                 /**< Fscale config for accel               */
-    uint8_t enable      :3;                 /**< Enable config for accel channels      */
+    uint16_t dlpfConfig  :3;                 /**< Digital low pass filter configuration */
+    uint16_t fchoice     :1;                 /**< Fchoice config for accel              */
+    uint16_t RESERVED    :7;
+    uint16_t fscale      :2;                 /**< Fscale config for accel               */
+    uint16_t enable      :3;                 /**< Enable config for accel channels      */
 } mpu9250_accel_config_t;
 
 /* Accel Scales */
@@ -309,7 +308,7 @@ typedef struct
 #define ACCEL_INTEL_EN   DISABLE
 #define ACCEL_INTEL_MODE DISABLE
 #define ACCEL_INTEL ( ACCEL_INTEL_EN   << ACCEL_INTEL_EN_LOC   || \
-                      ACCEL_INTEL_MODE << ACCEL_INTEL_MODE_LOC )
+ACCEL_INTEL_MODE << ACCEL_INTEL_MODE_LOC )
 /* Accel Motion Register Type */
 typedef struct
 {
@@ -381,13 +380,13 @@ typedef struct
 
 /* FIFO Enable Register Define Config */
 #define FIFO_ENABLE   ( FIFO_ENABLE_TEMP   << FIFO_ENABLE_TEMP_LOC   || \
-                        FIFO_ENABLE_GYRO_X << FIFO_ENABLE_GYRO_X_LOC || \
-                        FIFO_ENABLE_GYRO_Y << FIFO_ENABLE_GYRO_Y_LOC || \
-                        FIFO_ENABLE_GYRO_Z << FIFO_ENABLE_GYRO_Z_LOC || \
-                        FIFO_ENABLE_ACCEL  << FIFO_ENABLE_ACCEL_LOC  || \
-                        FIFO_ENABLE_SLV_2  << FIFO_ENABLE_SLV_2_LOC  || \
-                        FIFO_ENABLE_SLV_1  << FIFO_ENABLE_SLV_2_LOC  || \
-                        FIFO_ENABLE_SLV_0  << FIFO_ENABLE_SLV_0_LOC  )
+FIFO_ENABLE_GYRO_X << FIFO_ENABLE_GYRO_X_LOC || \
+FIFO_ENABLE_GYRO_Y << FIFO_ENABLE_GYRO_Y_LOC || \
+FIFO_ENABLE_GYRO_Z << FIFO_ENABLE_GYRO_Z_LOC || \
+FIFO_ENABLE_ACCEL  << FIFO_ENABLE_ACCEL_LOC  || \
+FIFO_ENABLE_SLV_2  << FIFO_ENABLE_SLV_2_LOC  || \
+FIFO_ENABLE_SLV_1  << FIFO_ENABLE_SLV_2_LOC  || \
+FIFO_ENABLE_SLV_0  << FIFO_ENABLE_SLV_0_LOC  )
 
 /***************************************************************************************************
  I2C Master Types and Definitions
@@ -460,13 +459,13 @@ typedef struct
 #define INT_PIN_BYPS_EN      HIGH
 
 /* INT PIN Register Define Config */
-#define INT_PIN   ( INT_PIN_ACTL     << INT_PIN_ACTL_LOC     || \
-                    INT_PIN_OPEN     << INT_PIN_OPEN_LOC     || \
-                    INT_PIN_LTCH_EN  << INT_PIN_LTCH_EN_LOC  || \
-                    INT_PIN_ANYRD_C  << INT_PIN_ANYRD_C_LOC  || \
-                    INT_PIN_ACTL_FS  << INT_PIN_ACTL_FS_LOC  || \
-                    INT_PIN_FSYNC_EN << INT_PIN_FSYNC_EN_LOC || \
-                    INT_PIN_BYPS_EN  << INT_PIN_BYPS_EN_LOC  )
+#define INT_PIN_CONFIG ( INT_PIN_ACTL     << INT_PIN_ACTL_LOC     || \
+INT_PIN_OPEN     << INT_PIN_OPEN_LOC     || \
+INT_PIN_LTCH_EN  << INT_PIN_LTCH_EN_LOC  || \
+INT_PIN_ANYRD_C  << INT_PIN_ANYRD_C_LOC  || \
+INT_PIN_ACTL_FS  << INT_PIN_ACTL_FS_LOC  || \
+INT_PIN_FSYNC_EN << INT_PIN_FSYNC_EN_LOC || \
+INT_PIN_BYPS_EN  << INT_PIN_BYPS_EN_LOC  )
 
 /* Interrupt Enable Type */
 typedef struct
@@ -494,9 +493,9 @@ typedef struct
 
 /* INT Enable Register Define Config */
 #define INT_ENABLE_CONFIG ( INT_ENABLE_WOM_EN       << INT_ENABLE_WOM_EN_LOC       || \
-                            INT_ENABLE_FIFO_OVFL_EN << INT_ENABLE_FIFO_OVFL_EN_LOC || \
-                            INT_ENABLE_FSYNC_INT_EN << INT_ENABLE_FSYNC_INT_EN_LOC || \
-                            INT_ENABLE_RAW_RDY_EN   << INT_ENABLE_RAW_RDY_EN_LOC   )
+INT_ENABLE_FIFO_OVFL_EN << INT_ENABLE_FIFO_OVFL_EN_LOC || \
+INT_ENABLE_FSYNC_INT_EN << INT_ENABLE_FSYNC_INT_EN_LOC || \
+INT_ENABLE_RAW_RDY_EN   << INT_ENABLE_RAW_RDY_EN_LOC   )
 
 /* Interrupt Status Type */
 typedef struct
@@ -524,9 +523,9 @@ typedef struct
 
 /* INT Status Register Define Config */
 #define INT_STATUS_CONFIG ( INT_STATUS_WOM_EN       << INT_STATUS_WOM_EN_LOC       || \
-                            INT_STATUS_FIFO_OVFL_EN << INT_STATUS_FIFO_OVFL_EN_LOC || \
-                            INT_STATUS_FSYNC_INT_EN << INT_STATUS_FSYNC_INT_EN_LOC || \
-                            INT_STATUS_RAW_RDY_EN   << INT_STATUS_RAW_RDY_EN_LOC   )
+INT_STATUS_FIFO_OVFL_EN << INT_STATUS_FIFO_OVFL_EN_LOC || \
+INT_STATUS_FSYNC_INT_EN << INT_STATUS_FSYNC_INT_EN_LOC || \
+INT_STATUS_RAW_RDY_EN   << INT_STATUS_RAW_RDY_EN_LOC   )
 
 /***************************************************************************************************
  User Control Types and Definitions
@@ -563,11 +562,11 @@ typedef struct
 
 /* User Config Define Config */
 #define USER_CONFIG   ( USER_CONFIG_FIFO_EN     << USER_CONFIG_FIFO_EN_LOC     || \
-                        USER_CONFIG_I2C_MST_EN  << USER_CONFIG_I2C_MST_EN_LOC  || \
-                        USER_CONFIG_I2C_IF_DIS  << USER_CONFIG_I2C_IF_DIS_LOC  || \
-                        USER_CONFIG_FIFO_RST    << USER_CONFIG_FIFO_RST_LOC    || \
-                        USER_CONFIG_I2C_MST_RST << USER_CONFIG_I2C_MST_RST_LOC || \
-                        USER_CONFIG_SIGCOND_RST << USER_CONFIG_SIGCOND_RST_LOC )
+USER_CONFIG_I2C_MST_EN  << USER_CONFIG_I2C_MST_EN_LOC  || \
+USER_CONFIG_I2C_IF_DIS  << USER_CONFIG_I2C_IF_DIS_LOC  || \
+USER_CONFIG_FIFO_RST    << USER_CONFIG_FIFO_RST_LOC    || \
+USER_CONFIG_I2C_MST_RST << USER_CONFIG_I2C_MST_RST_LOC || \
+USER_CONFIG_SIGCOND_RST << USER_CONFIG_SIGCOND_RST_LOC )
 
 /***************************************************************************************************
  Power Management Types and Definitions
@@ -576,19 +575,19 @@ typedef struct
 /* Power Management Type */
 typedef struct
 {
-    uint8_t dis_zg      :1;             /**< Disble Z gyro  */
-    uint8_t dis_yg      :1;             /**< Disble Y gyro  */
-    uint8_t dis_xg      :1;             /**< Disble X gyro  */
-    uint8_t dis_za      :1;             /**< Disble Z accel */
-    uint8_t dis_ya      :1;             /**< Disble Y accel */
-    uint8_t dis_xa      :1;             /**< Disble X accel */
-    uint8_t RESERVED    :2;
-    uint8_t clk_sel     :3;             /**< Clock source select                                    */
-    uint8_t pd_ptat     :1;             /**< Power down internal PTAT voltage generator             */
-    uint8_t gyro_stdby  :1;             /**< Enable gyro and pll circuitry, but disable sense paths */
-    uint8_t cycle       :1;             /**< Cycle between sleep and sampling at LP_ACCEL_ODR rate  */
-    uint8_t sleep       :1;             /**< Set sleep mode */
-    uint8_t h_rst       :1;             /**< Hard reset     */
+    uint16_t dis_zg      :1;            /**< Disble Z gyro  */
+    uint16_t dis_yg      :1;            /**< Disble Y gyro  */
+    uint16_t dis_xg      :1;            /**< Disble X gyro  */
+    uint16_t dis_za      :1;            /**< Disble Z accel */
+    uint16_t dis_ya      :1;            /**< Disble Y accel */
+    uint16_t dis_xa      :1;            /**< Disble X accel */
+    uint16_t RESERVED    :2;
+    uint16_t clk_sel     :3;            /**< Clock source select                                    */
+    uint16_t pd_ptat     :1;            /**< Power down internal PTAT voltage generator             */
+    uint16_t gyro_stdby  :1;            /**< Enable gyro and pll circuitry, but disable sense paths */
+    uint16_t cycle       :1;            /**< Cycle between sleep and sampling at LP_ACCEL_ODR rate  */
+    uint16_t sleep       :1;            /**< Set sleep mode */
+    uint16_t h_rst       :1;            /**< Hard reset     */
 } mpu9250_pwr_mgmt_t;
 
 /* Power Management Register Locations */
@@ -620,70 +619,70 @@ typedef struct
 #define PWR_MGMT_DISABLE_ZG DISABLE
 
 /* Power Management Register Define Config */
-#define PWR_MGMT  ( PWR_MGMT_H_RESET    << PWR_MGMT_H_RESET_LOC    || \
-                    PWR_MGMT_SLEEP      << PWR_MGMT_SLEEP_LOC      || \
-                    PWR_MGMT_CYCLE      << PWR_MGMT_CYCLE_LOC      || \
-                    PWR_MGMT_GYRO_STBY  << PWR_MGMT_GYRO_STBY_LOC  || \
-                    PWR_MGMT_PD_PTAT    << PWR_MGMT_PD_PTAT_LOC    || \
-                    PWR_MGMT_CLKSEL     << PWR_MGMT_CLKSEL         || \
-                    PWR_MGMT_DISABLE_XA << PWR_MGMT_DISABLE_XA_LOC || \
-                    PWR_MGMT_DISABLE_YA << PWR_MGMT_DISABLE_YA_LOC || \
-                    PWR_MGMT_DISABLE_ZA << PWR_MGMT_DISABLE_ZA_LOC || \
-                    PWR_MGMT_DISABLE_XG << PWR_MGMT_DISABLE_XG_LOC || \
-                    PWR_MGMT_DISABLE_YG << PWR_MGMT_DISABLE_YG_LOC || \
-                    PWR_MGMT_DISABLE_ZG << PWR_MGMT_DISABLE_ZG_LOC )
+#define PWR_MGMT_CONFIG ( PWR_MGMT_H_RESET    << PWR_MGMT_H_RESET_LOC    || \
+PWR_MGMT_SLEEP      << PWR_MGMT_SLEEP_LOC      || \
+PWR_MGMT_CYCLE      << PWR_MGMT_CYCLE_LOC      || \
+PWR_MGMT_GYRO_STBY  << PWR_MGMT_GYRO_STBY_LOC  || \
+PWR_MGMT_PD_PTAT    << PWR_MGMT_PD_PTAT_LOC    || \
+PWR_MGMT_CLKSEL     << PWR_MGMT_CLKSEL         || \
+PWR_MGMT_DISABLE_XA << PWR_MGMT_DISABLE_XA_LOC || \
+PWR_MGMT_DISABLE_YA << PWR_MGMT_DISABLE_YA_LOC || \
+PWR_MGMT_DISABLE_ZA << PWR_MGMT_DISABLE_ZA_LOC || \
+PWR_MGMT_DISABLE_XG << PWR_MGMT_DISABLE_XG_LOC || \
+PWR_MGMT_DISABLE_YG << PWR_MGMT_DISABLE_YG_LOC || \
+PWR_MGMT_DISABLE_ZG << PWR_MGMT_DISABLE_ZG_LOC )
 
 /***************************************************************************************************
  Universal Types and Definitions
  **************************************************************************************************/
 
-/* Config Type */
+/* Config Type (6 bytes) */
 typedef struct
 {
-    mpu9250_gen_config_t        general;        /**< General config */
-    mpu9250_gyro_config_t       gyro;           /**< Gyro config    */
-    mpu9250_accel_config_t      accel;          /**< Accel config */
-    mpu9250_int_pin_config_t    interrupt;      /**< Interrupt config */
+    mpu9250_gen_config_t        general;        /**< General config           */
+    mpu9250_gyro_config_t       gyro;           /**< Gyro config              */
+    mpu9250_accel_config_t      accel;          /**< Accel config             */
+    mpu9250_int_pin_config_t    interrupt;      /**< Interrupt config         */
+    uint8_t                     PADDING;        /**< Memory Alignment         */
 } mpu9250_config_t;
 
-/* Config Type */
+/* Control Type (8 bytes) */
 typedef struct
 {
-    mpu9250_accel_lp_odr_t      accel_lp;       /**< Low-power accel control */
-    mpu9250_accel_interrupt_t   accel_int;      /**< Accel interrupt control */
-    mpu9250_fifo_enable_t       fifo_en;        /**< FIFO enable control */
+    mpu9250_accel_lp_odr_t      accel_lp;       /**< Low-power accel control  */
+    mpu9250_accel_interrupt_t   accel_int;      /**< Accel interrupt control  */
+    mpu9250_fifo_enable_t       fifo_en;        /**< FIFO enable control      */
     mpu9250_int_enable_t        int_en;         /**< Interrupt enable control */
-    mpu9250_int_status_t        int_status;     /**< Interrupt status */
-    mpu9250_usr_control_t       usr_ctrl;       /**< User control */
-    mpu9250_pwr_mgmt_t          pwr_mgmt;       /**< Power management */
+    mpu9250_int_status_t        int_status;     /**< Interrupt status         */
+    mpu9250_usr_control_t       usr_ctrl;       /**< User control             */
+    mpu9250_pwr_mgmt_t          pwr_mgmt;       /**< Power management         */
 } mpu9250_control_t;
 
-/* Univerisal Type */
+/* Global Type (14 byte) */
 typedef struct
 {
-    mpu9250_config_t            config;         /**< Universal config */
-    mpu9250_control_t           control;        /**< Universal control */
+    mpu9250_config_t            config;         /**< Universal config         */
+    mpu9250_control_t           control;        /**< Universal control        */
 } mpu9250_global_t;
 
-enum defaultConfig
-{
-    FIFO_MODE_DEFAULT           = FIFO_MODE_OVWR,           /**< FIFO mode default                */
-    EXT_FSYNC_MODE_DEFAULT      = EXT_FSYNC_MODE_DIS,       /**< External FSYNC mode default      */
-    GYRO_BW_DEFAULT             = GYRO_BANDWIDTH_3600HZ,    /**< Gyro bandwidth default           */
-    GYRO_FS_DEFAULT             = GYRO_FULL_SCALE_250DPS,   /**< Gyro full scale default          */
-    GYRO_EN_DEFAULT             = GYRO_EN,                  /**< Gyro enable default              */
-    ACCEL_BW_DEFAULT            = ACCEL_BANDWIDTH_460HZ,    /**< Accel bandwidth default          */
-    ACCEL_FS_DEFAULT            = ACCEL_FULL_SCALE_2G,      /**< Accel full scale default         */
-    ACCEL_LP_ODR_DEFAULT        = ACCEL_LP_ODR_250HZ,       /**< Low-power accel date rate default*/
-    ACCEL_EN_DEFAULT            = ACCEL_EN,                 /**< Accel enable default             */
-    ACCEL_INTEL_DEFAULT         = ACCEL_INTEL,              /**< Accel interrupt default          */
-    FIFO_ENABLE_DEFAULT         = FIFO_ENABLE,              /**< FIFO enable default              */
-    INT_PIN_DEFAULT             = INT_PIN,                  /**< INT pin default                  */
-    INT_ENABLE_DEFAULT          = INT_ENABLE,               /**< Interrupt enable default         */
-    INT_STATUS_DEFAULT          = INT_STATUS,               /**< Interrupt status default         */
-    USER_CONFIG_DEFAULT         = USER_CONFIG,              /**< User config default              */
-    PWR_MGMT_DEFAULT            = PWR_MGMT,                 /**< Power Management default         */
-};
+/* Default Configurations */
+#define FIFO_MODE_DEFAULT       FIFO_MODE_OVWR          /**< FIFO mode default                */
+#define EXT_FSYNC_MODE_DEFAULT  EXT_FSYNC_MODE_DIS      /**< External FSYNC mode default      */
+#define GYRO_BW_DEFAULT         GYRO_BANDWIDTH_3600HZ   /**< Gyro bandwidth default           */
+#define GYRO_FS_DEFAULT         GYRO_FULL_SCALE_250DPS  /**< Gyro full scale default          */
+#define GYRO_EN_DEFAULT         GYRO_EN                 /**< Gyro enable default              */
+#define ACCEL_BW_DEFAULT        ACCEL_BANDWIDTH_460HZ   /**< Accel bandwidth default          */
+#define ACCEL_FS_DEFAULT        ACCEL_FULL_SCALE_2G     /**< Accel full scale default         */
+#define ACCEL_LP_ODR_DEFAULT    ACCEL_LP_ODR_250HZ      /**< Low-power accel date rate default*/
+#define ACCEL_EN_DEFAULT        ACCEL_EN                /**< Accel enable default             */
+#define ACCEL_INTEL_DEFAULT     ACCEL_INTEL             /**< Accel interrupt default          */
+#define FIFO_ENABLE_DEFAULT     FIFO_ENABLE             /**< FIFO enable default              */
+#define INT_PIN_DEFAULT         INT_PIN_CONFIG          /**< INT pin default                  */
+#define INT_ENABLE_DEFAULT      INT_ENABLE_CONFIG       /**< Interrupt enable default         */
+#define INT_STATUS_DEFAULT      INT_STATUS_CONFIG       /**< Interrupt status default         */
+#define USER_CONFIG_DEFAULT     USER_CONFIG             /**< User config default              */
+#define PWR_MGMT_DEFAULT        PWR_MGMT_CONFIG         /**< Power Management default         */
+
 
 /***************************************************************************************************
  Local Functions
@@ -725,6 +724,6 @@ void mpu9250_defaultInit( mpu9250_global_t * );
 /**************************************************************************//**
  * \brief Update MPU9250 registers with current global configuration
  *****************************************************************************/
-void mpu9250_updateRegisters( void );
+void mpu9250_updateRegisters( mpu9250_global_t * );
 
 #endif /* mpu9250_regs_h */
