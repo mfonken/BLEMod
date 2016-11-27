@@ -37,16 +37,28 @@ typedef struct _kalman_t
     double  timestamp;          /**< Timestamp */
 } kalman_t;
 
+/** IMU Type */
+typedef struct _imu_t
+{
+    double      accel[3];          /**< Raw position */
+    double      gyro[3];          /**< Raw rotation */
+    double      mag[3];          /**< Raw true loction */
+    
+    double      accel_bias[3];
+    double      gyro_bias[3];
+    doubel      mag_bias[3];
+} imu_t;
+    
 /** Kinetic Type */
 typedef struct _kinetic_t
 {
-    double     pos[3];          /**< Raw position */
-    double     rot[3];          /**< Raw rotation */
-    double     tru[3];          /**< Raw true loction */
+    double     position[3];          /**< Raw position */
+    double     rotation[3];          /**< Raw rotation */
+    double     truePosition[3];          /**< Raw true loction */
     
-    kalman_t   pos_f[3];        /**< Filtered position */
-    kalman_t   rot_f[3];        /**< Filtered rotation */
-    kalman_t   tru_f[3];        /**< Filtered true location */
+    kalman_t   positionFilter[3];        /**< Filtered position */
+    kalman_t   rotationFilter[3];        /**< Filtered rotation */
+    kalman_t   truePostitionFilter[3];        /**< Filtered true location */
 } kinetic_t;
 
 /** 2D Cartesian Cooridinate */

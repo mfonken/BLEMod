@@ -1,5 +1,5 @@
 /***********************************************************************************************//**
- * \file   imu.c
+ * \file   mpu9250.c
  * \brief  IMU Control
  ***************************************************************************************************
  *      Author: Matthew Fonken
@@ -16,7 +16,7 @@
 #include "i2c_sp.h"
 
 /* Own header */
-#include "imu.h"
+#include "mpu9250.h"
 
 /* Math headers */
 #include "matrix.h"
@@ -39,7 +39,7 @@
 /***************************************************************************************************
  Local Variables
  **************************************************************************************************/
-IMU_Settings settings;
+mpu9250_t this;
 
 /***************************************************************************************************
  Local Functions
@@ -65,7 +65,7 @@ void IMU_SetRegister( regAddr reg, uint8_t val )
 {
 	uint8_t i2c_write_data[2];
 	i2c_write_data[0] = reg;
-	i2c_write_data[1] = val;
+	i2c_write_data[0] = val;
 	I2C_Write( IMU_ADDR, i2c_write_data, 2 );
 }
 
@@ -74,166 +74,18 @@ void IMU_SetRegister( regAddr reg, uint8_t val )
  **************************************************************************************************/
 
 /**************************************************************************//**
- * \brief Reset Local Settings to Default
- ******************************************************************************
- * NOTE: This does not physically set on the IMU, just the local variable
- *****************************************************************************/
-void IMU_Default( void )
-{
-	settings.general.temperatureEnabled = TEMP_ENABLED;
-	settings.fifo.threshold				= FIFO_THRESHOLD;
-	settings.fifo.sampleRate			= FIFO_SAMPLE_RATE;
-	settings.fifo.mode					= FIFO_MODE;
-	settings.gyro.enabled				= GYRO_ENABLE;
-	settings.gyro.range					= GYRO_RANGE;
-	settings.gyro.sampleRate			= GYRO_SAMPLE_RATE;
-	settings.gyro.bandWidth				= GYRO_BANDWIDTH;
-	settings.gyro.fifoEnabled			= GYRO_FIFO_EN;
-	settings.gyro.fifoDecimation		= GYRO_FIFO_DEC;
-	settings.accel.enabled				= ACCEL_ENABLE;
-	settings.accel.range				= ACCEL_RANGE;
-	settings.accel.sampleRate			= ACCEL_SAMPLE_RATE;
-	settings.accel.bandWidth			= ACCEL_BANDWIDTH;
-	settings.accel.fifoEnabled			= ACCEL_FIFO_EN;
-	settings.accel.fifoDecimation		= ACCEL_FIFO_DEC;
-}
-
-/**************************************************************************//**
  * \brief Initialize IMU with local settings
  * \param[out] Initialization success
  *****************************************************************************/
 bool IMU_Init( void )
 {
-    /* Ensure IMU is connected and correct */
-	uint8_t i2c_read_data[1];
-	I2C_Read( IMU_ADDR, WHO_AM_I, i2c_read_data, 1 );
-	if( i2c_read_data[0] != IMU_ID )
-	{
-		return false;
-	}
-
-    /* Get default settings */
-	IMU_Default();
-
-    /* Set accel settings */
-	uint8_t options = 0;
-	if( settings.accel.enabled )
-	{
-		switch( settings.accel.bandWidth )
-		{
-		case 50:
-			options |= ACCEL_BANDWIDTH_50HZ;
-			break;
-		case 100:
-			options |= ACCEL_BANDWIDTH_100HZ;
-			break;
-		case 200:
-			options |= ACCEL_BANDWIDTH_200HZ;
-			break;
-		default:
-		case 400:
-			options |= ACCEL_BANDWIDTH_400HZ;
-			break;
-		}
-		switch( settings.accel.range )
-		{
-		case 2:
-			options |= ACCEL_SCALE_2G;
-			break;
-		case 4:
-			options |= ACCEL_SCALE_4G;
-			break;
-		case 8:
-			options |= ACCEL_SCALE_8G;
-			break;
-		default:
-		case 16:
-			options |= ACCEL_SCALE_16G;
-			break;
-		}
-		switch( settings.accel.sampleRate )
-		{
-		case 13:
-			options |= ACCEL_DATA_RATE_13HZ;
-			break;
-		case 26:
-			options |= ACCEL_DATA_RATE_26HZ;
-			break;
-		case 52:
-			options |= ACCEL_DATA_RATE_52HZ;
-			break;
-		default:
-		case 104:
-			options |= ACCEL_DATA_RATE_104HZ;
-			break;
-		case 208:
-			options |= ACCEL_DATA_RATE_208HZ;
-			break;
-		case 416:
-			options |= ACCEL_DATA_RATE_416HZ;
-			break;
-		case 833:
-			options |= ACCEL_DATA_RATE_833HZ;
-			break;
-		case 1660:
-			options |= ACCEL_DATA_RATE_1660HZ;
-			break;
-		case 3330:
-			options |= ACCEL_DATA_RATE_3330HZ;
-			break;
-		case 6660:
-			options |= ACCEL_DATA_RATE_6660HZ;
-			break;
-		case 13330:
-			options |= ACCEL_DATA_RATE_13330HZ;
-			break;
-		}
-	}
-	else
-	{
-		options |= ACCEL_DATA_RATE_PWDN;
-	}
-	IMU_SetRegister( CTRL1_XL, options);
-
-    /* Set gyro settings */
-	options = 0;
-	if( settings.gyro.enabled )
-	{
-		switch( settings.gyro.sampleRate )
-		{
-		case 13:
-			options |= GYRO_DATA_RATE_13HZ;
-			break;
-		case 26:
-			options |= GYRO_DATA_RATE_26HZ;
-			break;
-		case 52:
-			options |= GYRO_DATA_RATE_52HZ;
-			break;
-		case 104:
-			options |= GYRO_DATA_RATE_104HZ;
-			break;
-		case 208:
-			options |= GYRO_DATA_RATE_208HZ;
-			break;
-		case 416:
-			options |= GYRO_DATA_RATE_416HZ;
-			break;
-		case 833:
-			options |= GYRO_DATA_RATE_833HZ;
-			break;
-		case 1660:
-			options |= GYRO_DATA_RATE_1660HZ;
-			break;
-		}
-	}
-	else
-	{
-		options |= GYRO_DATA_RATE_PWDN;
-	}
-	IMU_SetRegister( CTRL2_G, options );
-	IMU_SetRegister( CTRL3_C, 0x04 );
-	return true;
+    this.imu.accel_bias = { ACCEL_BIAS_X, ACCEL_BIAS_Y, ACCEL_BIAS_Z };
+    this.imu.gyro_bias  = { GYRO_BIAS_X, GYRO_BIAS_Y, GYRO_BIAS_Z };
+    this.imu.mag_bias   = { MAG_BIAS_X, MAG_BIAS_Y, MAG_BIAS_Z };
+    
+    defaultInit( &this.settings );
+    
+    return true;
 }
 
 
@@ -246,30 +98,36 @@ bool IMU_Init( void )
  * \brief Read IMU accel and gyro data
  * \param[in] read_data Array to store read data
  *****************************************************************************/
-void IMU_Read( uint16_t read_data[6] )
+void IMU_Update( void )
 {
-	uint8_t i2c_read_data[12];
-	I2C_Read( IMU_ADDR, OUTX_L_G, i2c_read_data, 12);
+	uint8_t                    i2c_read_data[6];
+    I2C_Read();
 	/* Combine low and high byte values */
-	for( int i = 0; i < 6 ; i++ )
+    
+	for( int i = 0; i < 3 ; i++ )
 	{
-		read_data[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
+		this.imu.accel[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
 	}
-}
+    I2C_Read();
+    for( int i = 0; i < 3 ; i++ )
+    {
+        this.imu.gyro[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
+    }
 
-/**************************************************************************//**
- * \brief Filter IMU accel and gyro data
- * \param[in] read_data Array of data to filter
- * \param[in] filtered_data Array to store filtered data
- *****************************************************************************/
-void IMU_Filter( uint16_t data[6], double filtered_data[6] )
-{
-	filtered_data[0] =  convertGyro( data[0] );
-	filtered_data[1] =  convertGyro( data[1] );
-	filtered_data[2] =  convertGyro( data[2] );
-	filtered_data[3] = convertAccel( data[3] );
-	filtered_data[4] = convertAccel( data[4] );
-	filtered_data[5] = convertAccel( data[5] );
+    I2C_Read();
+    for( int i = 0; i < 3 ; i++ )
+    {
+        this.imu.mag[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
+    }
+    
+    for( int i = 0; i < 3 ; i++ )
+    {
+        this.imu.accel[i] += this.imu.accel_bias[i];
+        this.imu.gyro[i]  += this.imu.gyro_bias[i];
+        this.imu.mag[i]   += this.imu.mag_bias[i];
+    }
+    
+	return &this.imu;
 }
 
 /**************************************************************************//**
@@ -289,8 +147,8 @@ double convertAccel( uint16_t data )
  *****************************************************************************/
 double convertGyro( uint16_t data )
 {
-    uint8_t rangeDivisor = settings.gyro.range / 125;
-    if ( settings.gyro.range == 245 ) {
+    uint8_t rangeDivisor = settings.gyroRange / 125;
+    if ( settings.gyroRange == 245 ) {
         rangeDivisor = 2;
     }
 	return ( double )data * 4.375 * ( rangeDivisor ) / 1000;
@@ -299,34 +157,60 @@ double convertGyro( uint16_t data )
 /******************************************************************************
  * Rotation Calculation
  *****************************************************************************/
-/* See - http://www.nxp.com/files/sensors/doc/app_note/AN3461.pdf */
+/* See - http://www.nxp.com/files/sensors/doc/app_note/AN3461.pdf and
+       - http://www.nxp.com/assets/documents/data/en/application-notes/AN4248.pdf
+ */
 
 /**************************************************************************//**
- * \brief Get roll angle from accelerometer data
- * \param[out] Return value
+ * \brief Get roll angle (phi) from accelerometer data
+ * \param[out] Return roll
  *****************************************************************************/
 double getRoll( void )
 {
-	double y = sign( acc[2] ) * sqrt( ( acc[2] * acc[2] ) + ( MU * ( acc[0] * acc[0] ) ) );
-    return atan2( acc[1], y ); // Eqn. 38
+    double den = sqrt( ( ( this.imu.accel[1] * this.imu.accel[1] ) + ( this.imu.accel[2] * this.imu.accel[2] ) ) );
+    return atan2( -this.imu.accel[0], den );
+}
+/**************************************************************************//**
+ * \brief Get roll angle (phi) error from accelerometer data
+ * \param[out] Return roll error
+ *****************************************************************************/
+double getRollError( void )
+{
+    double sin_phi   = sin( this.imu.roll );
+    double sin_theta = sin( this.imu.pitch );
+    double cos_phi   = cos( this.imu.roll );
+    double cos_theta = cos( this.imu.pitch );
+    double cos_theta_cos_phi = cos_theta * cos_phi;
+    double mu_sin_2_theta = MU * ( sin_theta * sin_theta );
+    double factor = sqrt( ( cos_theta_cos_phi * cos_theta_cos_phi ) + mu_sin_2_theta );
+    double num = sin_phi * ( cos_theta_cos_phi - factor );
+    double den = ( cos_theta * ( sin_phi * sin_phi ) ) + ( cos_phi * factor );
+    return atan2( num, den );
 }
 
 /**************************************************************************//**
- * \brief Get pitch angle from accelerometer data
- * \param[out] Return value
+ * \brief Get pitch angle (theta) from accelerometer data
+ * \param[out] Return pitch
  *****************************************************************************/
 double getPitch( void )
 {
-    return atan( -acc[0] / sqrt( ( acc[1] * acc[1] ) + ( acc[2] * acc[2] ) ) ); // Eqn. 37
+    double den = sign( this.imu.accel[2] ) * sqrt( ( ( this.imu.accel[2] * this.imu.accel[2] ) + ( MU * ( this.imu.accel[0] * this.imu.accel[0] ) ) ) );
+    return atan2( this.imu.accel[1], den );
 }
 
 /**************************************************************************//**
- * \brief Get yaw angle from accelerometer data
- * \param[out] Return value
+ * \brief Get yaw angle (psi) from magnetometer data, pitch, and roll
+ * \param[out] Return yaw
  *****************************************************************************/
 double getYaw( void )
 {
-    return atan( -acc[2] / sqrt( ( acc[0] * acc[0] ) + ( acc[1] * acc[1] ) ) ); // Eqn. 37
+    double sin_phi   = sin( this.imu.roll );
+    double sin_theta = sin( this.imu.pitch );
+    double cos_phi   = cos( this.imu.roll );
+    double cos_theta = cos( this.imu.pitch );
+    double num = ( this.imu.mag[2] * sin_phi ) - ( this.imu.mag[1] * cos_phi );
+    double den = ( this.imu.mag[0] * cos_theta ) + ( this.imu.mag[1] * ( sin_theta * sin_phi ) ) + ( this.imu.mag[2] * ( sin_theta * cos_phi ) );
+    return atan2( num, den );
 }
 
 /**************************************************************************//**
@@ -338,9 +222,9 @@ vec3_t * getNonGravAcceleration( ang3_t * tba )
 {
     /* Create a vector of accelerometer values */
     vec3_t avec;
-    avec.ihat = acc[0];
-    avec.jhat = acc[1];
-    avec.khat = acc[2];
+    avec.ihat = accel[0];
+    avec.jhat = accel[1];
+    avec.khat = accel[2];
 
     /* Transform and normalize v vector by given angles to get unit vector from camera */
     vec3_t * atru = zxyTransform( &avec, tba, 1 );

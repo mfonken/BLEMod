@@ -48,9 +48,9 @@ void initKinetics( void )
  **************************************************************************************************/
 void initFilters( void )
 {
-    initKalman( &kinetics.rot_f[0], getRoll()  );
-    initKalman( &kinetics.rot_f[1], getPitch() );
-    initKalman( &kinetics.rot_f[2], getYaw()   );
+    initKalman( &kinetics.rotationFilter[0], getRoll()  );
+    initKalman( &kinetics.rotationFilter[1], getPitch() );
+    initKalman( &kinetics.rotationFilter[2], getYaw()   );
 }
 
 /***********************************************************************************************//**
@@ -98,7 +98,7 @@ vec3_t *dAugment( vec3_t *dvec,
 }
 
 /***********************************************************************************************//**
- *  \brief  Calculates system's absolute position and places value in tru[]
+ *  \brief  Calculates system's absolute position and places value in truePosition[]
 
  \f{eqnarray*}{
     &a_a = rot_{f_0}, a_b = rot_{f_1}, a_c = rot_{f_2} \\
@@ -132,9 +132,9 @@ void getAbsolutePosition( void )
 {
     /* Tait-Bryan angles of vision */
     ang3_t tba;
-    tba.a = kinetics.rot_f[0].value;
-    tba.b = kinetics.rot_f[1].value;
-    tba.c = kinetics.rot_f[2].value;
+    tba.a = kinetics.rotationFilter[0].value;
+    tba.b = kinetics.rotationFilter[1].value;
+    tba.c = kinetics.rotationFilter[2].value;
 
     /* vector from B1 in vision -TO-> B2 in vision */
     vec3_t dvec;
@@ -166,60 +166,72 @@ void getAbsolutePosition( void )
     /* Subract true e vector from augmented r vector */
     subtractvec3_t(&rvec, &etru);
 
-    kinetics.tru[0] = rvec.ihat;
-    kinetics.tru[1] = rvec.jhat;
-    kinetics.tru[2] = rvec.khat;
+    kinetics.truePosition[0] = rvec.ihat;
+    kinetics.truePosition[1] = rvec.jhat;
+    kinetics.truePosition[2] = rvec.khat;
 
     /* Filter calculated absolute position and with integrated acceleration (velocity) */
     ang3_t * ang;
-    ang->a = kinetics.rot_f[0].value;
-    ang->b = kinetics.rot_f[1].value;
-    ang->c = kinetics.rot_f[2].value;
+    ang->a = kinetics.rotationFilter[0].value;
+    ang->b = kinetics.rotationFilter[1].value;
+    ang->c = kinetics.rotationFilter[2].value;
     vec3_t *ngacc = getNonGravAcceleration( ang );
     double delta_time = 0; // Insert RTCC
     double x_vel = ngacc->ihat * delta_time;
-    updateKalman( &kinetics.tru_f[0], kinetics.tru[0], x_vel, delta_time);
+    updateKalman( &kinetics.truePositionFilter[0], kinetics.truePosition[0], x_vel, delta_time);
     double y_vel = ngacc->jhat * delta_time;
-    updateKalman( &kinetics.tru_f[1], kinetics.tru[1], y_vel, delta_time);
+    updateKalman( &kinetics.truePositionFilter[1], kinetics.truePosition[1], y_vel, delta_time);
     double z_vel = ngacc->khat * delta_time;
-    updateKalman( &kinetics.tru_f[2], kinetics.tru[2], z_vel, delta_time);
+    updateKalman( &kinetics.truePositionFilter[2], kinetics.truePosition[2], z_vel, delta_time);
 }
 
 /***********************************************************************************************//**
  *  \brief  Update IMU data and filter
  **************************************************************************************************/
-void IMU_Update( void )
+void Kalman_Update( void )
 {
-	uint16_t imu_data[12];
-    IMU_Read( imu_data );
+	imu_t imu_data;
+    IMU_Update();
 
-    double theta = getPitch();
-    double phi   = getRoll();
-    double psi   = getYaw();
+    double phi      = getPitch();
+    double theta    = getRoll();
+    double psi      = getYaw();
 
-    double kalman_t_temp = kinetics.rot_f[0].value;
-    if( ( theta < -HALF_PI && kalman_t_temp > HALF_PI ) ||
-        ( theta > HALF_PI && kalman_t_temp < -HALF_PI ) )
+    /* Restrict pitch */
+    double v = kinetics.rotationFilter[0].value;
+    if( ( phi < -HALF_PI && v > HALF_PI ) ||
+        ( phi > HALF_PI  && v < -HALF_PI ) )
     {
-    	kinetics.rot_f[1].value  = theta;
-    	kinetics.rot[1]          = theta;
+        kinetics.rotationFilter[0].value  = phi;
+        kinetics.rotation[0]              = phi;
     }
     else
     {
+        double delta_time0 = getMillis() - rotationFilter[0].timestamp;
         /* Calculate the true pitch using a kalman_t filter */
-        updateKalman( &kinetics.rot_f[1], theta, gyro[1], delta_t );
-        kinetics.rot[1] = kinetics.rot_f[1].value;
+        kinetics.rotation[0].update( phi, gyro[0], delta_time0 );
+        kinetics.rotation[0] = kinetics.rotationFilter[0].value;
     }
 
-    kalman_t_temp = absl(kinetics.rot_f[1].value);
-    if (kalman_t_temp > HALF_PI)
+    if ( kinetics.rotation[0] > HALF_PI )
     {
         /* Invert rate, so it fits the restricted accelerometer reading */
         gyro[0] = -gyro[0];
     }
+    
+    double delta_time1 = getMillis() - rotationFilter[1].timestamp;
+    double delta_time2 = getMillis() - rotationFilter[2].timestamp;
+    
     /* Calculate the true roll using a kalman_t filter */
-    updateKalman( &kinetics.rot_f[0], phi, gyro[0], delta_t );
-    kinetics.rot[0] = kinetics.rot_f[0].value;
+    kinetics.rotationFilter[1].update( theta, gyro[1], delta_time1 );
+    kinetics.rotation[1] = kinetics.rotationFilter[1].value;
     /* Calculate the true yaw using a kalman_t filter */
-    updateKalman( &kinetics.rot_f[2], psi, gyro[2], delta_t );
+    kinetics.rotationFilter[2].update( psi, gyro[2], delta_time2 );
+    kinetics.rotation[2] = kinetics.rotationFilter[2].value;
+}
+
+// TODO
+double getMillis( void )
+{
+    return 0;
 }
