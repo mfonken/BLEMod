@@ -14,6 +14,7 @@
 
 /* Additional function headers */
 #include "i2c_sp.h"
+#include "mpu9250_regs.h"
 
 /* Own header */
 #include "mpu9250.h"
@@ -35,7 +36,7 @@
  Macros
  **************************************************************************************************/
 #define sign(x) x > 0 ? 1:-1
-
+#define MU		0.01
 /***************************************************************************************************
  Local Variables
  **************************************************************************************************/
@@ -49,7 +50,7 @@ mpu9250_t this;
  * \param[out] Return value from register
  * \param[in] reg Register to access
  *****************************************************************************/
-uint8_t IMU_GetRegister( regAddr reg )
+uint8_t IMU_GetRegister( uint8_t reg )
 {
 	uint8_t i2c_read_data[1];
 	I2C_Read( IMU_ADDR, reg, i2c_read_data, 1 );
@@ -61,7 +62,7 @@ uint8_t IMU_GetRegister( regAddr reg )
  * \param[in] reg Register to access
  * \param[in] val Value to set
  *****************************************************************************/
-void IMU_SetRegister( regAddr reg, uint8_t val )
+void IMU_SetRegister( uint8_t reg, uint8_t val )
 {
 	uint8_t i2c_write_data[2];
 	i2c_write_data[0] = reg;
@@ -79,12 +80,18 @@ void IMU_SetRegister( regAddr reg, uint8_t val )
  *****************************************************************************/
 bool IMU_Init( void )
 {
-    this.imu.accel_bias = { ACCEL_BIAS_X, ACCEL_BIAS_Y, ACCEL_BIAS_Z };
-    this.imu.gyro_bias  = { GYRO_BIAS_X, GYRO_BIAS_Y, GYRO_BIAS_Z };
-    this.imu.mag_bias   = { MAG_BIAS_X, MAG_BIAS_Y, MAG_BIAS_Z };
-    
-    defaultInit( &this.settings );
-    
+
+	this.imu.accel_bias[0] = ACCEL_BIAS_X;
+	this.imu.accel_bias[1] = ACCEL_BIAS_Y;
+	this.imu.accel_bias[2] = ACCEL_BIAS_Z;
+	this.imu.gyro_bias[0]  =  GYRO_BIAS_X;
+	this.imu.gyro_bias[1]  =  GYRO_BIAS_Y;
+	this.imu.gyro_bias[2]  =  GYRO_BIAS_Z;
+	this.imu.mag_bias[0]   =   MAG_BIAS_X;
+	this.imu.mag_bias[1]   =   MAG_BIAS_Y;
+	this.imu.mag_bias[2]   =   MAG_BIAS_Z;
+
+    mpu9250_defaultInit( &this.settings );
     return true;
 }
 
@@ -98,23 +105,23 @@ bool IMU_Init( void )
  * \brief Read IMU accel and gyro data
  * \param[in] read_data Array to store read data
  *****************************************************************************/
-void IMU_Update( void )
+imu_t * IMU_Update( void )
 {
 	uint8_t                    i2c_read_data[6];
-    I2C_Read();
+	I2C_Read( IMU_ADDR, ACCEL_XOUT_H, i2c_read_data, 6 );
 	/* Combine low and high byte values */
     
 	for( int i = 0; i < 3 ; i++ )
 	{
-		this.imu.accel[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
+		this.imu.accel[i] = ( i2c_read_data[( i * 2 )] << 8 ) + i2c_read_data[( i * 2 ) + 1];
 	}
-    I2C_Read();
+	I2C_Read( IMU_ADDR, GYRO_XOUT_H, i2c_read_data, 6 );
     for( int i = 0; i < 3 ; i++ )
     {
-        this.imu.gyro[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
+        this.imu.gyro[i] = ( i2c_read_data[( i * 2 )] << 8 ) + i2c_read_data[( i * 2 ) + 1];
     }
 
-    I2C_Read();
+    I2C_Read( MAG_ADDR, MAG_XOUT_L, i2c_read_data, 6 );
     for( int i = 0; i < 3 ; i++ )
     {
         this.imu.mag[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
@@ -137,7 +144,7 @@ void IMU_Update( void )
  *****************************************************************************/
 double convertAccel( uint16_t data )
 {
-	return ( double )( data * 0.061 * (settings.accel.range >> 1) / 1000 );
+	return 0;//( double )( data * 0.061 * (settings.accel.range >> 1) / 1000 );
 }
 
 /**************************************************************************//**
@@ -147,11 +154,11 @@ double convertAccel( uint16_t data )
  *****************************************************************************/
 double convertGyro( uint16_t data )
 {
-    uint8_t rangeDivisor = settings.gyroRange / 125;
-    if ( settings.gyroRange == 245 ) {
-        rangeDivisor = 2;
-    }
-	return ( double )data * 4.375 * ( rangeDivisor ) / 1000;
+//    uint8_t rangeDivisor = settings.gyroRange / 125;
+//    if ( settings.gyroRange == 245 ) {
+//        rangeDivisor = 2;
+//    }
+	return 0;//( double )data * 4.375 * ( rangeDivisor ) / 1000;
 }
 
 /******************************************************************************
@@ -222,9 +229,9 @@ vec3_t * getNonGravAcceleration( ang3_t * tba )
 {
     /* Create a vector of accelerometer values */
     vec3_t avec;
-    avec.ihat = accel[0];
-    avec.jhat = accel[1];
-    avec.khat = accel[2];
+    avec.ihat = this.imu.accel[0];
+    avec.jhat = this.imu.accel[1];
+    avec.khat = this.imu.accel[2];
 
     /* Transform and normalize v vector by given angles to get unit vector from camera */
     vec3_t * atru = zxyTransform( &avec, tba, 1 );
@@ -244,8 +251,8 @@ vec3_t * getNonGravAcceleration( ang3_t * tba )
 uint16_t IMU_ReadTemp( void )
 {
 	uint16_t tempurature;
-	tempurature  = IMU_GetRegister( OUT_TEMP_H ) << 8;
-	tempurature += IMU_GetRegister( OUT_TEMP_L );
+	tempurature  = IMU_GetRegister( TEMP_OUT_H ) << 8;
+	tempurature += IMU_GetRegister( TEMP_OUT_L );
 	return tempurature;
 }
 

@@ -26,13 +26,14 @@ void reverse(uint8_t *str, int len)
  // Converts a given integer x to string str[].  d is the number
  // of digits required in output. If d is more than the number
  // of digits in x, then 0s are added at the beginning.
-int intToStr(int x, uint8_t str[], int d)
+int intToStr(int x, uint8_t str[], int d, bool neg)
 {
     int i = 0;
     while (x)
     {
-        str[i++] = (x%10) + '0';
-        x = x/10;
+    	x %= 10;
+        str[i++] = x + '0';
+        x /= 10;
     }
 
     // If number of digits required is more, then
@@ -40,14 +41,31 @@ int intToStr(int x, uint8_t str[], int d)
     while (i < d)
         str[i++] = '0';
 
+
     reverse(str, i);
+
     str[i] = '\0';
+    if(neg)
+    {
+		for(int j = 0; j < i; j++ )
+		{
+			str[j + 1] = str[j];
+		}
+		str[0] = '-';
+    }
     return i;
 }
 
 // Converts a floating point number to string.
 void dtoa (double n, uint8_t *res, int afterpoint)
 {
+	bool neg = false;
+    if( n < 0 )
+    {
+    	n = -n;
+    	neg = true;
+    }
+
     // Extract integer part
     int ipart = (int)n;
 
@@ -55,7 +73,7 @@ void dtoa (double n, uint8_t *res, int afterpoint)
     double dpart = n - (double)ipart;
 
     // convert integer part to string
-    int i = intToStr(ipart, res, 0);
+    int i = intToStr(ipart, res, 0, neg);
 
     // check for display option after point
     if (afterpoint != 0)
@@ -67,7 +85,7 @@ void dtoa (double n, uint8_t *res, int afterpoint)
         // to handle cases like 233.007
         dpart = dpart * pow(10, afterpoint);
 
-        intToStr((int)dpart, res + i + 1, afterpoint);
+        intToStr((int)dpart, res + i + 1, afterpoint, false);
     }
 }
 /***********************************************************************************************//**
@@ -116,7 +134,7 @@ void Print_Double_Ascii( double v )
 	dtoa( v, output, 3 );
 	for( int i = 0; i < 9; i++ )
 	{
-		if( output[i] == '.' || ( output[i] >= 0x30 && output[i] < 0x40 ) )
+//		if( output[i] == '.' || ( output[i] >= 0x30 && output[i] < 0x40 ) )
 		{
 			USART_Tx( USART0, output[i] );
 		}

@@ -21,7 +21,7 @@
 #include "app_hw.h"
 #include "usart_sp.h"
 
-#include "../sensors/imu.h"
+#include "../sensors/mpu9250.h"
 
 /***********************************************************************************************//**
  * @addtogroup Application

@@ -49,7 +49,7 @@
 #include "flashpwr.h"
 #endif
 
-#include "sensors/imu.h"
+#include "sensors/mpu9250.h"
 #include "system/usart_sp.h"
 
 /***********************************************************************************************//**
@@ -109,16 +109,28 @@ int main(void)
 //		IMU_Read( I2C0, motion_data );
 //		Print_IMU( motion_data );
 //	}
-	uint16_t imu_data[6];
-	IMU_Read( imu_data );
-	double filtered_data[6];
-	IMU_Filter( imu_data, filtered_data );
-	Print_IMU( filtered_data, true );
+
     struct gecko_cmd_packet* evt;
     /* Check for stack event. */
     evt = gecko_wait_event();
     /* Run application and event handler. */
     appHandleEvents(evt);
+
+    IMU_Update();
+    Print_Char( 'f' );
+    Print_Char( ',' );
+    double roll  = getRoll();
+    double pitch = getPitch();
+    double yaw   = getYaw();
+    Print_Double_Ascii( roll );
+    Print_Char( ',' );
+    Print_Double_Ascii( pitch );
+    Print_Char( ',' );
+    Print_Double_Ascii( yaw );
+    Print_Char( '\r' );
+    Print_Char( '\n' );
+    Print_Char( '\r' );
+	Print_Char( '\n' );
   }
 
   return 1;

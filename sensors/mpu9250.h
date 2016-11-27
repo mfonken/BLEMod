@@ -28,13 +28,6 @@
  * @{
  **************************************************************************************************/
 
-extern uint8_t accel[3];
-extern uint8_t accel_bias[3];
-extern uint8_t gyro[3];
-extern uint8_t gyro_bias[3];
-extern uint8_t mag[3];
-extern uint8_t mag_bias[3];
-
 /***************************************************************************************************
  Local Functions
  **************************************************************************************************/
@@ -70,7 +63,7 @@ bool 		IMU_Init( void );
  * \brief Read IMU accel and gyro data
  * \param[in] read_data Array to store read data
  *****************************************************************************/
-void 	 	IMU_Update( void );
+imu_t *		IMU_Update( void );
 
 /**************************************************************************//**
  * \brief Convert accelerometer data to readable double value
@@ -96,7 +89,7 @@ double 		getRoll( void );
  * \brief Get roll angle (phi) error from accelerometer data
  * \param[out] Return roll error
  *****************************************************************************/
-double      getRollError( void )
+double      getRollError( void );
 
 /**************************************************************************//**
  * \brief Get pitch angle (theta) from accelerometer data
@@ -108,7 +101,7 @@ double 		getPitch( void );
  * \brief Get yaw angle (psi) from magnetometer data, pitch, and roll
  * \param[out] Return yaw
  *****************************************************************************/
-double      getYaw( void )
+double      getYaw( void );
 
 /**************************************************************************//**
  * \brief Get no gravitation acceleration from accelerometer data

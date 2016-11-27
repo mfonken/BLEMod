@@ -10,7 +10,7 @@
 #include "kinetic.h"
 
 /* Sensors headers */
-#include "../sensors/imu.h"
+#include "../sensors/mpu9250.h"
 
 /* Math headers */
 #include "kalman.h"
@@ -26,7 +26,7 @@
 static cartesian2_t   vis[2];
 
 /** Local change in time */
-static double         delta_t;
+//static double         delta_t;
 
 /** Local positional and rotational vectors */
 static kinetic_t      kinetics;
@@ -36,11 +36,9 @@ static kinetic_t      kinetics;
  **************************************************************************************************/
 void initKinetics( void )
 {
-	if ( !IMU_Init() )
-	{
-		Print_String("No IMU Found.\r\n", 15); /* Display error message on screen. */
-	}
+	IMU_Init();
 	Print_String("IMU Initialized.\r\n", 18);
+	initFilters();
 }
 
 /***********************************************************************************************//**
@@ -190,8 +188,8 @@ void getAbsolutePosition( void )
  **************************************************************************************************/
 void Kalman_Update( void )
 {
-	imu_t imu_data;
-    IMU_Update();
+    imu_t this;
+    this = *( IMU_Update() );
 
     double phi      = getPitch();
     double theta    = getRoll();
@@ -207,26 +205,26 @@ void Kalman_Update( void )
     }
     else
     {
-        double delta_time0 = getMillis() - rotationFilter[0].timestamp;
+        double delta_time0 = getMillis() - kinetics.rotationFilter[0].timestamp;
         /* Calculate the true pitch using a kalman_t filter */
-        kinetics.rotation[0].update( phi, gyro[0], delta_time0 );
+        updateKalman( &kinetics.rotationFilter[0], phi, this.gyro[0], delta_time0 );
         kinetics.rotation[0] = kinetics.rotationFilter[0].value;
     }
 
     if ( kinetics.rotation[0] > HALF_PI )
     {
         /* Invert rate, so it fits the restricted accelerometer reading */
-        gyro[0] = -gyro[0];
+        this.gyro[0] = -this.gyro[0];
     }
     
-    double delta_time1 = getMillis() - rotationFilter[1].timestamp;
-    double delta_time2 = getMillis() - rotationFilter[2].timestamp;
+    double delta_time1 = getMillis() - kinetics.rotationFilter[1].timestamp;
+    double delta_time2 = getMillis() - kinetics.rotationFilter[2].timestamp;
     
     /* Calculate the true roll using a kalman_t filter */
-    kinetics.rotationFilter[1].update( theta, gyro[1], delta_time1 );
+    updateKalman( &kinetics.rotationFilter[1], theta, this.gyro[1], delta_time1 );
     kinetics.rotation[1] = kinetics.rotationFilter[1].value;
     /* Calculate the true yaw using a kalman_t filter */
-    kinetics.rotationFilter[2].update( psi, gyro[2], delta_time2 );
+    updateKalman( &kinetics.rotationFilter[2], psi, this.gyro[2], delta_time2 );
     kinetics.rotation[2] = kinetics.rotationFilter[2].value;
 }
 

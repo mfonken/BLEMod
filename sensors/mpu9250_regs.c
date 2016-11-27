@@ -7,7 +7,11 @@
 
 
 #include <stdio.h>
+
+/* Own Header */
 #include "mpu9250_regs.h"
+
+#include "i2c_sp.h"
 
 /***************************************************************************************************
  Local Variables
@@ -38,7 +42,7 @@ void mpu9250_SetRegister( uint8_t reg, uint8_t val )
 {
     uint8_t i2c_write_data[2];
     i2c_write_data[0] = reg;
-    i2c_write_data[0] = val;
+    i2c_write_data[1] = val;
     I2C_Write( IMU_ADDR, i2c_write_data, 2 );
 }
 
@@ -63,7 +67,7 @@ void mpu9250_SetMagRegister( uint8_t reg, uint8_t val )
 {
     uint8_t i2c_write_data[2];
     i2c_write_data[0] = reg;
-    i2c_write_data[0] = val;
+    i2c_write_data[1] = val;
     I2C_Write( MAG_ADDR, i2c_write_data, 2 );
 }
 
@@ -125,19 +129,19 @@ void mpu9250_defaultInit( mpu9250_global_t * this )
  *****************************************************************************/
 void mpu9250_updateRegisters( mpu9250_global_t * this )
 {
-    mpu9250_SetRegister( CONFIG,          this->config.general           );
-    mpu9250_SetRegister( GYRO_CONFIG,     this->config.gyro              );
-    mpu9250_SetRegister( ACCEL_CONFIG_2,  this->config.accel << 0xFF     );
-    mpu9250_SetRegister( ACCEL_CONFIG,    this->config.accel &  0xFF     );
-    mpu9250_SetRegister( INT_PIN_CFG,     this->config.interrupt         );
+    mpu9250_SetRegister( CONFIG,          *(uint8_t *)&this->config.general           );
+    mpu9250_SetRegister( GYRO_CONFIG,     *(uint8_t *)&this->config.gyro              );
+    mpu9250_SetRegister( ACCEL_CONFIG2,    (uint8_t)( *(uint16_t *)&this->config.accel ) >> 0x0F );
+    mpu9250_SetRegister( ACCEL_CONFIG,    *(uint8_t *)&this->config.accel &  0x0F     );
+    mpu9250_SetRegister( INT_PIN_CFG,     *(uint8_t *)&this->config.interrupt         );
     
-    mpu9250_SetRegister( LP_ACCEL_ODR,    this->control.accel_lp         );
-    mpu9250_SetRegister( MOT_DETECT_CTRL, this->control.accel_int        );
-    mpu9250_SetRegister( FIFO_EN,         this->control.fifo_en          );
-    mpu9250_SetRegister( INT_ENABLE,      this->control.int_en           );
-    mpu9250_SetRegister( INT_STATUS,      this->control.int_status       );
-    mpu9250_SetRegister( USER_CTRL,       this->control.usr_ctrl         );
+    mpu9250_SetRegister( LP_ACCEL_ODR,    *(uint8_t *)&this->control.accel_lp         );
+    mpu9250_SetRegister( MOT_DETECT_CTRL, *(uint8_t *)&this->control.accel_int        );
+    mpu9250_SetRegister( FIFO_EN,         *(uint8_t *)&this->control.fifo_en          );
+    mpu9250_SetRegister( INT_ENABLE,      *(uint8_t *)&this->control.int_en           );
+    mpu9250_SetRegister( INT_STATUS,      *(uint8_t *)&this->control.int_status       );
+    mpu9250_SetRegister( USER_CTRL,       *(uint8_t *)&this->control.usr_ctrl         );
     
-    mpu9250_SetRegister( PWR_MGMT_2,      this->control.pwr_mgmt << 0xFF );
-    mpu9250_SetRegister( PWR_MGMT_1,      this->control.pwr_mgmt &  0xFF );
+    mpu9250_SetRegister( PWR_MGMT_2,       (uint8_t)( *(uint16_t *)&this->control.pwr_mgmt ) >> 0x0F );
+    mpu9250_SetRegister( PWR_MGMT_1,      *(uint8_t *)&this->control.pwr_mgmt &  0x0F );
 }

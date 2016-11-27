@@ -97,7 +97,8 @@ void getAbsolutePosition( void );
  **************************************************************************************************/
 void Kalman_Update( void );
 
-    
+double getMillis( void );
+
 /** @} (end addtogroup kinetic) */
 /** @} (end addtogroup Application) */
     

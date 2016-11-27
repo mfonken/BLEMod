@@ -29,7 +29,8 @@
  *  \param[in] k Pointer to kalman filter type
  *  \param[in] v Initial value
  **************************************************************************************************/
-static void initKalman( kalman_t *k,
+
+void initKalman( kalman_t *k,
                         double    v )
 {
     k->K[0]        = 0;
@@ -75,9 +76,9 @@ static void initKalman( kalman_t *k,
  \f}
  **************************************************************************************************/
 void updateKalman( kalman_t *k,
-                          double    value_new,
-                          double    rate_new,
-                          double    delta_time )
+                   double    value_new,
+                   double    rate_new,
+                   double    delta_time )
 {
     /* =-----= PREDICT =-----= */
     /* Predict values */
