@@ -14,7 +14,7 @@
 #endif
  
 #include "boards.h"
-#include "ble-configuration.h"
+#include "../ble-configuration.h"
 #include "board_features.h"
 
 #include <stdint.h>

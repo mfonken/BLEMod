@@ -75,3 +75,6 @@ main.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platfor
 main.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_assert.h
 main.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_usart.h
 main.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\inc\InitDevice.h
+main.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\imu.h
+main.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\kinetic_types.h
+main.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\system\usart_sp.h

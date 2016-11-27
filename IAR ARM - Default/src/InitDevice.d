@@ -62,6 +62,8 @@ src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1
 src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_chip.h
 src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_gpio.h
 src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_gpcrc.h
+src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_i2c.h
 src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_ldma.h
 src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_prs.h
 src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_rtcc.h
+src/InitDevice.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_usart.h

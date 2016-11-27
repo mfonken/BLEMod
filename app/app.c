@@ -17,7 +17,7 @@
 #include "native_gecko.h"
 
 /* BG stack headers*/
-#include "gatt_db.h"
+#include "../gatt_db.h"
 
 /* em library */
 #include "em_system.h"

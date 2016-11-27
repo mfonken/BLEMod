@@ -49,6 +49,9 @@
 #include "flashpwr.h"
 #endif
 
+#include "sensors/imu.h"
+#include "system/usart_sp.h"
+
 /***********************************************************************************************//**
  * @addtogroup Application
  * @{
@@ -106,6 +109,11 @@ int main(void)
 //		IMU_Read( I2C0, motion_data );
 //		Print_IMU( motion_data );
 //	}
+	uint16_t imu_data[6];
+	IMU_Read( imu_data );
+	double filtered_data[6];
+	IMU_Filter( imu_data, filtered_data );
+	Print_IMU( filtered_data, true );
     struct gecko_cmd_packet* evt;
     /* Check for stack event. */
     evt = gecko_wait_event();

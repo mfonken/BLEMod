@@ -4,11 +4,72 @@
  ***************************************************************************************************
  *      Author: Matthew Fonken
  **************************************************************************************************/
-
+#include <stdio.h>
+#include <math.h>
 /* em headers */
 #include "em_usart.h"
 #include "em_i2c.h"
 
+// reverses a string 'str' of length 'len'
+void reverse(uint8_t *str, int len)
+{
+    int i=0, j=len-1, temp;
+    while (i<j)
+    {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+        i++; j--;
+    }
+}
+
+ // Converts a given integer x to string str[].  d is the number
+ // of digits required in output. If d is more than the number
+ // of digits in x, then 0s are added at the beginning.
+int intToStr(int x, uint8_t str[], int d)
+{
+    int i = 0;
+    while (x)
+    {
+        str[i++] = (x%10) + '0';
+        x = x/10;
+    }
+
+    // If number of digits required is more, then
+    // add 0s at the beginning
+    while (i < d)
+        str[i++] = '0';
+
+    reverse(str, i);
+    str[i] = '\0';
+    return i;
+}
+
+// Converts a floating point number to string.
+void dtoa (double n, uint8_t *res, int afterpoint)
+{
+    // Extract integer part
+    int ipart = (int)n;
+
+    // Extract floating part
+    double dpart = n - (double)ipart;
+
+    // convert integer part to string
+    int i = intToStr(ipart, res, 0);
+
+    // check for display option after point
+    if (afterpoint != 0)
+    {
+        res[i] = '.';  // add dot
+
+        // Get the value of fraction part upto given no.
+        // of points after dot. The third parameter is needed
+        // to handle cases like 233.007
+        dpart = dpart * pow(10, afterpoint);
+
+        intToStr((int)dpart, res + i + 1, afterpoint);
+    }
+}
 /***********************************************************************************************//**
  * @addtogroup Application
  * @{
@@ -49,49 +110,69 @@ void Print_String( uint8_t *s, uint8_t len )
  *  \brief  Print two byte integer
  *  \param[in] v integer to print
  **************************************************************************************************/
-void Print_Double_Ascii( uint16_t v )
+void Print_Double_Ascii( double v )
 {
-	bool pad = true;
-	for( int i = 4; i >= 0; i-- )
+	uint8_t output[9];
+	dtoa( v, output, 3 );
+	for( int i = 0; i < 9; i++ )
 	{
-		uint16_t power = 1;
-		for( int p = 0; p < i; p++ )
+		if( output[i] == '.' || ( output[i] >= 0x30 && output[i] < 0x40 ) )
 		{
-			power *= 10;
+			USART_Tx( USART0, output[i] );
 		}
-		uint8_t digit = v / power;
-		if( pad && digit != 0 )
-		{
-			pad = false;
-		}
-		if( pad == false )
-		{
-			USART_Tx( USART0, digit | 0x30 );
-		}
-		v -= ( digit * power );
 	}
+	Print_Char( 0x00 );
+//	bool pad = true;
+//	for( int i = 4; i >= 0; i-- )
+//	{
+//		uint16_t power = 1;
+//		for( int p = 0; p < i; p++ )
+//		{
+//			power *= 10;
+//		}
+//		uint8_t digit = ( uint8_t )v / power;
+//		if( pad && digit != 0 )
+//		{
+//			pad = false;
+//		}
+//		if( pad == false )
+//		{
+//			USART_Tx( USART0, digit | 0x30 );
+//		}
+//		v -= ( digit * power );
+//	}
 }
 
 /***********************************************************************************************//**
  *  \brief  Print IMU Data
  *  \param[in] motion_data IMU data to print
  **************************************************************************************************/
-void Print_IMU( uint16_t motion_data[6] )
+void Print_IMU( double motion_data[6], bool stripped )
 {
-	Print_String( "IMU: g(", 7 );
+	if( !stripped )
+		Print_String( "IMU: g(", 7 );
+	Print_Char( '0' );
 	Print_Double_Ascii( motion_data[0] );
 	Print_Char( ',' );
 	Print_Double_Ascii( motion_data[1] );
 	Print_Char( ',' );
 	Print_Double_Ascii( motion_data[2] );
-	Print_String( ") | a(", 6 );
+	if( !stripped )
+		Print_String( ") | a(", 6 );
+	else
+		Print_Char( ',' );
 	Print_Double_Ascii( motion_data[3] );
 	Print_Char( ',' );
 	Print_Double_Ascii( motion_data[4] );
 	Print_Char( ',' );
 	Print_Double_Ascii( motion_data[5] );
-	Print_String( ")\r\n", 3 );
+	if( !stripped )
+		Print_Char( ')' );
+	Print_Char( '\n' );
+	Print_Char( 0x00 );
 }
+
+
 
 /** @} (end addtogroup sp) */
 /** @} (end addtogroup Application) */

@@ -36,101 +36,6 @@
 extern uint8_t acc[3];
 extern uint8_t gyro[3];
 
-
-/***************************************************************************************************
- Local Functions
- **************************************************************************************************/
-
-/**************************************************************************//**
- * \brief Get IMU Register
- * \param[out] Return value from register
- * \param[in] reg Register to access
- *****************************************************************************/
-uint8_t 	IMU_GetRegister( uint8_t reg );
-
-/**************************************************************************//**
- * \brief Set IMU Register
- * \param[in] reg Register to access
- * \param[in] val Value to set
- *****************************************************************************/
-void 		IMU_SetRegister( uint8_t reg, uint8_t val );
-
-/**************************************************************************//**
- * \brief Reset Local Settings to Default
- ******************************************************************************
- * NOTE: This does not physically set on the IMU, just the local variable
- *****************************************************************************/
-void 		IMU_Default( void );
-
-/**************************************************************************//**
- * \brief Initialize IMU with local settings
- * \param[out] Initialization success
- *****************************************************************************/
-bool 		IMU_Init( void );
-
-/**************************************************************************//**
- * \brief Read IMU accel and gyro data
- * \param[in] read_data Array to store read data
- *****************************************************************************/
-void 	 	IMU_Read( uint16_t *read_data );
-
-/**************************************************************************//**
- * \brief Convert accelerometer data to readable double value
- * \param[out] Return converted value 
- * \param[in] data Raw value from register
- *****************************************************************************/
-double 		convertAccel( uint16_t data );
-
-/**************************************************************************//**
- * \brief Convert gyroscope data to readable double value
- * \param[out] Return converted value
- * \param[in] data Raw value from register
- *****************************************************************************/
-double 		convertGyro( uint16_t data );
-
-/**************************************************************************//**
- * \brief Get roll angle from accelerometer data
- * \param[out] Return value
- *****************************************************************************/
-double 		getRoll( void );
-
-/**************************************************************************//**
- * \brief Get pitch angle from accelerometer data
- * \param[out] Return value
- *****************************************************************************/
-double 		getPitch( void );
-
-/**************************************************************************//**
- * \brief Get yaw angle from accelerometer data
- * \param[out] Return value
- *****************************************************************************/
-double 		getYaw( void );
-
-/**************************************************************************//**
- * \brief Get no gravitation acceleration from accelerometer data
- * \param[out] Return 3D vector of acceleration
- * \param[in] tba Tait-Bryan angles to transform by
- *****************************************************************************/
-vec3_t * 	getNonGravAcceleration( ang3_t * tba );
-
-/**************************************************************************//**
- * \brief Read temperature from register
- * \param[out] Return raw temperature data
- *****************************************************************************/
-uint16_t 	IMU_ReadTemp( void );
-
-/**************************************************************************//**
- * \brief Read temperature in Fahrenheit
- * \param[out] Return corrected temperature data as readable double
- *****************************************************************************/
-double 		getTempF( void );
-
-/**************************************************************************//**
- * \brief Read temperature in Celsius
- * \param[out] Return corrected temperature data as readable double
- *****************************************************************************/
-double 		getTempC( void );
-
 /***************************************************************************************************
  Local Types
  **************************************************************************************************/
@@ -167,7 +72,7 @@ enum accel_data_rate
 	ACCEL_DATA_RATE_13330HZ = 0xB0,
 };
 /** Gyroscope Scale Options */
-enum gyro_scales
+enum _gyro_scales
 {
 	GYRO_SCALE_125DPS       = 0x00,
 	GYRO_SCALE_245DPS       = 0x03,
@@ -190,14 +95,14 @@ enum gryo_data_rate
 };
 
 /** FIFO Mode Options */
-enum fifo_mode
+typedef enum _fifo_mode
 {
 	BYPASS_MODE             = 0,
 	FIFO_ACTIVE_MODE        = 1,
 	CONTINUOUS_MODE         = 6,
 	CONT_TO_FIFO_MODE       = 3,
 	BYPASS_TO_CONT_MODE     = 4,
-};
+} fifo_mode;
 
 /** Default Setting Values */
 enum defaultValue
@@ -224,7 +129,7 @@ enum defaultValue
 };
 
 /** IMU Register Addresses */
-enum regAddr
+typedef enum _regAddr
 {
 	FUNC_CFG_ACCESS         = 0x01,
 
@@ -294,7 +199,7 @@ enum regAddr
 	FREE_FALL               = 0x5D,
 	MD1_CFG                 = 0x5E,
 	MD2_CFG                 = 0x5F,
-};
+} regAddr;
 
 /***************************************************************************************************
  Local Structures
@@ -308,9 +213,9 @@ typedef struct _IMU_General_Settings
 /** IMU FIFO Settings */
 typedef struct _IMU_FIFO_Settings
 {
-    uint16_t  sampleRate;               /**< FIFO sample rate           */
-    uint16_t  threshold;                /**< FIFO collection threshold  */
-    fifo_mode mode;                     /**< FIFO mode                  */
+    uint16_t sampleRate;                /**< FIFO sample rate           */
+    uint16_t threshold;                 /**< FIFO collection threshold  */
+    uint8_t  mode;                      /**< FIFO mode                  */
 } IMU_FIFO_Settings;
 
 /** IMU Gyroscope Settings */
@@ -329,7 +234,7 @@ typedef struct _IMU_Accel_Settings
 {
     bool  	 enabled;                   /**< Accel enable control       */
     bool	 dataReadyEnabled;          /**< Accel data ready enable    */
-    uint16_t range;                     /**< Accel dps range            */
+    uint16_t range;                     /**< Accel g range            	*/
     uint16_t sampleRate;                /**< Accel sample rate          */
     uint16_t bandWidth;                 /**< Accel bandwidth            */
     bool  	 fifoEnabled;               /**< FIFO accel control         */
@@ -344,6 +249,107 @@ typedef struct _IMU_Settings
     IMU_Gyro_Settings  		gyro;       /**< IMU gyro settings          */
     IMU_Accel_Settings 		accel;      /**< IMU accel settings         */
 } IMU_Settings;
+
+/***************************************************************************************************
+ Local Functions
+ **************************************************************************************************/
+
+/**************************************************************************//**
+ * \brief Get IMU Register
+ * \param[out] Return value from register
+ * \param[in] reg Register to access
+ *****************************************************************************/
+uint8_t 	IMU_GetRegister( regAddr reg );
+
+/**************************************************************************//**
+ * \brief Set IMU Register
+ * \param[in] reg Register to access
+ * \param[in] val Value to set
+ *****************************************************************************/
+void 		IMU_SetRegister( regAddr reg, uint8_t val );
+
+/**************************************************************************//**
+ * \brief Reset Local Settings to Default
+ ******************************************************************************
+ * NOTE: This does not physically set on the IMU, just the local variable
+ *****************************************************************************/
+void 		IMU_Default( void );
+
+/**************************************************************************//**
+ * \brief Initialize IMU with local settings
+ * \param[out] Initialization success
+ *****************************************************************************/
+bool 		IMU_Init( void );
+
+/**************************************************************************//**
+ * \brief Read IMU accel and gyro data
+ * \param[in] read_data Array to store read data
+ *****************************************************************************/
+void 	 	IMU_Read( uint16_t read_data[6] );
+
+/**************************************************************************//**
+ * \brief Filter IMU accel and gyro data
+ * \param[in] read_data Array of data to filter
+ * \param[in] filtered_data Array to store filtered data
+ *****************************************************************************/
+void IMU_Filter( uint16_t data[6], double filtered_data[6] );
+
+/**************************************************************************//**
+ * \brief Convert accelerometer data to readable double value
+ * \param[out] Return converted value
+ * \param[in] data Raw value from register
+ *****************************************************************************/
+double 		convertAccel( uint16_t data );
+
+/**************************************************************************//**
+ * \brief Convert gyroscope data to readable double value
+ * \param[out] Return converted value
+ * \param[in] data Raw value from register
+ *****************************************************************************/
+double 		convertGyro( uint16_t data );
+
+/**************************************************************************//**
+ * \brief Get roll angle from accelerometer data
+ * \param[out] Return value
+ *****************************************************************************/
+double 		getRoll( void );
+
+/**************************************************************************//**
+ * \brief Get pitch angle from accelerometer data
+ * \param[out] Return value
+ *****************************************************************************/
+double 		getPitch( void );
+
+/**************************************************************************//**
+ * \brief Get yaw angle from accelerometer data
+ * \param[out] Return value
+ *****************************************************************************/
+double 		getYaw( void );
+
+/**************************************************************************//**
+ * \brief Get no gravitation acceleration from accelerometer data
+ * \param[out] Return 3D vector of acceleration
+ * \param[in] tba Tait-Bryan angles to transform by
+ *****************************************************************************/
+vec3_t * 	getNonGravAcceleration( ang3_t * tba );
+
+/**************************************************************************//**
+ * \brief Read temperature from register
+ * \param[out] Return raw temperature data
+ *****************************************************************************/
+uint16_t 	IMU_ReadTemp( void );
+
+/**************************************************************************//**
+ * \brief Read temperature in Fahrenheit
+ * \param[out] Return corrected temperature data as readable double
+ *****************************************************************************/
+double 		getTempF( void );
+
+/**************************************************************************//**
+ * \brief Read temperature in Celsius
+ * \param[out] Return corrected temperature data as readable double
+ *****************************************************************************/
+double 		getTempC( void );
 
 /** @} (end addtogroup imu) */
 /** @} (end addtogroup Application) */

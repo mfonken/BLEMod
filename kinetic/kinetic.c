@@ -36,7 +36,7 @@ static kinetic_t      kinetics;
  **************************************************************************************************/
 void initKinetics( void )
 {
-	if ( !IMU_Init( ) )
+	if ( !IMU_Init() )
 	{
 		Print_String("No IMU Found.\r\n", 15); /* Display error message on screen. */
 	}

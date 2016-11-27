@@ -15,7 +15,7 @@
 
 /* Include feature header */
 #include "boards.h"
-#include "ble-configuration.h"
+#include "../ble-configuration.h"
 #include "board_features.h"
 
 /* BG stack headers*/

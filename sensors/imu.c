@@ -65,7 +65,7 @@ void IMU_SetRegister( regAddr reg, uint8_t val )
 {
 	uint8_t i2c_write_data[2];
 	i2c_write_data[0] = reg;
-	i2c_write_data[0] = val;
+	i2c_write_data[1] = val;
 	I2C_Write( IMU_ADDR, i2c_write_data, 2 );
 }
 
@@ -78,7 +78,7 @@ void IMU_SetRegister( regAddr reg, uint8_t val )
  ******************************************************************************
  * NOTE: This does not physically set on the IMU, just the local variable
  *****************************************************************************/
-bool IMU_Default( void )
+void IMU_Default( void )
 {
 	settings.general.temperatureEnabled = TEMP_ENABLED;
 	settings.fifo.threshold				= FIFO_THRESHOLD;
@@ -232,6 +232,7 @@ bool IMU_Init( void )
 		options |= GYRO_DATA_RATE_PWDN;
 	}
 	IMU_SetRegister( CTRL2_G, options );
+	IMU_SetRegister( CTRL3_C, 0x04 );
 	return true;
 }
 
@@ -245,36 +246,30 @@ bool IMU_Init( void )
  * \brief Read IMU accel and gyro data
  * \param[in] read_data Array to store read data
  *****************************************************************************/
-bool IMU_Read( uint16_t *read_data )
+void IMU_Read( uint16_t read_data[6] )
 {
-	I2C_TransferSeq_TypeDef    seq;
-	I2C_TransferReturn_TypeDef ret;
-	uint8_t                    i2c_write_data[1];
-	uint8_t                    i2c_read_data[12];
-
-	seq.addr  = IMU_ADDR;
-	seq.flags = I2C_FLAG_WRITE_READ;
-	/* Select command to issue */
-	i2c_write_data[0] = OUTX_L_G;
-	seq.buf[0].data   = i2c_write_data;
-	seq.buf[0].len    = 1;
-	/* Select location/length of data to be read */
-	seq.buf[1].data = i2c_read_data;
-	seq.buf[1].len  = 12;
-
-	ret = I2C_TransferInit(I2C0, &seq);
-	while (ret == i2cTransferInProgress)
-	{
-		ret = I2C_Transfer(I2C0);
-	}
-
+	uint8_t i2c_read_data[12];
+	I2C_Read( IMU_ADDR, OUTX_L_G, i2c_read_data, 12);
 	/* Combine low and high byte values */
 	for( int i = 0; i < 6 ; i++ )
 	{
 		read_data[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
 	}
+}
 
-	return true;
+/**************************************************************************//**
+ * \brief Filter IMU accel and gyro data
+ * \param[in] read_data Array of data to filter
+ * \param[in] filtered_data Array to store filtered data
+ *****************************************************************************/
+void IMU_Filter( uint16_t data[6], double filtered_data[6] )
+{
+	filtered_data[0] =  convertGyro( data[0] );
+	filtered_data[1] =  convertGyro( data[1] );
+	filtered_data[2] =  convertGyro( data[2] );
+	filtered_data[3] = convertAccel( data[3] );
+	filtered_data[4] = convertAccel( data[4] );
+	filtered_data[5] = convertAccel( data[5] );
 }
 
 /**************************************************************************//**
@@ -294,8 +289,8 @@ double convertAccel( uint16_t data )
  *****************************************************************************/
 double convertGyro( uint16_t data )
 {
-    uint8_t rangeDivisor = settings.gyroRange / 125;
-    if ( settings.gyroRange == 245 ) {
+    uint8_t rangeDivisor = settings.gyro.range / 125;
+    if ( settings.gyro.range == 245 ) {
         rangeDivisor = 2;
     }
 	return ( double )data * 4.375 * ( rangeDivisor ) / 1000;
@@ -365,8 +360,8 @@ vec3_t * getNonGravAcceleration( ang3_t * tba )
 uint16_t IMU_ReadTemp( void )
 {
 	uint16_t tempurature;
-	tempurature  = IMU_ReadRegister( OUT_TEMP_H ) << 8;
-	tempurature += IMU_ReadRegister( OUT_TEMP_L );
+	tempurature  = IMU_GetRegister( OUT_TEMP_H ) << 8;
+	tempurature += IMU_GetRegister( OUT_TEMP_L );
 	return tempurature;
 }
 

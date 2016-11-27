@@ -21,6 +21,8 @@
 #include "app_hw.h"
 #include "usart_sp.h"
 
+#include "../sensors/imu.h"
+
 /***********************************************************************************************//**
  * @addtogroup Application
  * @{
@@ -56,6 +58,7 @@
 
 void appHwInit(void)
 {
+	Print_String( "Initializing Application\r\n", 26 );
 	initKinetics();
 }
 

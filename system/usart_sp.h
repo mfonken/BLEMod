@@ -29,14 +29,17 @@ void Print_String( uint8_t *s, uint8_t len );
  *  \param[in] s String to print
  *  \param[in] len Length of string
  **************************************************************************************************/
-void Print_Double_Ascii( uint16_t v );
+void Print_Double_Ascii( double v );
 
 /***********************************************************************************************//**
  *  \brief  Print two byte integer
  *  \param[in] v integer to print
  **************************************************************************************************/
-void Print_IMU( uint16_t motion_data[6] );
+void Print_IMU( double motion_data[6], bool stripped );
 
+void reverse(uint8_t *str, int len);
+int intToStr(int x, uint8_t str[], int d);
+void dtoa(double n, uint8_t *res, int afterpoint);
 /** @} (end addtogroup sp) */
 /** @} (end addtogroup Application) */
 
