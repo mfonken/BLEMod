@@ -49,7 +49,7 @@
 #include "flashpwr.h"
 #endif
 
-#include "sensors/mpu9250.h"
+#include "sensors/imu/LSM9DS1.h"
 #include "system/usart_sp.h"
 
 /***********************************************************************************************//**
@@ -104,10 +104,6 @@ int main(void)
 //	{
 //		uint8_t ret = USART_RxDataGet(USART0);
 //		//USART_Tx(USART0, ret);
-//
-//		uint16_t motion_data[6];
-//		IMU_Read( I2C0, motion_data );
-//		Print_IMU( motion_data );
 //	}
 
     struct gecko_cmd_packet* evt;

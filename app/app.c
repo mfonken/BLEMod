@@ -29,11 +29,13 @@
 #include "beacon.h"
 #include "app_timer.h"
 
+
 /* Own header */
 #include "app.h"
 
 /* Additional Functions */
 #include "usart_sp.h"
+#include "PCA9534A.h"
 
 /***********************************************************************************************//**
  * @addtogroup Application
@@ -91,6 +93,7 @@ void appInit( void )
   appHwInit();
 
   /* Initialize services */
+
 //  htmInit();
 }
 
@@ -118,6 +121,8 @@ void appHandleEvents( struct gecko_cmd_packet* evt )
 	  /* Call advertisement.c connection started callback */
       advConnectionStarted();
       Print_String( "Connection Started.\r\n", 21 );
+//      disablePowerSwitch();
+//      systemControllerSetOutput();
       break;
 
     /* Value of attribute changed from the local database by remote GATT client */

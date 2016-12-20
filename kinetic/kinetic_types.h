@@ -48,6 +48,10 @@ typedef struct _imu_t
     double      gyro_bias[3];
     double      mag_bias[3];
 
+    double      accel_res;
+	double      gyro_res;
+	double      mag_res;
+
     double 		roll;
     double 		pitch;
     double 		yaw;

@@ -67,5 +67,6 @@ app/app_hw.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm
 app/app_hw.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\kinetic_types.h
 app/app_hw.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\app\app_hw.h
 app/app_hw.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\system\usart_sp.h
-app/app_hw.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\mpu9250.h
-app/app_hw.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\mpu9250_regs.h
+app/app_hw.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\imu\LSM9DS1.h
+app/app_hw.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\imu\LSM9DS1_regs.h
+app/app_hw.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\system\PCA9534A.h

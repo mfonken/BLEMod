@@ -73,3 +73,4 @@ app/app.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\ble\bea
 app/app.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\app\app_timer.h
 app/app.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\app\app.h
 app/app.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\system\usart_sp.h
+app/app.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\system\PCA9534A.h

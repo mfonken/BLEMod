@@ -1,12 +1,12 @@
 /***********************************************************************************************//**
- * \file   imu.h
+ * \file   LSM9DS1.h
  * \brief  IMU Control Header
  ***************************************************************************************************
  *      Author: Matthew Fonken
  **************************************************************************************************/
 
-#ifndef IMU_H_
-#define IMU_H_
+#ifndef LSM9DS1_H_
+#define LSM9DS1_H_
 
 /* Standard headers */
 #include <stdbool.h>
@@ -16,7 +16,7 @@
 
 /* Included types header */
 #include "kinetic_types.h"
-#include "mpu9250_regs.h"
+#include "LSM9DS1_regs.h"
 
 /***********************************************************************************************//**
  * @addtogroup Application
@@ -27,6 +27,37 @@
  * @addtogroup imu
  * @{
  **************************************************************************************************/
+
+//extern uint8_t accel[3];
+//extern uint8_t accel_bias[3];
+//extern uint8_t gyro[3];
+//extern uint8_t gyro_bias[3];
+//extern uint8_t mag[3];
+//extern uint8_t mag_bias[3];
+
+#define ACCEL_BIAS_X 	0
+#define ACCEL_BIAS_Y	0
+#define ACCEL_BIAS_Z	0
+
+#define GYRO_BIAS_X		0
+#define GYRO_BIAS_Y		0
+#define GYRO_BIAS_Z		0
+
+#define MAG_BIAS_X		0
+#define MAG_BIAS_Y		0
+#define MAG_BIAS_Z		0
+
+#define MU				0.001
+
+/***************************************************************************************************
+ Local Structures
+ **************************************************************************************************/
+
+typedef struct
+{
+    imu_t               imu;
+    LSM9DS1_cfg_t       settings;
+} LSM9DS1_t;
 
 /***************************************************************************************************
  Local Functions
@@ -57,27 +88,13 @@ void 		IMU_Default( void );
  * \brief Initialize IMU with local settings
  * \param[out] Initialization success
  *****************************************************************************/
-bool 		IMU_Init( void );
+void 		IMU_Init( void );
 
 /**************************************************************************//**
  * \brief Read IMU accel and gyro data
  * \param[in] read_data Array to store read data
  *****************************************************************************/
-imu_t *		IMU_Update( void );
-
-/**************************************************************************//**
- * \brief Convert accelerometer data to readable double value
- * \param[out] Return converted value 
- * \param[in] data Raw value from register
- *****************************************************************************/
-double 		convertAccel( uint16_t data );
-
-/**************************************************************************//**
- * \brief Convert gyroscope data to readable double value
- * \param[out] Return converted value
- * \param[in] data Raw value from register
- *****************************************************************************/
-double 		convertGyro( uint16_t data );
+LSM9DS1_t * IMU_Update( void );
 
 /**************************************************************************//**
  * \brief Get roll angle (phi) from accelerometer data
@@ -127,16 +144,6 @@ double 		getTempF( void );
  * \param[out] Return corrected temperature data as readable double
  *****************************************************************************/
 double 		getTempC( void );
-
-/***************************************************************************************************
- Local Structures
- **************************************************************************************************/
-
-typedef struct
-{
-    imu_t               imu;
-    mpu9250_global_t    settings;
-} mpu9250_t;
 
 /** @} (end addtogroup imu) */
 /** @} (end addtogroup Application) */

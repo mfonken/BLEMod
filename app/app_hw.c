@@ -14,14 +14,14 @@
 
 /* STK header files. */
 
-/* Temp sensor and I2c*/
+/* Temp sensor and I2C*/
 #include "em_usart.h"
 #include "app_ui.h"
 #include "kinetic.h"
 #include "app_hw.h"
 #include "usart_sp.h"
-
-#include "../sensors/mpu9250.h"
+#include "LSM9DS1.h"
+#include "PCA9534A.h"
 
 /***********************************************************************************************//**
  * @addtogroup Application
@@ -59,6 +59,8 @@
 void appHwInit(void)
 {
 	Print_String( "Initializing Application\r\n", 26 );
+	PCA9534A_Init();
+	Print_String( "System Controller Initialized\r\n", 31 );
 	initKinetics();
 }
 

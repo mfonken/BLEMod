@@ -8,6 +8,8 @@
 #ifndef SYSTEM_I2C_SP_H_
 #define SYSTEM_I2C_SP_H_
 
+#include <stdbool.h>
+
 /***********************************************************************************************//**
  * @addtogroup Application
  * @{

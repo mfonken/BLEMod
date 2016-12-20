@@ -15,7 +15,7 @@ kinetic/kinetic.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.
 kinetic/kinetic.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\ymath.h
 kinetic/kinetic.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\xtgmath.h
 kinetic/kinetic.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\kinetic_types.h
-kinetic/kinetic.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\mpu9250.h
+kinetic/kinetic.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\imu\LSM9DS1.h
 kinetic/kinetic.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\stdbool.h
 kinetic/kinetic.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include\em_device.h
 kinetic/kinetic.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include\efr32bg1b232f256gm32.h
@@ -62,7 +62,7 @@ kinetic/kinetic.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.
 kinetic/kinetic.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include\efr32bg1b_dmareq.h
 kinetic/kinetic.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include\efr32bg1b_af_ports.h
 kinetic/kinetic.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include\efr32bg1b_af_pins.h
-kinetic/kinetic.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\mpu9250_regs.h
+kinetic/kinetic.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\sensors\imu\LSM9DS1_regs.h
 kinetic/kinetic.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\kalman.h
 kinetic/kinetic.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_rtcc.h
 kinetic/kinetic.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc\em_assert.h

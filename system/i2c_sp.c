@@ -65,7 +65,7 @@ bool I2C_Write( uint8_t addr, uint8_t *i2c_write_data, uint8_t i2c_write_data_le
 {
 	I2C_TransferSeq_TypeDef    seq;
 	I2C_TransferReturn_TypeDef ret;
-	uint8_t                    i2c_read_data[1];
+	//uint8_t                    i2c_read_data[1];
 
 	seq.addr  = addr;
 	seq.flags = I2C_FLAG_WRITE;

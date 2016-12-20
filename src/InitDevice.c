@@ -40,6 +40,7 @@ extern void enter_DefaultMode_from_RESET(void) {
 	CMU_enter_DefaultMode_from_RESET();
 	RTCC_enter_DefaultMode_from_RESET();
 	USART0_enter_DefaultMode_from_RESET();
+	USART1_enter_DefaultMode_from_RESET();
 	I2C0_enter_DefaultMode_from_RESET();
 	GPCRC_enter_DefaultMode_from_RESET();
 	LDMA_enter_DefaultMode_from_RESET();
@@ -156,6 +157,9 @@ extern void CMU_enter_DefaultMode_from_RESET(void) {
 
 	/* Enable clock for USART0 */
 	CMU_ClockEnable(cmuClock_USART0, true);
+
+	/* Enable clock for USART1 */
+	CMU_ClockEnable(cmuClock_USART1, true);
 
 	/* Enable clock for GPIO by default */
 	CMU_ClockEnable(cmuClock_GPIO, true);
@@ -302,10 +306,10 @@ extern void USART0_enter_DefaultMode_from_RESET(void) {
 			| USART_ROUTELOC0_CLKLOC_LOC4;
 	USART0->ROUTEPEN = USART0->ROUTEPEN & (~USART_ROUTEPEN_CLKPEN);
 
-	/* Set up CS pin */
+	/* Disable CS pin */
 	USART0->ROUTELOC0 = (USART0->ROUTELOC0 & (~_USART_ROUTELOC0_CSLOC_MASK))
-			| USART_ROUTELOC0_CSLOC_LOC3;
-	USART0->ROUTEPEN = USART0->ROUTEPEN | USART_ROUTEPEN_CSPEN;
+			| USART_ROUTELOC0_CSLOC_LOC6;
+	USART0->ROUTEPEN = USART0->ROUTEPEN & (~USART_ROUTEPEN_CSPEN);
 
 	/* Disable CTS pin */
 	USART0->ROUTELOC1 = (USART0->ROUTELOC1 & (~_USART_ROUTELOC1_CTSLOC_MASK))
@@ -358,21 +362,88 @@ extern void USART0_enter_DefaultMode_from_RESET(void) {
 extern void USART1_enter_DefaultMode_from_RESET(void) {
 
 	// $[USART_InitAsync]
+	USART_InitAsync_TypeDef initasync = USART_INITASYNC_DEFAULT;
+
+	initasync.enable = usartDisable;
+	initasync.baudrate = 115200;
+	initasync.databits = usartDatabits8;
+	initasync.parity = usartNoParity;
+	initasync.stopbits = usartStopbits1;
+	initasync.oversampling = usartOVS16;
+#if defined( USART_INPUT_RXPRS ) && defined( USART_CTRL_MVDIS )
+	initasync.mvdis = 0;
+	initasync.prsRxEnable = 0;
+	initasync.prsRxCh = 0;
+#endif
+
+	USART_InitAsync(USART1, &initasync);
 	// [USART_InitAsync]$
 
 	// $[USART_InitSync]
 	// [USART_InitSync]$
 
 	// $[USART_InitPrsTrigger]
+	USART_PrsTriggerInit_TypeDef initprs = USART_INITPRSTRIGGER_DEFAULT;
+
+	initprs.rxTriggerEnable = 0;
+	initprs.txTriggerEnable = 0;
+	initprs.prsTriggerChannel = usartPrsTriggerCh0;
+
+	USART_InitPrsTrigger(USART1, &initprs);
 	// [USART_InitPrsTrigger]$
 
 	// $[USART_InitIO]
+	/* Set up CLK pin */
+	USART1->ROUTELOC0 = (USART1->ROUTELOC0 & (~_USART_ROUTELOC0_CLKLOC_MASK))
+			| USART_ROUTELOC0_CLKLOC_LOC5;
+	USART1->ROUTEPEN = USART1->ROUTEPEN | USART_ROUTEPEN_CLKPEN;
+
+	/* Set up CS pin */
+	USART1->ROUTELOC0 = (USART1->ROUTELOC0 & (~_USART_ROUTELOC0_CSLOC_MASK))
+			| USART_ROUTELOC0_CSLOC_LOC5;
+	USART1->ROUTEPEN = USART1->ROUTEPEN | USART_ROUTEPEN_CSPEN;
+
+	/* Disable CTS pin */
+	USART1->ROUTELOC1 = (USART1->ROUTELOC1 & (~_USART_ROUTELOC1_CTSLOC_MASK))
+			| USART_ROUTELOC1_CTSLOC_LOC2;
+	USART1->ROUTEPEN = USART1->ROUTEPEN & (~USART_ROUTEPEN_CTSPEN);
+
+	/* Disable RTS pin */
+	USART1->ROUTELOC1 = (USART1->ROUTELOC1 & (~_USART_ROUTELOC1_RTSLOC_MASK))
+			| USART_ROUTELOC1_RTSLOC_LOC1;
+	USART1->ROUTEPEN = USART1->ROUTEPEN & (~USART_ROUTEPEN_RTSPEN);
+
+	/* Set up RX pin */
+	USART1->ROUTELOC0 = (USART1->ROUTELOC0 & (~_USART_ROUTELOC0_RXLOC_MASK))
+			| USART_ROUTELOC0_RXLOC_LOC5;
+	USART1->ROUTEPEN = USART1->ROUTEPEN | USART_ROUTEPEN_RXPEN;
+
+	/* Disable TX pin */
+	USART1->ROUTELOC0 = (USART1->ROUTELOC0 & (~_USART_ROUTELOC0_TXLOC_MASK))
+			| USART_ROUTELOC0_TXLOC_LOC10;
+	USART1->ROUTEPEN = USART1->ROUTEPEN & (~USART_ROUTEPEN_TXPEN);
+
 	// [USART_InitIO]$
 
 	// $[USART_Misc]
+	/* Disable CTS */
+	USART1->CTRLX = USART1->CTRLX & (~USART_CTRLX_CTSEN);
+	/* Set CTS active low */
+	USART1->CTRLX = USART1->CTRLX & (~USART_CTRLX_CTSINV);
+	/* Set RTS active low */
+	USART1->CTRLX = USART1->CTRLX & (~USART_CTRLX_RTSINV);
+	/* Set CS active low */
+	USART1->CTRL = USART1->CTRL & (~USART_CTRL_CSINV);
+	/* Set TX active high */
+	USART1->CTRL = USART1->CTRL & (~USART_CTRL_TXINV);
+	/* Set RX active high */
+	USART1->CTRL = USART1->CTRL & (~USART_CTRL_RXINV);
 	// [USART_Misc]$
 
 	// $[USART_Enable]
+
+	/* Enable USART if opted by user */
+	USART_Enable(USART1, usartEnable);
 	// [USART_Enable]$
 
 }
@@ -553,12 +624,21 @@ extern void PRS_enter_DefaultMode_from_RESET(void) {
 extern void PORTIO_enter_DefaultMode_from_RESET(void) {
 
 	// $[Port A Configuration]
+
+	/* Pin PA0 is configured to Push-pull */
+	GPIO_PinModeSet(gpioPortA, 0, gpioModePushPull, 0);
+
+	/* Pin PA1 is configured to Input enabled */
+	GPIO_PinModeSet(gpioPortA, 1, gpioModeInput, 0);
 	// [Port A Configuration]$
 
 	// $[Port B Configuration]
 
-	/* Pin PB11 is configured to Push-pull */
-	GPIO_PinModeSet(gpioPortB, 11, gpioModePushPull, 0);
+	/* Pin PB11 is configured to Input enabled */
+	GPIO_PinModeSet(gpioPortB, 11, gpioModeInput, 0);
+
+	/* Pin PB13 is configured to Push-pull */
+	GPIO_PinModeSet(gpioPortB, 13, gpioModePushPull, 0);
 	// [Port B Configuration]$
 
 	// $[Port C Configuration]

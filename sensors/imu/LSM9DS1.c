@@ -14,10 +14,9 @@
 
 /* Additional function headers */
 #include "i2c_sp.h"
-#include "mpu9250_regs.h"
 
 /* Own header */
-#include "mpu9250.h"
+#include "LSM9DS1.h"
 
 /* Math headers */
 #include "matrix.h"
@@ -36,11 +35,11 @@
  Macros
  **************************************************************************************************/
 #define sign(x) x > 0 ? 1:-1
-#define MU		0.01
+
 /***************************************************************************************************
  Local Variables
  **************************************************************************************************/
-mpu9250_t this;
+LSM9DS1_t this;
 
 /***************************************************************************************************
  Local Functions
@@ -53,7 +52,7 @@ mpu9250_t this;
 uint8_t IMU_GetRegister( uint8_t reg )
 {
 	uint8_t i2c_read_data[1];
-	I2C_Read( IMU_ADDR, reg, i2c_read_data, 1 );
+	I2C_Read( LSM9DS1_IMU_ADDR, reg, i2c_read_data, 1 );
 	return i2c_read_data[0];
 }
 
@@ -67,7 +66,7 @@ void IMU_SetRegister( uint8_t reg, uint8_t val )
 	uint8_t i2c_write_data[2];
 	i2c_write_data[0] = reg;
 	i2c_write_data[0] = val;
-	I2C_Write( IMU_ADDR, i2c_write_data, 2 );
+	I2C_Write( LSM9DS1_IMU_ADDR, i2c_write_data, 2 );
 }
 
 /***************************************************************************************************
@@ -78,24 +77,77 @@ void IMU_SetRegister( uint8_t reg, uint8_t val )
  * \brief Initialize IMU with local settings
  * \param[out] Initialization success
  *****************************************************************************/
-bool IMU_Init( void )
+void IMU_Init( void )
 {
+	LSM9DS1_defaultInit( &this.settings );
 
-	this.imu.accel_bias[0] = ACCEL_BIAS_X;
-	this.imu.accel_bias[1] = ACCEL_BIAS_Y;
-	this.imu.accel_bias[2] = ACCEL_BIAS_Z;
-	this.imu.gyro_bias[0]  =  GYRO_BIAS_X;
-	this.imu.gyro_bias[1]  =  GYRO_BIAS_Y;
-	this.imu.gyro_bias[2]  =  GYRO_BIAS_Z;
-	this.imu.mag_bias[0]   =   MAG_BIAS_X;
-	this.imu.mag_bias[1]   =   MAG_BIAS_Y;
-	this.imu.mag_bias[2]   =   MAG_BIAS_Z;
+    this.imu.accel_bias[0] 	= ACCEL_BIAS_X;
+    this.imu.accel_bias[1] 	= ACCEL_BIAS_Y;
+    this.imu.accel_bias[2] 	= ACCEL_BIAS_Z;
 
-    mpu9250_defaultInit( &this.settings );
-    return true;
+    this.imu.gyro_bias[0] 	= GYRO_BIAS_X;
+	this.imu.gyro_bias[1] 	= GYRO_BIAS_Y;
+	this.imu.gyro_bias[2]	= GYRO_BIAS_Z;
+
+	this.imu.mag_bias[0] 	= MAG_BIAS_X;
+	this.imu.mag_bias[1] 	= MAG_BIAS_Y;
+	this.imu.mag_bias[2] 	= MAG_BIAS_Z;
+
+	uint32_t accel_res;
+	switch ( XL_FS_DEFAULT )
+	{
+		default:
+		case XL_FS_2G:
+			accel_res = 2;
+			break;
+		case XL_FS_4G:
+			accel_res = 4;
+			break;
+		case XL_FS_8G:
+			accel_res = 8;
+			break;
+		case XL_FS_16G:
+			accel_res = 16;
+			break;
+	}
+
+	uint32_t gyro_res;
+	switch ( GYRO_FS_DEFAULT )
+	{
+		default:
+		case GYRO_FS_245DPS:
+			gyro_res = 245;
+			break;
+		case GYRO_FS_500DPS:
+			gyro_res = 500;
+			break;
+		case GYRO_FS_2000DPS:
+			gyro_res = 2000;
+			break;
+	}
+
+	uint32_t mag_res;
+	switch ( MAG_FS_DEFAULT )
+	{
+		default:
+		case MAG_FS_4GAUSS:
+			mag_res = 4;
+			break;
+		case MAG_FS_8GAUSS:
+			mag_res = 8;
+			break;
+		case MAG_FS_12GAUSS:
+			mag_res = 12;
+			break;
+		case MAG_FS_16GAUSS:
+			mag_res = 16;
+			break;
+	}
+
+	this.imu.accel_res 		= accel_res / LSM9DS1_IMU_ADC_MAX;
+	this.imu.gyro_res 		= gyro_res  / LSM9DS1_IMU_ADC_MAX;
+	this.imu.mag_res 		= mag_res   / LSM9DS1_IMU_ADC_MAX;
 }
-
-
 
 /******************************************************************************
  * Motion Data Access
@@ -105,60 +157,43 @@ bool IMU_Init( void )
  * \brief Read IMU accel and gyro data
  * \param[in] read_data Array to store read data
  *****************************************************************************/
-imu_t * IMU_Update( void )
+LSM9DS1_t * IMU_Update( void )
 {
-	uint8_t                    i2c_read_data[6];
-	I2C_Read( IMU_ADDR, ACCEL_XOUT_H, i2c_read_data, 6 );
 	/* Combine low and high byte values */
-    
+	uint8_t                    i2c_read_data[6];
+	I2C_Read( LSM9DS1_IMU_ADDR, XL_OUT, i2c_read_data, 6 );
+	uint32_t accel[3];
 	for( int i = 0; i < 3 ; i++ )
 	{
-		this.imu.accel[i] = ( i2c_read_data[( i * 2 )] << 8 ) + i2c_read_data[( i * 2 ) + 1];
+		accel[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
 	}
-	I2C_Read( IMU_ADDR, GYRO_XOUT_H, i2c_read_data, 6 );
+
+	I2C_Read( LSM9DS1_IMU_ADDR, G_OUT, i2c_read_data, 6 );
+	uint32_t gyro[3];
     for( int i = 0; i < 3 ; i++ )
     {
-        this.imu.gyro[i] = ( i2c_read_data[( i * 2 )] << 8 ) + i2c_read_data[( i * 2 ) + 1];
+    	gyro[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
     }
 
-    I2C_Read( MAG_ADDR, MAG_XOUT_L, i2c_read_data, 6 );
+    I2C_Read( LSM9DS1_MAG_ADDR, M_OUT, i2c_read_data, 6 );
+    uint32_t mag[3];
     for( int i = 0; i < 3 ; i++ )
     {
-        this.imu.mag[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
-    }
-    
-    for( int i = 0; i < 3 ; i++ )
-    {
-        this.imu.accel[i] += this.imu.accel_bias[i];
-        this.imu.gyro[i]  += this.imu.gyro_bias[i];
-        this.imu.mag[i]   += this.imu.mag_bias[i];
+    	mag[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
     }
     
-	return &this.imu;
-}
+    for( int i = 0; i < 3 ; i++ )
+    {
+    	accel[i] -= this.imu.accel_bias[i];
+    	gyro[i]  -= this.imu.gyro_bias[i];
+    	mag[i]   -= this.imu.mag_bias[i];
 
-/**************************************************************************//**
- * \brief Convert accelerometer data to readable double value
- * \param[out] Return converted value
- * \param[in] data Raw value from register
- *****************************************************************************/
-double convertAccel( uint16_t data )
-{
-	return 0;//( double )( data * 0.061 * (settings.accel.range >> 1) / 1000 );
-}
+    	this.imu.accel[i] = accel[i] * this.imu.accel_res;
+    	this.imu.gyro[i]  = gyro[i]  * this.imu.gyro_res;
+    	this.imu.mag[i]   = mag[i]   * this.imu.mag_res;
+    }
 
-/**************************************************************************//**
- * \brief Convert gyroscope data to readable double value
- * \param[out] Return converted value
- * \param[in] data Raw value from register
- *****************************************************************************/
-double convertGyro( uint16_t data )
-{
-//    uint8_t rangeDivisor = settings.gyroRange / 125;
-//    if ( settings.gyroRange == 245 ) {
-//        rangeDivisor = 2;
-//    }
-	return 0;//( double )data * 4.375 * ( rangeDivisor ) / 1000;
+    return &this;
 }
 
 /******************************************************************************
@@ -251,8 +286,8 @@ vec3_t * getNonGravAcceleration( ang3_t * tba )
 uint16_t IMU_ReadTemp( void )
 {
 	uint16_t tempurature;
-	tempurature  = IMU_GetRegister( TEMP_OUT_H ) << 8;
-	tempurature += IMU_GetRegister( TEMP_OUT_L );
+	tempurature  = IMU_GetRegister( OUT_TEMP_H ) << 8;
+	tempurature += IMU_GetRegister( OUT_TEMP_L );
 	return tempurature;
 }
 

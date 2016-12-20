@@ -10,7 +10,7 @@ RM := rm -rf
 -include sources.mk
 -include system/subdir.mk
 -include src/subdir.mk
--include sensors/subdir.mk
+-include sensors/imu/subdir.mk
 -include kinetic/subdir.mk
 -include emlib/subdir.mk
 -include device/EFR32_B_B/iar/subdir.mk

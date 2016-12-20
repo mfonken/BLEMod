@@ -33,7 +33,7 @@ device/EFR32_B_B/iar \
 emlib \
 . \
 kinetic \
-sensors \
+sensors/imu \
 src \
 system \
 
