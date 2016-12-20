@@ -212,23 +212,6 @@ double getRoll( void )
     double den = sqrt( ( ( this.imu.accel[1] * this.imu.accel[1] ) + ( this.imu.accel[2] * this.imu.accel[2] ) ) );
     return atan2( -this.imu.accel[0], den );
 }
-/**************************************************************************//**
- * \brief Get roll angle (phi) error from accelerometer data
- * \param[out] Return roll error
- *****************************************************************************/
-double getRollError( void )
-{
-    double sin_phi   = sin( this.imu.roll );
-    double sin_theta = sin( this.imu.pitch );
-    double cos_phi   = cos( this.imu.roll );
-    double cos_theta = cos( this.imu.pitch );
-    double cos_theta_cos_phi = cos_theta * cos_phi;
-    double mu_sin_2_theta = MU * ( sin_theta * sin_theta );
-    double factor = sqrt( ( cos_theta_cos_phi * cos_theta_cos_phi ) + mu_sin_2_theta );
-    double num = sin_phi * ( cos_theta_cos_phi - factor );
-    double den = ( cos_theta * ( sin_phi * sin_phi ) ) + ( cos_phi * factor );
-    return atan2( num, den );
-}
 
 /**************************************************************************//**
  * \brief Get pitch angle (theta) from accelerometer data
@@ -252,6 +235,24 @@ double getYaw( void )
     double cos_theta = cos( this.imu.pitch );
     double num = ( this.imu.mag[2] * sin_phi ) - ( this.imu.mag[1] * cos_phi );
     double den = ( this.imu.mag[0] * cos_theta ) + ( this.imu.mag[1] * ( sin_theta * sin_phi ) ) + ( this.imu.mag[2] * ( sin_theta * cos_phi ) );
+    return atan2( num, den );
+}
+
+/**************************************************************************//**
+ * \brief Get roll angle (phi) error from accelerometer data
+ * \param[out] Return roll error
+ *****************************************************************************/
+double getRollError( void )
+{
+    double sin_phi   = sin( this.imu.roll );
+    double sin_theta = sin( this.imu.pitch );
+    double cos_phi   = cos( this.imu.roll );
+    double cos_theta = cos( this.imu.pitch );
+    double cos_theta_cos_phi = cos_theta * cos_phi;
+    double mu_sin_2_theta = MU * ( sin_theta * sin_theta );
+    double factor = sqrt( ( cos_theta_cos_phi * cos_theta_cos_phi ) + mu_sin_2_theta );
+    double num = sin_phi * ( cos_theta_cos_phi - factor );
+    double den = ( cos_theta * ( sin_phi * sin_phi ) ) + ( cos_phi * factor );
     return atan2( num, den );
 }
 

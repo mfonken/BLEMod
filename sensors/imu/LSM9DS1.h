@@ -47,7 +47,7 @@
 #define MAG_BIAS_Y		0
 #define MAG_BIAS_Z		0
 
-#define MU				0.001
+#define MU				0.1
 
 /***************************************************************************************************
  Local Structures
