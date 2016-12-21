@@ -97,28 +97,28 @@ void 		IMU_Init( void );
 LSM9DS1_t * IMU_Update( void );
 
 /**************************************************************************//**
- * \brief Get roll angle (phi) from accelerometer data
+ * \brief Calculate roll angle (phi) from accelerometer data
  * \param[out] Return roll
  *****************************************************************************/
-double 		getRoll( void );
+void 		calculateRoll( void );
 
 /**************************************************************************//**
- * \brief Get roll angle (phi) error from accelerometer data
- * \param[out] Return roll error
- *****************************************************************************/
-double      getRollError( void );
-
-/**************************************************************************//**
- * \brief Get pitch angle (theta) from accelerometer data
+ * \brief Calculate pitch angle (theta) from accelerometer data
  * \param[out] Return pitch
  *****************************************************************************/
-double 		getPitch( void );
+void 		calculatePitch( void );
 
 /**************************************************************************//**
- * \brief Get yaw angle (psi) from magnetometer data, pitch, and roll
+ * \brief Calculate yaw angle (psi) from magnetometer data, pitch, and roll
  * \param[out] Return yaw
  *****************************************************************************/
-double      getYaw( void );
+void      	calculateYaw( void );
+
+/**************************************************************************//**
+ * \brief Calculate roll angle (phi) error from accelerometer data
+ * \param[out] Return roll error
+ *****************************************************************************/
+double      calculateRollError( void );
 
 /**************************************************************************//**
  * \brief Get no gravitation acceleration from accelerometer data

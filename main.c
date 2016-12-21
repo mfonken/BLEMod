@@ -112,21 +112,18 @@ int main(void)
     /* Run application and event handler. */
     appHandleEvents(evt);
 
-    IMU_Update();
+    LSM9DS1_t * imu_pointer = IMU_Update();
     Print_Char( 'f' );
     Print_Char( ',' );
-    double roll  = getRoll();
-    double pitch = getPitch();
-    double yaw   = getYaw();
-    Print_Double_Ascii( roll );
+    Print_Double_Ascii( imu_pointer->imu.pitch );
     Print_Char( ',' );
-    Print_Double_Ascii( pitch );
+    Print_Double_Ascii( imu_pointer->imu.roll );
     Print_Char( ',' );
-    Print_Double_Ascii( yaw );
+    Print_Double_Ascii( imu_pointer->imu.yaw );
     Print_Char( '\r' );
+    Print_Char( '\0' );
     Print_Char( '\n' );
-    Print_Char( '\r' );
-	Print_Char( '\n' );
+    Print_Char( '\0' );
   }
 
   return 1;

@@ -162,36 +162,39 @@ LSM9DS1_t * IMU_Update( void )
 	/* Combine low and high byte values */
 	uint8_t                    i2c_read_data[6];
 	I2C_Read( LSM9DS1_IMU_ADDR, XL_OUT, i2c_read_data, 6 );
-	uint32_t accel[3];
-	for( int i = 0; i < 3 ; i++ )
-	{
-		accel[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
-	}
+	int16_t accel[3];
+	accel[0] = ( i2c_read_data[1] << 8 ) | i2c_read_data[0];
+	accel[1] = ( i2c_read_data[3] << 8 ) | i2c_read_data[2];
+	accel[2] = ( i2c_read_data[5] << 8 ) | i2c_read_data[4];
 
 	I2C_Read( LSM9DS1_IMU_ADDR, G_OUT, i2c_read_data, 6 );
-	uint32_t gyro[3];
-    for( int i = 0; i < 3 ; i++ )
-    {
-    	gyro[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
-    }
+	int16_t gyro[3];
+	gyro[0] = ( i2c_read_data[1] << 8 ) | i2c_read_data[0];
+	gyro[1] = ( i2c_read_data[3] << 8 ) | i2c_read_data[2];
+	gyro[2] = ( i2c_read_data[5] << 8 ) | i2c_read_data[4];
 
     I2C_Read( LSM9DS1_MAG_ADDR, M_OUT, i2c_read_data, 6 );
-    uint32_t mag[3];
-    for( int i = 0; i < 3 ; i++ )
-    {
-    	mag[i] = ( i2c_read_data[( i * 2 ) + 1] << 8 ) + i2c_read_data[( i * 2 )];
-    }
+	int16_t mag[3];
+	mag[0] = ( i2c_read_data[1] << 8 ) | i2c_read_data[0];
+	mag[1] = ( i2c_read_data[3] << 8 ) | i2c_read_data[2];
+	mag[2] = ( i2c_read_data[5] << 8 ) | i2c_read_data[4];
     
     for( int i = 0; i < 3 ; i++ )
     {
+
     	accel[i] -= this.imu.accel_bias[i];
     	gyro[i]  -= this.imu.gyro_bias[i];
     	mag[i]   -= this.imu.mag_bias[i];
+
 
     	this.imu.accel[i] = accel[i] * this.imu.accel_res;
     	this.imu.gyro[i]  = gyro[i]  * this.imu.gyro_res;
     	this.imu.mag[i]   = mag[i]   * this.imu.mag_res;
     }
+
+    calculateRoll();
+    calculatePitch();
+    calculateYaw();
 
     return &this;
 }
@@ -204,30 +207,30 @@ LSM9DS1_t * IMU_Update( void )
  */
 
 /**************************************************************************//**
- * \brief Get roll angle (phi) from accelerometer data
+ * \brief Calculate roll angle (phi) from accelerometer data
  * \param[out] Return roll
  *****************************************************************************/
-double getRoll( void )
+void calculateRoll( void )
 {
     double den = sqrt( ( ( this.imu.accel[1] * this.imu.accel[1] ) + ( this.imu.accel[2] * this.imu.accel[2] ) ) );
-    return atan2( -this.imu.accel[0], den );
+    this.imu.roll = atan2( -this.imu.accel[0], den );
 }
 
 /**************************************************************************//**
- * \brief Get pitch angle (theta) from accelerometer data
+ * \brief Calculate pitch angle (theta) from accelerometer data
  * \param[out] Return pitch
  *****************************************************************************/
-double getPitch( void )
+void calculatePitch( void )
 {
     double den = sign( this.imu.accel[2] ) * sqrt( ( ( this.imu.accel[2] * this.imu.accel[2] ) + ( MU * ( this.imu.accel[0] * this.imu.accel[0] ) ) ) );
-    return atan2( this.imu.accel[1], den );
+    this.imu.pitch = atan2( this.imu.accel[1], den );
 }
 
 /**************************************************************************//**
- * \brief Get yaw angle (psi) from magnetometer data, pitch, and roll
+ * \brief Calculate yaw angle (psi) from magnetometer data, pitch, and roll
  * \param[out] Return yaw
  *****************************************************************************/
-double getYaw( void )
+void calculateYaw( void )
 {
     double sin_phi   = sin( this.imu.roll );
     double sin_theta = sin( this.imu.pitch );
@@ -235,14 +238,14 @@ double getYaw( void )
     double cos_theta = cos( this.imu.pitch );
     double num = ( this.imu.mag[2] * sin_phi ) - ( this.imu.mag[1] * cos_phi );
     double den = ( this.imu.mag[0] * cos_theta ) + ( this.imu.mag[1] * ( sin_theta * sin_phi ) ) + ( this.imu.mag[2] * ( sin_theta * cos_phi ) );
-    return atan2( num, den );
+    this.imu.yaw = atan2( num, den );
 }
 
 /**************************************************************************//**
- * \brief Get roll angle (phi) error from accelerometer data
+ * \brief Calculate roll angle (phi) error from accelerometer data
  * \param[out] Return roll error
  *****************************************************************************/
-double getRollError( void )
+double calculateRollError( void )
 {
     double sin_phi   = sin( this.imu.roll );
     double sin_theta = sin( this.imu.pitch );

@@ -46,9 +46,10 @@ void initKinetics( void )
  **************************************************************************************************/
 void initFilters( void )
 {
-    initKalman( &kinetics.rotationFilter[0], getRoll()  );
-    initKalman( &kinetics.rotationFilter[1], getPitch() );
-    initKalman( &kinetics.rotationFilter[2], getYaw()   );
+	LSM9DS1_t * imu_pointer = IMU_Update();
+    initKalman( &kinetics.rotationFilter[0], imu_pointer->imu.roll );
+    initKalman( &kinetics.rotationFilter[1], imu_pointer->imu.pitch );
+    initKalman( &kinetics.rotationFilter[2], imu_pointer->imu.yaw   );
 }
 
 /***********************************************************************************************//**
@@ -191,9 +192,9 @@ void Kalman_Update( void )
 	LSM9DS1_t this;
     this = *( IMU_Update() );
 
-    double phi      = getPitch();
-    double theta    = getRoll();
-    double psi      = getYaw();
+    double phi      = this.imu.roll;
+    double theta    = this.imu.pitch;
+    double psi      = this.imu.yaw;
 
     /* Restrict pitch */
     double v = kinetics.rotationFilter[0].value;
