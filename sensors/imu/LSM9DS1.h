@@ -43,9 +43,9 @@
 #define GYRO_BIAS_Y		0
 #define GYRO_BIAS_Z		0
 
-#define MAG_BIAS_X		0
-#define MAG_BIAS_Y		0
-#define MAG_BIAS_Z		0
+#define MAG_BIAS_X		0.330
+#define MAG_BIAS_Y	   -0.042
+#define MAG_BIAS_Z		0.015
 
 #define MU				0.1
 
