@@ -212,8 +212,12 @@ LSM9DS1_t * IMU_Update( void )
  *****************************************************************************/
 void calculateRoll( void )
 {
-    double den = sqrt( ( ( this.imu.accel[1] * this.imu.accel[1] ) + ( this.imu.accel[2] * this.imu.accel[2] ) ) );
-    this.imu.roll = atan2( -this.imu.accel[0], den );
+    /* AN4248: Eq. 13 */
+    this.imu.roll = atan2( this.imu.accel[1] / this.imu.accel[2] );
+    
+    /* AN3461: Eq. 37 */
+//    double den = sqrt( ( ( this.imu.accel[1] * this.imu.accel[1] ) + ( this.imu.accel[2] * this.imu.accel[2] ) ) );
+//    this.imu.roll = atan2( -this.imu.accel[0], den );
 }
 
 /**************************************************************************//**
@@ -222,8 +226,13 @@ void calculateRoll( void )
  *****************************************************************************/
 void calculatePitch( void )
 {
-    double den = sign( this.imu.accel[2] ) * sqrt( ( ( this.imu.accel[2] * this.imu.accel[2] ) + ( MU * ( this.imu.accel[0] * this.imu.accel[0] ) ) ) );
-    this.imu.pitch = atan2( this.imu.accel[1], den );
+    /* AN4248: Eq. 14 */
+    double den = ( this.imu.accel[1] * sin( this.imu.roll ) ) + ( this.imu.accel[2] * cos ( this.imu.roll ) );
+    this.imu.pitch = atan2( -this.imu.accel[0] / den );
+    
+    /* AN3461: Eq. 38 */
+//    double den = sign( this.imu.accel[2] ) * sqrt( ( ( this.imu.accel[2] * this.imu.accel[2] ) + ( MU * ( this.imu.accel[0] * this.imu.accel[0] ) ) ) );
+//    this.imu.pitch = atan2( this.imu.accel[1], den );
 }
 
 /**************************************************************************//**
@@ -232,6 +241,7 @@ void calculatePitch( void )
  *****************************************************************************/
 void calculateYaw( void )
 {
+    /* AN4248: Eq. 22 */
     double sin_phi   = sin( this.imu.roll );
     double sin_theta = sin( this.imu.pitch );
     double cos_phi   = cos( this.imu.roll );
