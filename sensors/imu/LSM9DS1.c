@@ -41,6 +41,8 @@
  **************************************************************************************************/
 LSM9DS1_t this;
 
+double magResolutions[4] = { 0.00014, 0.00029, 0.00043, 0.00058 };
+
 /***************************************************************************************************
  Local Functions
  **************************************************************************************************/
@@ -126,27 +128,27 @@ void IMU_Init( void )
 			break;
 	}
 
-	uint32_t mag_res;
+	double mag_res;
 	switch ( MAG_FS_DEFAULT )
 	{
 		default:
 		case MAG_FS_4GAUSS:
-			mag_res = 4;
+			mag_res = magResolutions[0];
 			break;
 		case MAG_FS_8GAUSS:
-			mag_res = 8;
+			mag_res = magResolutions[1];
 			break;
 		case MAG_FS_12GAUSS:
-			mag_res = 12;
+			mag_res = magResolutions[2];
 			break;
 		case MAG_FS_16GAUSS:
-			mag_res = 16;
+			mag_res = magResolutions[3];
 			break;
 	}
 
 	this.imu.accel_res 		= accel_res / LSM9DS1_IMU_ADC_MAX;
 	this.imu.gyro_res 		= gyro_res  / LSM9DS1_IMU_ADC_MAX;
-	this.imu.mag_res 		= mag_res   / LSM9DS1_IMU_ADC_MAX;
+	this.imu.mag_res 		= mag_res;
 }
 
 /******************************************************************************
@@ -213,7 +215,7 @@ LSM9DS1_t * IMU_Update( void )
 void calculateRoll( void )
 {
     /* AN4248: Eq. 13 */
-    this.imu.roll = atan2( this.imu.accel[1] / this.imu.accel[2] );
+    this.imu.roll = atan2( this.imu.accel[0], this.imu.accel[2] );
     
     /* AN3461: Eq. 37 */
 //    double den = sqrt( ( ( this.imu.accel[1] * this.imu.accel[1] ) + ( this.imu.accel[2] * this.imu.accel[2] ) ) );
@@ -227,8 +229,8 @@ void calculateRoll( void )
 void calculatePitch( void )
 {
     /* AN4248: Eq. 14 */
-    double den = ( this.imu.accel[1] * sin( this.imu.roll ) ) + ( this.imu.accel[2] * cos ( this.imu.roll ) );
-    this.imu.pitch = atan2( -this.imu.accel[0] / den );
+    double den = ( this.imu.accel[0] * sin( this.imu.roll ) ) + ( this.imu.accel[2] * cos ( this.imu.roll ) );
+    this.imu.pitch = atan2( -this.imu.accel[1], den );
     
     /* AN3461: Eq. 38 */
 //    double den = sign( this.imu.accel[2] ) * sqrt( ( ( this.imu.accel[2] * this.imu.accel[2] ) + ( MU * ( this.imu.accel[0] * this.imu.accel[0] ) ) ) );

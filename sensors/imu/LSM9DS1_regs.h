@@ -909,12 +909,17 @@ typedef struct
 #define MAG_SELF_TEST           DISABLE
 #define MAG_FAST_ODR            DISABLE
 #define MAG_ODR                 MAG_ODR_10HZ
-#define MAG_OM                  MAG_LOW_POWER
+#define MAG_OM                  MAG_HIGH_PERFORMANCE
 
 #define MAG_ODR_OM_DEFAULT    ( MAG_SELF_TEST << MAG_SELF_TEST_LOC | \
                                 MAG_FAST_ODR  << MAG_FAST_ODR_LOC  | \
                                 MAG_ODR       << MAG_ODR_LOC       | \
                                 MAG_OM        << MAG_OM_LOC        )
+
+/* Magnometer Control (Full-scale) Register */
+#define MAG_FS_LOC						5
+
+#define MAG_CTRL_REG_DEFAULT MAG_FS_DEFAULT << MAG_FS_LOC
 
 #define OFFSET_X_REG_L_M_DEFAULT        0x00
 #define OFFSET_X_REG_H_M_DEFAULT        0x00
@@ -924,8 +929,8 @@ typedef struct
 #define OFFSET_Z_REG_H_M_DEFAULT        0x00
 #define WHO_AM_I_M_DEFAULT              0x3d
 #define CTRL_REG1_M_DEFAULT             MAG_ODR_OM_DEFAULT
-#define CTRL_REG2_M_DEFAULT             0x00
-#define CTRL_REG3_M_DEFAULT             MAG_POWER_DOWN
+#define CTRL_REG2_M_DEFAULT             MAG_CTRL_REG_DEFAULT
+#define CTRL_REG3_M_DEFAULT             MAG_CONTINUOUS
 #define CTRL_REG4_M_DEFAULT             0x00
 #define CTRL_REG5_M_DEFAULT             0x00
 #define INT_CFG_M_DEFAULT               0x00

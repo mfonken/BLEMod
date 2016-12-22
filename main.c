@@ -113,13 +113,34 @@ int main(void)
     appHandleEvents(evt);
 
     LSM9DS1_t * imu_pointer = IMU_Update();
-    Print_Char( 'f' );
-    Print_Char( ',' );
-    Print_Double_Ascii( imu_pointer->imu.pitch );
-    Print_Char( ',' );
-    Print_Double_Ascii( imu_pointer->imu.roll );
-    Print_Char( ',' );
-    Print_Double_Ascii( imu_pointer->imu.yaw );
+//    Print_Char( 'r' );
+//    Print_Char( ',' );
+//    Print_Double_Ascii( imu_pointer->imu.accel[0] );
+//    Print_Char( ',' );
+//    Print_Double_Ascii( imu_pointer->imu.accel[1] );
+//    Print_Char( ',' );
+//    Print_Double_Ascii( imu_pointer->imu.accel[2] );
+//    Print_Char( ',' );
+//	Print_Double_Ascii( imu_pointer->imu.gyro[0] );
+//	Print_Char( ',' );
+//	Print_Double_Ascii( imu_pointer->imu.gyro[1] );
+//	Print_Char( ',' );
+//	Print_Double_Ascii( imu_pointer->imu.gyro[2] );
+//	Print_Char( ',' );
+//	Print_Double_Ascii( imu_pointer->imu.mag[0] );
+//	Print_Char( ',' );
+//	Print_Double_Ascii( imu_pointer->imu.mag[1] );
+//	Print_Char( ',' );
+//	Print_Double_Ascii( imu_pointer->imu.mag[2] );
+
+	Print_Char( 'f' );
+	Print_Char( ',' );
+	Print_Double_Ascii( imu_pointer->imu.pitch );
+	Print_Char( ',' );
+	Print_Double_Ascii( imu_pointer->imu.roll );
+	Print_Char( ',' );
+	Print_Double_Ascii( imu_pointer->imu.yaw );
+
     Print_Char( '\r' );
     Print_Char( '\0' );
     Print_Char( '\n' );
