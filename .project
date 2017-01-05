@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>BLEMod</name>
+	<name>ble-module</name>
 	<comment></comment>
 	<projects>
 	</projects>
 	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
-			<triggers>auto,full,incremental,</triggers>
-			<arguments>
-				<dictionary>
-					<key>LaunchConfigHandle</key>
-					<value>&lt;project&gt;/.externalToolBuilders/BgBuild.launch</value>
-				</dictionary>
-			</arguments>
-		</buildCommand>
 		<buildCommand>
 			<name>org.eclipse.cdt.managedbuilder.core.genmakebuilder</name>
 			<triggers>clean,full,incremental,</triggers>
@@ -36,6 +26,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>emlib/em_adc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-5-PROJECT_LOC/SiliconLabs/SimplicityStudio/v4/developer/stacks/ble/v2.1.1.0/platform/emlib/src/em_adc.c</locationURI>
+		</link>
+		<link>
 			<name>emlib/em_cryotimer.c</name>
 			<type>1</type>
 			<locationURI>STUDIO_SDK_LOC/platform/emlib/src/em_cryotimer.c</locationURI>
@@ -51,6 +46,16 @@
 			<locationURI>STUDIO_SDK_LOC/platform/emlib/src/em_i2c.c</locationURI>
 		</link>
 		<link>
+			<name>emlib/em_leuart.c</name>
+			<type>1</type>
+			<locationURI>PARENT-5-PROJECT_LOC/SiliconLabs/SimplicityStudio/v4/developer/stacks/ble/v2.1.1.0/platform/emlib/src/em_leuart.c</locationURI>
+		</link>
+		<link>
+			<name>emlib/em_msc.c</name>
+			<type>1</type>
+			<locationURI>STUDIO_SDK_LOC/platform/emlib/src/em_msc.c</locationURI>
+		</link>
+		<link>
 			<name>emlib/em_rtcc.c</name>
 			<type>1</type>
 			<locationURI>STUDIO_SDK_LOC/platform/emlib/src/em_rtcc.c</locationURI>
@@ -61,7 +66,7 @@
 			<locationURI>STUDIO_SDK_LOC/platform/emlib/src/em_usart.c</locationURI>
 		</link>
 		<link>
-			<name>device/EFR32_B_B/iar/startup_efr32bg1b.c</name>
+			<name>device/EFR32_B_1_1_B/iar/startup_efr32bg1b.c</name>
 			<type>1</type>
 			<locationURI>STUDIO_SDK_LOC/platform/Device/SiliconLabs/EFR32BG1B/Source/IAR/startup_efr32bg1b.c</locationURI>
 		</link>

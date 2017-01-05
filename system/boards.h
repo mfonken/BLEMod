@@ -29,17 +29,17 @@
 
 
 #define BRD4100A 1
-#define BRD4150B 2
-#define BRD4151A 3
-#define BRD4153A 4
-#define BRD4300C 5
-#define BRD4300AREVA01 6
-#define BRD4300AREVA02 7
-#define BRD4300AREVA03 8
-#define BRD4301A 9
-#define BRD4302A 10
-#define RD_0057_0101 11
-
+#define BRD4101B 2
+#define BRD4150B 3
+#define BRD4151A 4
+#define BRD4153A 5
+#define BRD4300C 9
+#define BRD4300AREVA02 10
+#define BRD4300AREVA03 11
+#define BRD4301A 12
+#define BRD4302A 13
+#define RD_0057_0101 14
+#define BRD4160A 15
 
 /** @} (end addtogroup Boards) */
 /** @} (end addtogroup platform_hw) */

@@ -19,10 +19,12 @@
 #include "em_device.h"
 #include "em_chip.h"
 #include "em_assert.h"
+#include "em_adc.h"
 #include "em_gpcrc.h"
 #include "em_gpio.h"
 #include "em_i2c.h"
 #include "em_ldma.h"
+#include "em_leuart.h"
 #include "em_prs.h"
 #include "em_rtcc.h"
 #include "em_usart.h"
@@ -38,9 +40,11 @@ extern void enter_DefaultMode_from_RESET(void) {
 	EMU_enter_DefaultMode_from_RESET();
 	LFXO_enter_DefaultMode_from_RESET();
 	CMU_enter_DefaultMode_from_RESET();
+	ADC0_enter_DefaultMode_from_RESET();
 	RTCC_enter_DefaultMode_from_RESET();
 	USART0_enter_DefaultMode_from_RESET();
 	USART1_enter_DefaultMode_from_RESET();
+	LEUART0_enter_DefaultMode_from_RESET();
 	I2C0_enter_DefaultMode_from_RESET();
 	GPCRC_enter_DefaultMode_from_RESET();
 	LDMA_enter_DefaultMode_from_RESET();
@@ -140,6 +144,9 @@ extern void CMU_enter_DefaultMode_from_RESET(void) {
 	/* Enable clock for HF peripherals */
 	CMU_ClockEnable(cmuClock_HFPER, true);
 
+	/* Enable clock for ADC0 */
+	CMU_ClockEnable(cmuClock_ADC0, true);
+
 	/* Enable clock for GPCRC */
 	CMU_ClockEnable(cmuClock_GPCRC, true);
 
@@ -148,6 +155,9 @@ extern void CMU_enter_DefaultMode_from_RESET(void) {
 
 	/* Enable clock for LDMA */
 	CMU_ClockEnable(cmuClock_LDMA, true);
+
+	/* Enable clock for LEUART0 */
+	CMU_ClockEnable(cmuClock_LEUART0, true);
 
 	/* Enable clock for PRS */
 	CMU_ClockEnable(cmuClock_PRS, true);
@@ -193,6 +203,16 @@ extern void CMU_enter_DefaultMode_from_RESET(void) {
 extern void ADC0_enter_DefaultMode_from_RESET(void) {
 
 	// $[ADC0_Init]
+	ADC_Init_TypeDef ADC0_init = ADC_INIT_DEFAULT;
+
+	ADC0_init.ovsRateSel = adcOvsRateSel2;
+	ADC0_init.warmUpMode = adcWarmupNormal;
+	ADC0_init.timebase = ADC_TimebaseCalc(0);
+	ADC0_init.prescale = ADC_PrescaleCalc(7000000, 0);
+	ADC0_init.tailgate = 0;
+	ADC0_init.em2ClockConfig = adcEm2Disabled;
+
+	ADC_Init(ADC0, &ADC0_init);
 	// [ADC0_Init]$
 
 	// $[ADC0_InputConfiguration]
@@ -434,8 +454,6 @@ extern void USART1_enter_DefaultMode_from_RESET(void) {
 	USART1->CTRLX = USART1->CTRLX & (~USART_CTRLX_RTSINV);
 	/* Set CS active low */
 	USART1->CTRL = USART1->CTRL & (~USART_CTRL_CSINV);
-	/* Set TX active high */
-	USART1->CTRL = USART1->CTRL & (~USART_CTRL_TXINV);
 	/* Set RX active high */
 	USART1->CTRL = USART1->CTRL & (~USART_CTRL_RXINV);
 	// [USART_Misc]$
@@ -443,7 +461,7 @@ extern void USART1_enter_DefaultMode_from_RESET(void) {
 	// $[USART_Enable]
 
 	/* Enable USART if opted by user */
-	USART_Enable(USART1, usartEnable);
+	USART_Enable(USART1, usartEnableRx);
 	// [USART_Enable]$
 
 }
@@ -454,6 +472,19 @@ extern void USART1_enter_DefaultMode_from_RESET(void) {
 extern void LEUART0_enter_DefaultMode_from_RESET(void) {
 
 	// $[LEUART0 initialization]
+	LEUART_Init_TypeDef initleuart = LEUART_INIT_DEFAULT;
+
+	initleuart.enable = leuartEnable;
+	initleuart.baudrate = 32786;
+	initleuart.databits = leuartDatabits8;
+	initleuart.parity = leuartNoParity;
+	initleuart.stopbits = leuartStopbits1;
+	LEUART_Init(LEUART0, &initleuart);
+
+	/* Configuring non-standard properties */
+	LEUART_TxDmaInEM2Enable(LEUART0, 0);
+	LEUART_RxDmaInEM2Enable(LEUART0, 0);
+
 	// [LEUART0 initialization]$
 
 }
@@ -625,20 +656,17 @@ extern void PORTIO_enter_DefaultMode_from_RESET(void) {
 
 	// $[Port A Configuration]
 
-	/* Pin PA0 is configured to Push-pull */
-	GPIO_PinModeSet(gpioPortA, 0, gpioModePushPull, 0);
+	/* Pin PA0 is configured to Input enabled */
+	GPIO_PinModeSet(gpioPortA, 0, gpioModeInput, 0);
 
-	/* Pin PA1 is configured to Input enabled */
-	GPIO_PinModeSet(gpioPortA, 1, gpioModeInput, 0);
+	/* Pin PA1 is configured to Push-pull */
+	GPIO_PinModeSet(gpioPortA, 1, gpioModePushPull, 0);
 	// [Port A Configuration]$
 
 	// $[Port B Configuration]
 
 	/* Pin PB11 is configured to Input enabled */
 	GPIO_PinModeSet(gpioPortB, 11, gpioModeInput, 0);
-
-	/* Pin PB13 is configured to Push-pull */
-	GPIO_PinModeSet(gpioPortB, 13, gpioModePushPull, 0);
 	// [Port B Configuration]$
 
 	// $[Port C Configuration]

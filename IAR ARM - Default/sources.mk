@@ -27,12 +27,11 @@ S79_UPPER_DEPS :=
 
 # Every subdirectory with source files must be described here
 SUBDIRS := \
-app \
-ble \
-device/EFR32_B_B/iar \
+device/EFR32_B_1_1_B/iar \
 emlib \
 . \
 kinetic \
+sensors/camera \
 sensors/imu \
 src \
 system \

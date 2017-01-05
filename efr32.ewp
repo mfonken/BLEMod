@@ -311,27 +311,33 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\common</state>
-          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\soc</state>
+          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\common</state>
+          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\soc</state>
           <state>$PROJ_DIR$\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\CMSIS\Include</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\config</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\common\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\capsense\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\dmadrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\gpiointerrupt\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\nvm\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\rtcdrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\sleep\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\spidrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\tempdrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\uartdrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\ustimer\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\hardware\kit\common\bsp</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\hardware\kit\common\drivers</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\radio\rail_lib_1.3\chip\efr32\rf\common\cortex</state>
+          <state>$PROJ_DIR$</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\CMSIS\Include</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\common\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\dmadrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\dmadrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\gpiointerrupt\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\nvm\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\nvm\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\rtcdrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\rtcdrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\sleep\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\spidrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\spidrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\tempdrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\tempdrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\uartdrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\uartdrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\ustimer\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\ustimer\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emlib\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\hardware\kit\common\bsp</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\hardware\kit\common\drivers</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\radio\rail_lib\chip\efr32\rf\common\cortex</state>
 
         </option>
         <option>
@@ -628,7 +634,7 @@
         </option>
         <option>
           <name>OOCOutputFile</name>
-          <state>BLEMod.bin</state>
+          <state>ble-module.bin</state>
         </option>
         <option>
           <name>OOCCommandLineProducer</name>
@@ -644,8 +650,8 @@
       <name>CUSTOM</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <extensions>.bgproj</extensions>
-        <cmdline>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\bin\bgbuild.exe -ng "$FILE_PATH$"</cmdline>
+        <extensions>.xml</extensions>
+        <cmdline>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\bin\bgbuild.exe -ng "$FILE_PATH$"</cmdline>
         <hasPrio>1</hasPrio>
         <outputs>
           <file>
@@ -691,7 +697,7 @@
         </option>
         <option>
           <name>IlinkOutputFile</name>
-          <state>BLEMod.out</state>
+          <state>ble-module.out</state>
         </option>
         <option>
           <name>IlinkDebugInfoEnable</name>
@@ -755,7 +761,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\linker\bleDemo.icf</state>
+          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\linker\bleDemo.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1297,27 +1303,33 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
-          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\common</state>
-          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\soc</state>
+          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\common</state>
+          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\soc</state>
           <state>$PROJ_DIR$\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\CMSIS\Include</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\config</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\common\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\capsense\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\dmadrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\gpiointerrupt\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\nvm\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\rtcdrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\sleep\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\spidrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\tempdrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\uartdrv\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emdrv\ustimer\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\inc</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\hardware\kit\common\bsp</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\hardware\kit\common\drivers</state>
-          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\radio\rail_lib_1.3\chip\efr32\rf\common\cortex</state>
+          <state>$PROJ_DIR$</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\CMSIS\Include</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\Device\SiliconLabs\EFR32BG1B\Include</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\common\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\dmadrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\dmadrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\gpiointerrupt\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\nvm\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\nvm\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\rtcdrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\rtcdrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\sleep\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\spidrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\spidrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\tempdrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\tempdrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\uartdrv\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\uartdrv\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\ustimer\config</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emdrv\ustimer\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emlib\inc</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\hardware\kit\common\bsp</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\hardware\kit\common\drivers</state>
+          <state>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\radio\rail_lib\chip\efr32\rf\common\cortex</state>
 
         </option>
         <option>
@@ -1614,7 +1626,7 @@
         </option>
         <option>
           <name>OOCOutputFile</name>
-          <state>BLEMod.bin</state>
+          <state>ble-module.bin</state>
         </option>
         <option>
           <name>OOCCommandLineProducer</name>
@@ -1630,8 +1642,8 @@
       <name>CUSTOM</name>
       <archiveVersion>3</archiveVersion>
       <data>
-        <extensions>.bgproj</extensions>
-        <cmdline>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\bin\bgbuild.exe -ng "$FILE_PATH$"</cmdline>
+        <extensions>.xml</extensions>
+        <cmdline>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\bin\bgbuild.exe -ng "$FILE_PATH$"</cmdline>
         <hasPrio>1</hasPrio>
         <outputs>
           <file>
@@ -1677,7 +1689,7 @@
         </option>
         <option>
           <name>IlinkOutputFile</name>
-          <state>BLEMod.out</state>
+          <state>ble-module.out</state>
         </option>
         <option>
           <name>IlinkDebugInfoEnable</name>
@@ -1741,7 +1753,7 @@
         </option>
         <option>
           <name>IlinkIcfFile</name>
-          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\linker\bleDemo.icf</state>
+          <state>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\linker\bleDemo.icf</state>
         </option>
         <option>
           <name>IlinkIcfFileSlave</name>
@@ -1977,57 +1989,63 @@
   <group>
     <name>gattdb</name>
     <file>
-      <name>$PROJ_DIR$\gatt_db.bgproj</name>
+      <name>$PROJ_DIR$\gatt.xml</name>
     </file>
   </group>
   <group>
     <name>include</name>
     <file>
-      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\common\bg_errorcodes.h</name>
+      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\common\bg_errorcodes.h</name>
     </file>
     <file>
-      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\common\bg_gattdb_def.h</name>
+      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\common\bg_gattdb_def.h</name>
     </file>
     <file>
-      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\common\bg_types.h</name>
+      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\common\bg_types.h</name>
     </file>
     <file>
-      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\common\gecko_configuration.h</name>
+      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\common\gecko_configuration.h</name>
     </file>
     <file>
-      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\soc\native_gecko.h</name>
+      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\soc\native_gecko.h</name>
     </file>
   </group>
   <group>
     <name>lib</name>
     
     <file>
-      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\lib\binbootloader.o</name>
+      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\lib\binbootloader.o</name>
     </file>
     <file>
-      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\lib\stack.a</name>
+      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\lib\stack.a</name>
     </file>
     <file>
-      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\lib\binstack.o</name>
+      <name>C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\lib\binstack.o</name>
     </file>
   </group>
     <file>
-    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\Device\SiliconLabs\EFR32BG1B\Source\IAR\startup_efr32bg1b.c</name>
+    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\Device\SiliconLabs\EFR32BG1B\Source\IAR\startup_efr32bg1b.c</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\src\em_cryotimer.c</name>
+    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emlib\src\em_cryotimer.c</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\src\em_gpio.c</name>
+    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emlib\src\em_gpio.c</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\src\em_i2c.c</name>
+    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emlib\src\em_i2c.c</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\src\em_rtcc.c</name>
+    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emlib\src\em_msc.c</name>
   </file>
   <file>
-    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\platform\emlib\src\em_usart.c</name>
+    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emlib\src\em_rtcc.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\..\..\..\..\..\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\platform\emlib\src\em_usart.c</name>
+  </file>
+  <file>
+    <name>$PROJ_DIR$\gatt_db.c</name>
   </file>
   <file>
     <name>$PROJ_DIR$\main.c</name>

@@ -183,15 +183,9 @@ LSM9DS1_t * IMU_Update( void )
     
     for( int i = 0; i < 3 ; i++ )
     {
-
-    	accel[i] -= this.imu.accel_bias[i];
-    	gyro[i]  -= this.imu.gyro_bias[i];
-    	mag[i]   -= this.imu.mag_bias[i];
-
-
-    	this.imu.accel[i] = accel[i] * this.imu.accel_res;
-    	this.imu.gyro[i]  = gyro[i]  * this.imu.gyro_res;
-    	this.imu.mag[i]   = mag[i]   * this.imu.mag_res;
+    	this.imu.accel[i] = accel[i] * this.imu.accel_res - this.imu.accel_bias[i];
+    	this.imu.gyro[i]  = gyro[i]  * this.imu.gyro_res  - this.imu.gyro_bias[i];
+    	this.imu.mag[i]   = mag[i]   * this.imu.mag_res	  - this.imu.mag_bias[i];
     }
 
     calculateRoll();
@@ -243,13 +237,17 @@ void calculatePitch( void )
  *****************************************************************************/
 void calculateYaw( void )
 {
+	double Bx = this.imu.mag[1];
+	double By = this.imu.mag[0];
+	double Bz = -this.imu.mag[2];
+
     /* AN4248: Eq. 22 */
     double sin_phi   = sin( this.imu.roll );
     double sin_theta = sin( this.imu.pitch );
     double cos_phi   = cos( this.imu.roll );
     double cos_theta = cos( this.imu.pitch );
-    double num = ( this.imu.mag[2] * sin_phi ) - ( this.imu.mag[1] * cos_phi );
-    double den = ( this.imu.mag[0] * cos_theta ) + ( this.imu.mag[1] * ( sin_theta * sin_phi ) ) + ( this.imu.mag[2] * ( sin_theta * cos_phi ) );
+    double num = ( Bz * sin_phi ) - ( By * cos_phi );
+    double den = ( Bx * cos_theta ) + ( By * ( sin_theta * sin_phi ) ) + ( Bz * ( sin_theta * cos_phi ) );
     this.imu.yaw = atan2( num, den );
 }
 

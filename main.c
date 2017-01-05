@@ -29,14 +29,9 @@
 #include "gatt_db.h"
 #include "aat.h"
 
-/* application specific files */
-#include "app.h"
-
 /* Libraries containing default Gecko configuration values */
 #include "em_emu.h"
 #include "em_cmu.h"
-#include "em_usart.h"
-
 #ifdef FEATURE_BOARD_DETECTED
 #include "bspconfig.h"
 #include "pti.h"
@@ -49,8 +44,6 @@
 #include "flashpwr.h"
 #endif
 
-#include "sensors/imu/LSM9DS1.h"
-#include "system/usart_sp.h"
 
 /***********************************************************************************************//**
  * @addtogroup Application
@@ -91,8 +84,14 @@ static const gecko_configuration_t config = {
 /**
  * @brief  Main function
  */
-int main(void)
-{    
+void main(void)
+{
+  #ifdef FEATURE_SPI_FLASH
+  /* Put the SPI flash into Deep Power Down mode for those radio boards where it is available */
+  flashpwrInit();
+  flashpwrDeepPowerDown();
+  #endif
+
   /* Initialize peripherals */
   enter_DefaultMode_from_RESET();
 
@@ -100,54 +99,50 @@ int main(void)
   gecko_init(&config);
 
   while (1) {
-//	if(USART_StatusGet(USART0) & USART_STATUS_RXDATAV)
-//	{
-//		uint8_t ret = USART_RxDataGet(USART0);
-//		//USART_Tx(USART0, ret);
-//	}
-
+    /* Event pointer for handling events */
     struct gecko_cmd_packet* evt;
+
     /* Check for stack event. */
     evt = gecko_wait_event();
-    /* Run application and event handler. */
-    appHandleEvents(evt);
 
-    LSM9DS1_t * imu_pointer = IMU_Update();
-//    Print_Char( 'r' );
-//    Print_Char( ',' );
-//    Print_Double_Ascii( imu_pointer->imu.accel[0] );
-//    Print_Char( ',' );
-//    Print_Double_Ascii( imu_pointer->imu.accel[1] );
-//    Print_Char( ',' );
-//    Print_Double_Ascii( imu_pointer->imu.accel[2] );
-//    Print_Char( ',' );
-//	Print_Double_Ascii( imu_pointer->imu.gyro[0] );
-//	Print_Char( ',' );
-//	Print_Double_Ascii( imu_pointer->imu.gyro[1] );
-//	Print_Char( ',' );
-//	Print_Double_Ascii( imu_pointer->imu.gyro[2] );
-//	Print_Char( ',' );
-//	Print_Double_Ascii( imu_pointer->imu.mag[0] );
-//	Print_Char( ',' );
-//	Print_Double_Ascii( imu_pointer->imu.mag[1] );
-//	Print_Char( ',' );
-//	Print_Double_Ascii( imu_pointer->imu.mag[2] );
+    /* Handle events */
+    switch (BGLIB_MSG_ID(evt->header)) {
 
-	Print_Char( 'f' );
-	Print_Char( ',' );
-	Print_Double_Ascii( imu_pointer->imu.pitch );
-	Print_Char( ',' );
-	Print_Double_Ascii( imu_pointer->imu.roll );
-	Print_Char( ',' );
-	Print_Double_Ascii( imu_pointer->imu.yaw );
+      /* This boot event is generated when the system boots up after reset.
+       * Here the system is set to start advertising immediately after boot procedure. */
+      case gecko_evt_system_boot_id:
 
-    Print_Char( '\r' );
-    Print_Char( '\0' );
-    Print_Char( '\n' );
-    Print_Char( '\0' );
+        /* Set advertising parameters. 100ms advertisement interval. All channels used.
+         * The first two parameters are minimum and maximum advertising interval, both in
+         * units of (milliseconds * 1.6). The third parameter '7' sets advertising on all channels. */
+        gecko_cmd_le_gap_set_adv_parameters(160,160,7);
+
+        /* Start general advertising and enable connections. */
+        gecko_cmd_le_gap_set_mode(le_gap_general_discoverable, le_gap_undirected_connectable);
+        break;
+
+      case gecko_evt_le_connection_closed_id:
+        /* Restart advertising after client has disconnected */
+        gecko_cmd_le_gap_set_mode(le_gap_general_discoverable, le_gap_undirected_connectable);
+        break;
+
+
+      /* Events related to OTA upgrading
+      ----------------------------------------------------------------------------- */
+
+      /* Check if the user-type OTA Control Characteristic was written.
+       * If ota_control was written, boot the device into Device Firmware Upgrade (DFU) mode. */
+      case gecko_evt_gatt_server_user_write_request_id:
+        if(evt->data.evt_gatt_server_user_write_request.characteristic==gattdb_ota_control)
+        {
+          gecko_cmd_system_reset(1);
+        }
+        break;
+
+      default:
+        break;
+    }
   }
-
-  return 1;
 }
 
 

@@ -176,7 +176,6 @@ SECTIONS
   {
     KEEP(*(.stack*))
   } > RAM
-  __padding = (((__etext + SIZEOF(.text_app_data) +16 +0x800-1)&0xFFFFF800)-16) - (__etext + SIZEOF(.text_app_data));
   
   /* Set stack top to end of RAM, and stack limit move down by
    * size of stack_dummy section */
