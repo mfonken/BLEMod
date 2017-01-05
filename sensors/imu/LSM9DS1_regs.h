@@ -799,7 +799,7 @@ typedef struct
 /* IMU Default Configurations */
 #define GYRO_FS_DEFAULT 		GYRO_FS_245DPS
 #define XL_FS_DEFAULT 			XL_FS_2G
-#define MAG_FS_DEFAULT			MAG_FS_4GAUSS
+#define MAG_FS_DEFAULT			MAG_FS_8GAUSS
 
 #define GYRO_RES_DEFAULT 		( double )( GYRO_FS_DEFAULT / LSM9DS1_IMU_ADC_MAX )
 #define XL_RES_DEFAULT 			( double )( XL_FS_DEFAULT   / LSM9DS1_IMU_ADC_MAX )

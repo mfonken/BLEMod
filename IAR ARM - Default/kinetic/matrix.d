@@ -1,5 +1,5 @@
-kinetic/matrix.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\matrix.c
-kinetic/matrix.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\matrix.h
+kinetic/matrix.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\ble-module\kinetic\matrix.c
+kinetic/matrix.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\ble-module\kinetic\matrix.h
 kinetic/matrix.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\stdbool.h
 kinetic/matrix.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\stdint.h
 kinetic/matrix.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\ycheck.h
@@ -12,4 +12,4 @@ kinetic/matrix.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5
 kinetic/matrix.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\math.h
 kinetic/matrix.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\ymath.h
 kinetic/matrix.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\xtgmath.h
-kinetic/matrix.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\BLEMod\kinetic\kinetic_types.h
+kinetic/matrix.o: C:\Users\Matthew\ Fonken\SimplicityStudio\v4_workspace\ble-module\kinetic\kinetic_types.h

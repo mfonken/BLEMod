@@ -7,7 +7,7 @@ gatt_db.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\in
 gatt_db.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\DLib_Product.h
 gatt_db.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\xencoding_limits.h
 gatt_db.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\DLib_Threads.h
-gatt_db.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\common\bg_gattdb_def.h
-gatt_db.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.0.1.0\protocol\bluetooth_2.0\ble_stack\inc\common\bg_types.h
+gatt_db.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\common\bg_gattdb_def.h
+gatt_db.o: C:\SiliconLabs\SimplicityStudio\v4\developer\stacks\ble\v2.1.1.0\protocol\bluetooth_2.1\ble_stack\inc\common\bg_types.h
 gatt_db.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\stddef.h
 gatt_db.o: c:\Program\ Files\ (x86)\IAR\ Systems\Embedded\ Workbench\ 7.5\arm\inc\c\ysizet.h

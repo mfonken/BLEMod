@@ -10,14 +10,14 @@
 #include "kinetic.h"
 
 /* Sensors headers */
-#include "../sensors/imu/LSM9DS1.h"
+#include "LSM9DS1.h"
 
 /* Math headers */
 #include "kalman.h"
 #include "matrix.h"
 
 /* Additional function headers */
-#include "../system/usart_sp.h"
+#include "usart_sp.h"
 
 /***************************************************************************************************
  Local Variables

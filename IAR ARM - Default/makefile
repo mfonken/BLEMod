@@ -11,11 +11,10 @@ RM := rm -rf
 -include system/subdir.mk
 -include src/subdir.mk
 -include sensors/imu/subdir.mk
+-include sensors/camera/subdir.mk
 -include kinetic/subdir.mk
 -include emlib/subdir.mk
--include device/EFR32_B_B/iar/subdir.mk
--include ble/subdir.mk
--include app/subdir.mk
+-include device/EFR32_B_1_1_B/iar/subdir.mk
 -include subdir.mk
 -include objects.mk
 
@@ -60,7 +59,7 @@ all: BLEMod.out
 BLEMod.out: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: IAR Linker for ARM'
-	ilinkarm $(OBJS) $(USER_OBJS) -o "BLEMod.out" --config "C:\Users\Matthew Fonken\SimplicityStudio\v4_workspace\BLEMod\linker\bleDemo.icf" --no_wrap_diagnostics "C:/SiliconLabs/SimplicityStudio/v4/developer/stacks/ble/v2.0.1.0//protocol/bluetooth_2.0/lib/binbootloader.o" "C:/SiliconLabs/SimplicityStudio/v4/developer/stacks/ble/v2.0.1.0//protocol/bluetooth_2.0/lib/stack.a" "C:/SiliconLabs/SimplicityStudio/v4/developer/stacks/ble/v2.0.1.0//protocol/bluetooth_2.0/lib/binstack.o" --entry __iar_program_start --no_range_reservations --keep __iar_program_start  
+	ilinkarm $(OBJS) $(USER_OBJS) -o "BLEMod.out" --config "C:\Users\Matthew Fonken\SimplicityStudio\v4_workspace\BLEMod\linker\bleDemo.icf" --no_wrap_diagnostics "C:/SiliconLabs/SimplicityStudio/v4/developer/stacks/ble/v2.1.1.0//protocol/bluetooth_2.1/lib/binbootloader.o" "C:/SiliconLabs/SimplicityStudio/v4/developer/stacks/ble/v2.1.1.0//protocol/bluetooth_2.1/lib/stack.a" "C:/SiliconLabs/SimplicityStudio/v4/developer/stacks/ble/v2.1.1.0//protocol/bluetooth_2.1/lib/binstack.o" --entry __iar_program_start --no_range_reservations --keep __iar_program_start  
 	ielftool --srec --verbose "BLEMod.out" "BLEMod.s37"  
 	ielftool --ihex --verbose "BLEMod.out" "BLEMod.hex"  
 	ielftool --bin --verbose "BLEMod.out" "BLEMod.bin"
